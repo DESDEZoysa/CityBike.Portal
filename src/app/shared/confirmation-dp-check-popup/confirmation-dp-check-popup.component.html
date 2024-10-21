@@ -1,0 +1,15 @@
+<div class="service-main">
+  <div class="service-main--loader" *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center center">
+    <img class="tire-pressure-loader" src="assets/images/preloader.svg" *ngIf="isLoading" />
+  </div>
+
+  <div class="bike-workshop-status" fxLayout="column" fxLayoutAlign="center center">
+    <div>
+      <p class="go-to-workshop title">{{'DP_CHECK_CONFIRMATION.TITLE' | translate}} {{dpVisualId}}</p>
+      <p class="go-to-workshop">{{'DP_CHECK_CONFIRMATION.DESCRIPTION' | translate}}</p>
+    </div>
+    <div class="go-to-workshop-btn-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+      <a mat-raised-button (click)="cancelConfirmation()">{{'DP_CHECK_CONFIRMATION.CANCEL' | translate}}</a>
+      <a mat-raised-button (click)="acceptConfirmation()">{{'DP_CHECK_CONFIRMATION.CHECKED_AND_OK' | translate}}</a>
+    </div>
+  </div>

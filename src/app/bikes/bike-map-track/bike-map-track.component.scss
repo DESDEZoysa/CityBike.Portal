@@ -1,0 +1,98 @@
+.font {
+  font-size: 12px;
+}
+
+.date-picker-row {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.date-picker-column {
+  width: 80%;
+  margin: auto;
+  text-align: center;
+}
+
+.date-picker-row md-form-field,
+.date-picker-row button {
+  margin: 0 20px;
+}
+
+.mat-card-title .mat-button-toggle-group {
+  display: flex;
+  flex-wrap: wrap;
+
+  .mat-button-toggle {
+    height: 40px;
+  }
+}
+
+.font-mobile {
+  font-size: 12px;
+  margin-left: -2px;
+  margin-right: -2px;
+}
+
+.map-radio-group {
+  display: inline-flex;
+  flex-direction: column;
+  padding: 0 15px;
+}
+
+.map-title-wrapper {
+  width: 100%;
+
+  @media (min-width: 960px) {
+    width: auto;
+  }
+}
+
+.toggle-button-wrapper {
+  width: 100%;
+}
+
+.date-picker-column {
+  display: flex;
+}
+
+.mat-button-toggle {
+  button {
+    .mat-button-toggle-label-content {
+      padding: 0 10px;
+    }
+  }
+}
+
+.map-views.mat-button-toggle-group {
+  background-color: #fff;
+  top: -4px;
+
+  @media (min-width: 600px) {
+    top: 0;
+  }
+}
+
+.map-filter-wrapper {
+  height: calc(100vh - 145px);
+  position: relative;
+
+  app-track-map {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  .bike-track-map-filter {
+    padding: 10px 0 0 10px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .toggle-bar {
+    background-color: #fff;
+    margin-right: 5px;
+  }
+}

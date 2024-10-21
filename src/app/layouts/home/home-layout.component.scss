@@ -1,0 +1,144 @@
+.map-radio-group {
+  display: inline-flex;
+  flex-direction: column;
+  padding: 0 15px;
+}
+
+.map-radio-button {
+  margin-bottom: 3px;
+}
+
+.map-heading {
+  margin: 0 !important;
+  padding: 5px 15px 10px 15px;
+}
+
+.menu-font {
+  font-size: 1rem;
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+
+.divider {
+  margin: 8px 0;
+}
+
+.map-checkbox {
+  padding: 0 15px;
+  margin-bottom: 3px;
+}
+
+.map-radio-group {
+  display: inline-flex;
+  flex-direction: column;
+  padding: 0 15px;
+}
+
+.map-radio-button {
+  margin-bottom: 3px;
+}
+
+.map-heading {
+  margin: 0 !important;
+  padding: 5px 15px 10px 15px;
+}
+
+.menu-font {
+  font-size: 1rem;
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+
+.mat-badge-content {
+  left: calc(100% - 16px);
+  position: absolute;
+  right: auto !important;
+  top: -3px !important;
+}
+
+.nav-bar {
+  .mat-button {
+    min-width: auto;
+    margin: 0 5px;
+    padding: 0 13px;
+
+    @media (min-width: 1280px) {
+      font-size: 12px;
+    }
+
+    @media (min-width: 1500px) {
+      font-size: 14px;
+    }
+
+    @media (min-width: 1400px) {
+      padding: 0 16px;
+    }
+
+    &.mat-badge-accent {
+      .mat-badge-content {
+        background-color: #ffb600;
+        color: white;
+      }
+    }
+
+    &.wide {
+      .mat-badge-content {
+        width: auto;
+      }
+    }
+  }
+
+  .mat-select-value-text {
+    @media (min-width: 1280px) {
+      font-size: 13px;
+    }
+
+    @media (min-width: 1360px) {
+      font-size: 14px;
+    }
+  }
+}
+
+.mat-menu-item {
+  &.wide {
+    .mat-badge {
+      right: 20px;
+    }
+
+    .mat-badge-content {
+      width: auto;
+    }
+  }
+
+  .mat-badge {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+  }
+
+  &.active {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+  }
+}
+
+.active-list-item {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.mat-menu-item .mat-icon {
+  margin-right: 5px;
+}
+
+.logo-service {
+  margin-right: 10px;
+}
+
+.icon-map {
+  cursor: pointer;
+}
+
+.logo-main {
+  margin-right: 10px;
+}

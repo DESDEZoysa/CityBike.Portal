@@ -1,0 +1,128 @@
+<div class="faliure-type-model">
+  <div mat-dialog-title>
+    <div fxLayout="column">
+      <div fxLayout="row" class="faliure-header">
+        <img src="/assets/images/dashboard/in-ws.svg" width="37" />
+        <!-- <h3 class="text-center faliure-title">{{dateFinishedShortFormatted}}:{{workshopName}}</h3> -->
+        <h3 class="text-center faliure-title">{{bikeVisualId}}: {{'WORKSHOP_HISTORY.DETAILS_BODY.TITLE'|translate}}</h3>
+        <img *ngIf="isOwner" (click)="updateRepairHistoryForm()" class="editbtn" src="/assets/images/edit-icon.svg"
+          width="20">
+      </div>
+      <span class="edited"
+        *ngIf="isUpdated && !modifiedUser">{{'WORKSHOP_HISTORY.DETAILS_BODY.EDITED'|translate}}</span>
+      <span class="edited" *ngIf="isUpdated && modifiedUser">({{'WORKSHOP_HISTORY.DETAILS_BODY.EDITED_BY'|translate}}
+        {{modifiedUser}})</span>
+    </div>
+
+  </div>
+  <div mat-dialog-content style="max-height: none;">
+    <div class="report-error-popup-wrapper">
+      <div class="table-content-wrapper">
+        <div>
+          <div class="meta-section">
+            <div>
+              <div>
+                {{'WORKSHOP_HISTORY.DETAILS_BODY.DELIVER_TO_WORKSHOP'|translate}}
+              </div>
+              <div>
+                : <b>{{dateStartedLongFormatted}}</b>
+              </div>
+            </div>
+            <div>
+              <div>
+                {{'WORKSHOP_HISTORY.DETAILS_BODY.WORKSHOP'|translate}}
+              </div>
+              <div>
+                : <b>{{workshopName}}</b>
+              </div>
+            </div>
+            <div>
+              <div>
+                {{'WORKSHOP_HISTORY.DETAILS_BODY.CREATED_ON'|translate}}
+              </div>
+              <div>
+                : <b>{{createdAtLongFormatted}}</b>
+              </div>
+            </div>
+            <div>
+              <div>
+                {{'WORKSHOP_HISTORY.DETAILS_BODY.CREATED_BY'|translate}}
+              </div>
+              <div>
+                : <b>{{createdUser}}</b>
+              </div>
+            </div>
+            <div>
+              <div>
+                {{'WORKSHOP_HISTORY.DETAILS_BODY.HOURS_SPENT'|translate}}
+              </div>
+              <div>
+                : <b><span *ngIf="hoursSpent>0">{{hoursSpent}} hr</span>&nbsp;<span
+                    *ngIf="minutesSpent>0">{{minutesSpent}} min</span></b>
+              </div>
+            </div>
+            <div>
+              <div>
+                {{'WORKSHOP_HISTORY.DETAILS_BODY.ODOMETER'|translate}}
+              </div>
+              <div>
+                : <b>{{accumulateTotalDistance | number:'1.0-0' | removeComma}} km</b>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div fxLayout="column" fxLayoutAlign="space-around start" class="pt-1">
+            <h3 fxFlex="30" class="faliure-subtitle">{{'WORKSHOP_HISTORY.DETAILS_BODY.PARTS_REPLACED'|translate}}</h3>
+            <div fxFlex="70" *ngFor="let workOriented of workOrientedList">
+              <img class="faliure-img" src="{{workOriented.WorkCategoryImageURL}}" />
+              <div class="faliure-list">
+                <div *ngFor="let part of workOriented.PartOrientedList">
+                  <span style="margin-right: 4px; font-size: 12px;"> {{part.RepairedAtLongFormatted}} -
+                    <strong>{{part.RepairedBy.FirstName}} {{part.RepairedBy.LastName}}</strong></span>
+                  <ul>
+                    <li>
+                      {{part.PartName}} {{'WORKSHOP_HISTORY.DETAILS_BODY.CHANGE_TO'|translate}} {{part.PartDesc |
+                      translate}} <b *ngIf="part && part.VariantName" style="margin-right: 4px">{{part.VariantName}}</b>
+                      <span
+                        *ngIf="part.HasWarranty">{{'WORKSHOP_HISTORY.DETAILS_BODY.WARRANTY_REQUESTED'|translate}}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <p class="no-data" *ngIf="workOrientedList.length==0">
+              {{'WORKSHOP_HISTORY.DETAILS_BODY.NO_PARTS_REPLACED'|translate}}</p>
+          </div>
+          <hr>
+          <div fxLayout="column" fxLayoutAlign="space-around start" class="pt-1">
+            <h3 fxFlex="30" class="faliure-subtitle">{{'WORKSHOP_HISTORY.DETAILS_BODY.OTHER_WORKS_DONE'|translate}}</h3>
+            <div fxFlex="70" *ngFor="let otherWorkOriented of otherWorkOrientedList">
+              <img *ngIf="otherWorkOriented.WorkCategoryImageURL" class="faliure-img"
+                src="{{otherWorkOriented.WorkCategoryImageURL}}" />
+              <div class="faliure-list">
+                <div *ngFor="let otherPart of otherWorkOriented.OtherPartList">
+                  <span style="margin-right: 4px; font-size: 12px;"> {{otherPart.RepairedAtLongFormatted}} -
+                    <strong>{{otherPart.RepairedBy.FirstName}} {{otherPart.RepairedBy.LastName}}</strong></span>
+                  <ul>
+                    <li>
+                      {{otherPart.WorkCategorySubTypeName}}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <p class="no-data" *ngIf="otherWorkOrientedList.length==0">
+              {{'WORKSHOP_HISTORY.DETAILS_BODY.NO_OTHER_WORKS_DONE'|translate}}</p>
+          </div>
+          <hr>
+          <div fxLayout="column" fxLayoutAlign="space-around start" class="py-1">
+            <h3 fxFlex="30" class="faliure-subtitle">{{'WORKSHOP_HISTORY.DETAILS_BODY.COMMENTS'|translate}}</h3>
+            <div fxFlex="70">
+              <p class="faliure-comment">{{comments}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

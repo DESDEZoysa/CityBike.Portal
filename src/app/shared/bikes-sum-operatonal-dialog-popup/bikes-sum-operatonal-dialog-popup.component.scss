@@ -1,0 +1,82 @@
+.bike-main {
+    height: 100%;
+    position: relative;
+    width: 100%;
+
+    .go-back {
+        cursor: pointer;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 1;
+
+        img {
+            width: 20px;
+        }
+    }
+}
+
+.bike-stats-date-filter {
+    margin-top: 10px;
+
+    @media (min-width: 600px) {
+        padding-left: 15px;
+        margin-top: 0;
+    }
+}
+
+.filters-wrapper {
+  padding-bottom: 15px;
+  padding-top: 15px;
+
+  @media (min-width: 768px) {
+      padding: 0;
+  }
+
+  @media (min-width: 960px) {
+      width: auto;
+  }
+}
+
+.dropdown-placeholder {
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 13.5px;
+}
+
+.dropdown-content {
+  margin-bottom: 15px;
+}
+
+.date-filter-wrapper {
+    font-size: 13px;
+    margin-top: 10px;
+    width: 100%;
+
+    @media (min-width: 768px) {
+      width: 370px;
+    }
+
+    > div:last-child {
+      @media (min-width: 600px) {
+        margin-left: 5px;
+      }
+    }
+  }
+
+  .bike-stats-table {
+    min-height: 500px;
+  }
+
+  .mobile-filter-search {
+    margin-bottom: 27px;
+    margin-left: 10px;
+    min-width: 75px;
+    max-width: 75px;
+    text-align: center;
+}
+
+.download-desktop {
+  margin-bottom: 15px;
+  margin-right: 20px;
+}
+

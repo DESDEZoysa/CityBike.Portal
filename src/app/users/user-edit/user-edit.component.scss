@@ -1,0 +1,91 @@
+.edit-field {
+    margin: 18px 0;
+}
+
+.btn-block {
+    margin-top: 10px;
+}
+
+.font-placeholder {
+    font-size: 11px;
+    margin-bottom: 5px;
+    color: rgba(0, 0, 0, .54);
+}
+
+.field-underline {
+    height: 1px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, .42);
+}
+
+.user-edit-form {
+    border-radius: 5px;
+    box-shadow: 1px 4px 8px 1px rgba(0, 0, 0, 0.5);
+    padding: 0 15px 15px;
+    width: 100%;
+
+    @media (min-width: 600px) {
+        max-width: 500px !important;
+    }
+}
+
+.selected-areas-wrapper {
+    width: 100%;
+
+    @media (min-width: 600px) {
+        margin-left: 20px;
+    }
+
+    @media (min-width: 960px) {
+        margin-left: 50px;
+    }
+}
+
+.selected-areas {
+    margin-top: 20px;
+    padding-top: 15px;
+    width: 100%;
+
+    @media (min-width: 600px) {
+        margin-top: 0;
+    }
+
+    @media (min-width: 960px) {
+        width: 400px;
+    }
+
+    .area-title {
+        margin-left: 30px;
+    }
+}
+.area-list {
+    max-height: 500px;
+    overflow: auto;
+    width: 100%;
+
+    li {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+}
+
+.grayout {
+    opacity: 0.6; /* Real browsers */
+    filter: alpha(opacity = 60); /* MSIE */
+}
+
+.docking-station-state {
+    margin-bottom: 15px !important;
+
+    &.hide-xs {
+        @media (max-width: 599px) {
+            display: none;
+        }
+    }
+
+    &.hide-md {
+        @media (min-width: 600px) {
+            display: none;
+        }
+    }
+}

@@ -1,0 +1,81 @@
+<div class="service-main">
+  <!-- Docking point sidebar left -->
+  <div class="service-main--left" fxLayout="column" fxLayoutAlign="space;-between none">
+    <div class="service-main--details">
+      <!-- Close button -->
+      <a (click)="this.dialogRef.close();" class="go-back">
+        <img src="/assets/images/map-icons/close.svg">
+      </a>
+      <!-- Docking point details header  -->
+      <div class="service-main--details__header" fxLayout="row" fxLayoutAlign=" start">
+        <!-- Docking point details image -->
+        <!-- normal docking point -->
+        <img *ngIf="!dpDisabled" src="/assets/images/map-icons/docking-point-small.svg" width="44">
+        <!-- should be checked -->
+        <img *ngIf="dpDisabled && dpDisabledReason == 2" src="/assets/images/map-icons/Should-be-checked-small.svg"
+          width="56">
+        <!-- disabled docking point -->
+        <img *ngIf="dpDisabled && dpDisabledReason == 1" src="/assets/images/map-icons/disabled-and-blocked-small.svg"
+          width="56">
+        <!-- needs repair docking point -->
+        <img *ngIf="dpDisabled && dpDisabledReason == 3" src="/assets/images/map-icons/must-be-checked-small.svg"
+          width="56">
+        <a class="service-main--details__bikeid"><span>{{dpVisualId}}</span>{{'LIVE_MAP.DOCKING_POINT_ISSUE_FIX.HEADER' |
+          translate}}</a>
+      </div>
+      <div class="service-main--details__tab" fxLayout="column">
+        <div class="service-main--details">
+          <section class="cb-wrapper" *ngFor="let category of fixCategories">
+            <mat-checkbox class="example-margin" [(ngModel)]="category.Result" (change)="manageFixCategoryIds($event, category.FixId)">
+              {{category.FixType | translate}}
+            </mat-checkbox>
+          </section>
+          <section class="rb-wrapper">
+            <mat-radio-button class="tp-radio-button" [value]="activateDockingPoint" checked>
+              {{'LIVE_MAP.DOCKING_POINT_ISSUE_FIX.ACTIVATE_DOCKING_POINT' | translate}}
+            </mat-radio-button>
+          </section>
+
+          <section class="field-section">
+            <div fxLayout="column" fxLayoutAlign="start start" style="margin-bottom: 30px">
+               <label> {{'DP_REPAIR_HISTORY.DETAILS_BODY.HOURS_SPENT'| translate}}</label>
+               <span class="time-spent-input">
+                 <input type="number" matInput [(ngModel)]="hoursSpent" placeholder="Hours"> :
+                 <input type="number" matInput [(ngModel)]="minutesSpent" placeholder="Minutes" min="0" max="59" name="minutesInput" [formControl]="minutesInput">          
+                              
+               </span>
+              <div [hidden]="minutesInput.valid" class="error-text"> Minutes should be less than 60 </div>
+              <span style="color:red" *ngIf="isTimeSpentEmpty">
+                {{ 'DP_REPAIR_HISTORY.DETAILS_BODY.HOURS_REQUIRED' | translate }}
+              </span>
+            </div>
+            <div fxLayout="column" fxLayoutAlign="start start">
+              <label class="comment-label">{{'DP_REPAIR_HISTORY.DETAILS_BODY.ADD_COMMENT' | translate }}</label>
+              <textarea matInput [(ngModel)]="comments" class="comment-label background-color:white" 
+              style="height: 100px; width: 100%;"></textarea>
+              <span style="color:red" *ngIf="selectedFixCategoryIds.length == 0 && isCommentsEmpty">
+                {{ 'DP_REPAIR_HISTORY.DETAILS_BODY.COMMENTS_REQUIRED' | translate }}
+              </span>
+            </div>
+          </section>
+
+        </div>
+      </div>
+      <!-- / Docking point details tab  -->
+
+    </div>
+    <div class="service-main--footer service-main--footer-error-report" fxLayout="row" fxLayoutAlign="space-between start">
+      <button fxLayout="column" fxLayoutAlign="center center" (click)="cancel()">
+        {{'LIVE_MAP.DOCKING_POINT_ISSUE_FIX.CANCEL' | translate}}
+      </button>
+
+      <button *ngIf="!isUpdate" fxLayout="column" fxLayoutAlign="center center" (click)="ActivateDockingPoint()">
+        {{'LIVE_MAP.DOCKING_POINT_ISSUE_FIX.ACTIVATE_DOCKING_POINT' | translate}}
+      </button>
+      <button *ngIf="isUpdate" fxLayout="column" fxLayoutAlign="center center" (click)="updateDockingPointRepairs()">
+        {{'LIVE_MAP.DOCKING_POINT_ISSUE_FIX.UPDATE_DOCKING_POINT_REPAIRS' | translate}}
+      </button>
+    </div>
+  </div>
+  <!-- / Docking point sidebar left -->
+</div>

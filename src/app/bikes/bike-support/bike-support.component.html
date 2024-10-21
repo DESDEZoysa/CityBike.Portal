@@ -1,0 +1,110 @@
+<div id="session" class="result-container" (window:resize)="onResize()">
+  <mat-card class="pad">
+    <mat-card-title style="margin-left: 24px;margin-top: 24px">
+      <div>
+        <span class="bc-current">{{'SUPPORT.BIKE' | translate }} {{bikeSession?.VisualId}}</span>
+        <span style="font-size: 14px;margin-left:18px"><a class="bike-details"
+            [routerLink]="['/bikes',bikeId,'details']">{{'SUPPORT.OPEN_DETAILS' | translate }}</a></span>
+      </div>
+    </mat-card-title>
+
+    <mat-card-content>
+      <div class="container" fxLayout="column" fxLayout.gt-md="row wrap">
+
+        <div fxFlex="100%" fxFlex.gt-md="25%">
+          <mat-card style="padding: 10px 24px">
+            <mat-card-content>
+
+              <div class="container" fxLayout="column">
+                <div class="detail-field">
+                  <span class="detail-field-label">{{'SUPPORT.SUMMARY' | translate }} : </span>
+                  <span class="detail-field-value">{{summaryDetails}}</span>
+                </div>
+
+                <div class="detail-field">
+                  <span class="detail-field-label">{{'SUPPORT.SESSION' | translate }} : </span>
+                  <span class="detail-field-value">{{sessionDetails}}</span>
+                </div>
+
+                <div *ngIf="bikeSession?.CurrentSessionId" class="detail-field">
+                  <span class="detail-field-label">{{'SESSIONS.PRICE_MODEL' | translate }} : </span>
+                  <span class="detail-field-value">{{bikeSession?.PriceModelId}}</span>
+                </div>
+
+                <div *ngIf="bikeSession?.CurrentSessionId" class="detail-field">
+                  <span class="detail-field-label">{{'SUPPORT.START_TIME' | translate }} : </span>
+                  <span class="detail-field-value">{{bikeSession?.StartTime}}</span>
+                </div>
+
+                <div class="detail-field">
+                  <span class="detail-field-label">{{'SUPPORT.BATTERY' | translate }} : </span>
+                  <span class="detail-field-value">{{bikeSession?.CurrentChargeLevel|number:'1.0-2'}}<span
+                      *ngIf="bikeSession?.BikeId>0">%</span></span>
+                </div>
+                <div class="address-wrap detail-field" fxLayout="row">
+                  <span class="detail-field-label">{{'SUPPORT.LOCATION' | translate }} : </span>
+                  <app-bike-address [bike]="bike" (onAddressReceived)="updateAddress($event)"
+                    style="padding-right:15px;white-space:unset;"></app-bike-address>
+                </div>
+
+                <div class="detail-field">
+                  <span class="detail-field-label">{{'SUPPORT.PULSE' | translate }} : </span>
+                  <span class="detail-field-value">{{pulseTimestamp}}</span>
+                </div>
+
+                <div class="detail-field">
+                  <span class="detail-field-label">{{ 'BIKE.MODE' | translate }} :</span>
+                  <span class="detail-field-value">{{ bike?.BikeModeId | bikeModes }}</span>
+                </div>
+                <div class="detail-field">
+                  <span class="detail-field-label">{{'SESSIONS.LOCK_STATE' | translate }} : </span>
+                  <span *ngIf="bike?.LockState != 20"> {{bike?.LockStateValue}}</span>
+                  <span *ngIf="bike?.LockState == 20" class="intran-support"> {{bike?.LockStateValue}}</span>
+                </div>
+
+
+                <div fxFlex="100%" style="margin-top: 70px;">
+                  <img mat-card-image [src]="bikeImagePath" *ngIf="bikeImagePath" style="max-width: 520px;" />
+                </div>
+
+                <div *ngIf="hazardImagePath" fxFlex="100%" fxLayout="column" fxLayoutAlign=" center"
+                  fxLayoutAlign.gt-md=" end">
+                  <img [src]="hazardImagePath" style="width: 65px;" />
+                  <label class="{{hazardTextColor}}">{{hazardText}}</label>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <div fxLayout="column" fxFlex="100%" fxFlex.gt-md="75%">
+          <div #map class="map" fxFlex="100%">
+            <div #popup class="popup"></div>
+          </div>
+        </div>
+
+        <div fxFlex="100%" class="btnbar">
+          <div class="container" fxLayoutAlign="space-between " fxLayoutAlign.gt-xs="flex-start ">
+            <!-- style="margin-top: 30px;margin-left: 25px" -->
+            <a matTooltip="{{ 'SUPPORT.QUIT_RENTAL' | translate }}" class="btnrow" (click)="openDialog()"
+              [class.disabled]="commandBtns.disableEndSession"><img src="/assets/images/support/QuitRentals.png" /></a>
+
+            <a matTooltip="{{ 'SUPPORT.REPORT_ERRORS' | translate }}" class="btnrow" (click)="createReportError()"
+              [class.disabled]="commandBtns.disableReportError"><img
+                src="/assets/images/support/ReportErrors.png" /></a>
+
+            <a matTooltip="{{ 'SUPPORT.LOCK' | translate }}" class="btnrow" (click)="addLock()"
+              [class.disabled]="commandBtns.disableFreeLock"><img src="/assets/images/support/Unlock.png" /></a>
+            <a matTooltip="{{ 'SUPPORT.UNLOCK' | translate }}" class="btnrow" (click)="freeLock()"
+              [class.disabled]="commandBtns.disableFreeLock"><img src="/assets/images/support/Open.png" /></a>
+          </div>
+        </div>
+      </div>
+
+      <ngx-spinner bdOpacity=1 bdColor="rgba(255,255,255,0)" size="default" color="#1172c3" type="ball-clip-rotate"
+        [fullScreen]="false">
+      </ngx-spinner>
+
+    </mat-card-content>
+  </mat-card>
+</div>

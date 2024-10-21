@@ -1,0 +1,492 @@
+<div id="docking-stations" class="result-container" (window:resize)="onResize()">
+  <mat-card>
+    <mat-card-title>
+
+      <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between center">
+        <div>
+          <a [routerLink]="['/dockingStations']" class="bc-link">{{ 'COMMON.DOCKING_STATIONS' | translate }}</a>
+          <span class="bc-separator" *ngIf="dockingStationId"> / </span>
+          <a routerLink="/dockingStations/{{dockingStationId}}/dockingpoints" class="bc-link"
+            *ngIf="dockingStationId">{{ dockingStationDetails?.Name }}</a>
+          <span class="bc-separator"> / </span>
+          <span class="bc-current" *ngIf="dockingStationId">{{ 'COMMON.UPDATE' | translate }}</span>
+          <span class="bc-current" *ngIf="!dockingStationId">{{ 'COMMON.CREATE' | translate }}</span>
+        </div>
+
+        <div class="docking-station-state">
+          <mat-slide-toggle [(ngModel)]="isDisabled" (change)="stateChangeConfirmation()">{{(isDisabled == true) ?
+            'Enabled' : 'Disabled'}}</mat-slide-toggle>
+        </div>
+      </div>
+    </mat-card-title>
+
+    <mat-accordion class="example-headers-align">
+      <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)" hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{'DOCKING_STATION.DOCKING_STATION' | translate }}
+          </mat-panel-title>
+          <mat-panel-description>
+            {{dockingStationDetails?.Name}}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <mat-card class="pad">
+          <mat-card-content>
+
+            <div class="container" fxLayout="column" fxLayout.gt-sm="row">
+              <div fxFlex="30%">
+                <form class="example-form" [formGroup]="dockingStationForm">
+
+                  <mat-form-field class="full-width">
+                    <input matInput placeholder="{{'DOCKING_STATION.NAME' | translate }} *" formControlName="Name">
+                    <mat-error
+                      *ngIf="dockingStationForm.controls['Name'].hasError('required') && dockingStationForm.controls['Name'].touched"
+                      class="md-text-warn">{{'DOCKING_STATION.REQ_ERROR' | translate }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field class="full-width">
+                    <input matInput placeholder="{{'DOCKING_STATION.STREET' | translate }}" formControlName="Street">
+                  </mat-form-field>
+
+                  <mat-form-field class="full-width">
+                    <input matInput placeholder="{{'DOCKING_STATION.DISTRICT' | translate }}"
+                      formControlName="District">
+                  </mat-form-field>
+
+                  <mat-form-field class="full-width">
+                    <input matInput placeholder="{{'DOCKING_STATION.CITY' | translate }} *" formControlName="City">
+                    <mat-error
+                      *ngIf="dockingStationForm.controls['City'].hasError('required') && dockingStationForm.controls['City'].touched"
+                      class="md-text-warn">{{'DOCKING_STATION.REQ_ERROR' | translate }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field class="full-width">
+                    <mat-select placeholder="{{ 'DOCKING_STATION.AREA' | translate }} *" formControlName="AreaId">
+                      <mat-option>
+                        <ngx-mat-select-search [ngModelOptions]="{standalone: true}" [(ngModel)]="searchCtrl"
+                          placeholderLabel="{{'DOCKING_STATION.AREA_SEARCH' | translate}}"
+                          noEntriesFoundLabel="{{'DOCKING_STATION.NOT_FOUND_AREA' | translate}}" name="search">
+                        </ngx-mat-select-search>
+                      </mat-option>
+                      <mat-option *ngFor="let area of areas | stringFilterBy:searchCtrl:'Name'" [value]="area.AreaId">
+                        {{area.Name}}</mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="dockingStationForm.controls['AreaId'].hasError('required') && dockingStationForm.controls['AreaId'].touched"
+                      class="md-text-warn">{{'DOCKING_STATION.REQ_ERROR' | translate }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field class="full-width">
+                    <mat-select placeholder="{{ 'DOCKING_STATION.COUNTRY' | translate }} *" formControlName="Country">
+                      <mat-option *ngFor="let country of countries" [value]="country.Name">{{country.Name}}</mat-option>
+                    </mat-select>
+                    <mat-error
+                      *ngIf="dockingStationForm.controls['Country'].hasError('required') && dockingStationForm.controls['Country'].touched"
+                      class="md-text-warn">{{'DOCKING_STATION.REQ_ERROR' | translate }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field class="full-width">
+                    <input matInput placeholder="{{'DOCKING_STATION.ZIPCODE' | translate }}" formControlName="ZipCode">
+                  </mat-form-field>
+
+                  <div formGroupName="Position">
+                    <mat-form-field class="full-width">
+                      <input matInput placeholder="{{'DOCKING_STATION.LONGITUDE' | translate }} *"
+                        formControlName="Longitude" type="number">
+                      <mat-error
+                        *ngIf="dockingStationForm.get('Position').get('Longitude').hasError('required') && dockingStationForm.get('Position').get('Longitude').touched"
+                        class="md-text-warn">{{'DOCKING_STATION.REQ_ERROR' | translate }}</mat-error>
+                      <mat-error
+                        *ngIf="dockingStationForm.get('Position').get('Longitude').hasError('exceed') && dockingStationForm.get('Position').get('Longitude').touched"
+                        class="md-text-warn">{{'DOCKING_STATION.LONGITUDE_INVALID' | translate }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="full-width">
+                      <input matInput placeholder="{{'DOCKING_STATION.LATITUDE' | translate }} *"
+                        formControlName="Latitude" type="number">
+                      <mat-error
+                        *ngIf="dockingStationForm.get('Position').get('Latitude').hasError('required') && dockingStationForm.get('Position').get('Latitude').touched"
+                        class="md-text-warn">{{'DOCKING_STATION.REQ_ERROR' | translate }}</mat-error>
+                      <mat-error
+                        *ngIf="dockingStationForm.get('Position').get('Latitude').hasError('exceed') && dockingStationForm.get('Position').get('Latitude').touched"
+                        class="md-text-warn">{{'DOCKING_STATION.LATITUDE_INVALID' | translate }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="full-width">
+                      <input matInput placeholder="{{'DOCKING_STATION.ALTITUDE' | translate }}"
+                        formControlName="Altitude" type="number">
+                    </mat-form-field>
+                  </div>
+
+                  <mat-form-field class="full-width">
+                    <input matInput placeholder="{{'DOCKING_STATION.ZONE_ID' | translate }}" formControlName="ZoneId"
+                      type="number">
+
+                  </mat-form-field>
+
+                  <mat-form-field class="full-width">
+                    <input matInput placeholder="{{'DOCKING_STATION.RADIUS' | translate }} *" formControlName="Radius"
+                      type="number">
+                    <mat-error
+                      *ngIf="dockingStationForm.controls['Radius'].hasError('required') && dockingStationForm.controls['Radius'].touched"
+                      class="md-text-warn">{{'DOCKING_STATION.REQ_ERROR' | translate }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field class="full-width">
+                    <input matInput placeholder="{{'DOCKING_STATION.IDEAL_NUMBER_OF_BIKES' | translate }} *"
+                      formControlName="IdealNumberOfBikes" type="number">
+                    <mat-error
+                      *ngIf="dockingStationForm.controls['IdealNumberOfBikes'].hasError('required') && dockingStationForm.controls['IdealNumberOfBikes'].touched"
+                      class="md-text-warn">{{'DOCKING_STATION.REQ_ERROR' | translate }}</mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field class="full-width">
+                    <input matInput placeholder="{{'DOCKING_STATION.MINIMUM_NUMBER_OF_BIKES' | translate }} *"
+                      formControlName="MinimumNumberOfBikes" type="number">
+                    <mat-error
+                      *ngIf="dockingStationForm.controls['MinimumNumberOfBikes'].hasError('required') && dockingStationForm.controls['MinimumNumberOfBikes'].touched"
+                      class="md-text-warn">{{'DOCKING_STATION.REQ_ERROR' | translate }}</mat-error>
+                  </mat-form-field>
+                  <mat-slide-toggle class="full-width" formControlName="IsOnboardStation">{{'DOCKING_STATION.ONBOARDING'
+                    | translate }}</mat-slide-toggle>
+                  <button mat-raised-button type=" button" [disabled]="!dockingStationForm.valid" (click)="saveDock()">
+                    <i class="material-icons" *ngIf="!dockingStationId">add</i>{{dockingStationBtnTxt |
+                    translate}}</button>
+                </form>
+              </div>
+
+              <div fxFlex="70%" class="map-wrapper">
+                <div #map class="map">
+                  <div #popup class="popup"></div>
+                </div>
+              </div>
+            </div>
+
+            <ngx-spinner bdOpacity=1 bdColor="rgba(255,255,255,0)" size="default" color="#1172c3"
+              type="ball-clip-rotate" [fullScreen]="false">
+            </ngx-spinner>
+
+
+          </mat-card-content>
+        </mat-card>
+        <mat-action-row>
+
+          <button mat-button color="primary" (click)="nextStep()"
+            [disabled]="isDockingPointDisabled">{{'DOCKING_STATION.NEXT' | translate }}</button>
+        </mat-action-row>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)" hideToggle [disabled]="isDockingPointDisabled">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{'DOCKING_POINT.DOCKING_POINTS' | translate}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <form [formGroup]="dockingPointForm" class="example-form docking-point-form" fxLayout="column"
+          fxLayoutAlign="start start">
+          <mat-form-field class="" [style.width.px]=295>
+            <input matInput placeholder="{{ 'DOCKING_POINTS.VISUAL_ID' | translate }}" type="text"
+              formControlName="VisualId">
+            <mat-error
+              *ngIf="dockingPointForm.controls['VisualId'].hasError('required') && dockingPointForm.controls['VisualId'].touched"
+              class="md-text-warn">{{ 'DOCKING_POINT.REQ_ERROR' | translate }}</mat-error>
+            <mat-error
+              *ngIf="dockingPointForm.controls['VisualId'].hasError('pattern') && dockingPointForm.controls['VisualId'].touched"
+              class="md-text-warn">{{ 'DOCKING_POINT.NUMBERS_ONLY_ERROR' | translate }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="" [style.width.px]=295>
+            <input matInput placeholder="{{ 'DOCKING_POINTS.HARDWARE_ID' | translate }}" type="text"
+              formControlName="HardwareId">
+            <mat-error
+              *ngIf="dockingPointForm.controls['HardwareId'].hasError('required') && dockingPointForm.controls['HardwareId'].touched"
+              class="md-text-warn">{{ 'DOCKING_POINT.REQ_ERROR' | translate }}</mat-error>
+            <mat-error
+              *ngIf="dockingPointForm.controls['HardwareId'].errors?.maxlength && dockingPointForm.controls['HardwareId'].touched"
+              class="md-text-warn">{{ 'DOCKING_POINT.NUMBER_OF_CHARACTER_ERROR' | translate }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="" [style.width.px]=295>
+            <input matInput placeholder="{{ 'DOCKING_POINTS.APPLICATION_VERSION' | translate }}" type="text"
+              formControlName="ApplicationVersion">
+          </mat-form-field>
+
+          <mat-form-field class="" [style.width.px]=295>
+            <mat-select placeholder="{{ 'DOCKING_POINTS.STATE' | translate }}" formControlName="State">
+              <mat-option value="1">Available</mat-option>
+              <mat-option value="2">Occupied</mat-option>
+              <mat-option value="3">Disabled</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-raised-button type="button" [disabled]="!dockingPointForm.valid" (click)="addDockingPoint()">
+            <i class="material-icons" *ngIf="!dockingPointId">add</i>{{dockingPointBtnTxt | translate}}</button>
+        </form>
+
+        <div *ngIf="dockingPoints && dockingPoints.length>0">
+          <ngx-datatable class="material expandable docking-points-table" [rows]="dockingPoints"
+            [loadingIndicator]="loadingIndicator" [columnMode]="'force'" [headerHeight]="50" [scrollbarH]="true"
+            #dockingPointTable [footerHeight]="50" [scrollbarH]="true" [rowHeight]="50" [limit]="13"
+            [sorts]="[{prop: 'VisualId'}]">
+
+            <!-- Row Detail Template -->
+            <ngx-datatable-row-detail [rowHeight]="120" #dockingPointDetailRow *ngIf="isMobile">
+              <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                <div style="padding-left:15px;">
+                  <div>
+                    <strong>{{ 'DOCKING_POINTS.VISUAL_ID' | translate }} :</strong> {{row.VisualId}}
+                  </div>
+                  <div style="padding-top:10px;">
+                    <strong>{{ 'DOCKING_POINTS.APPLICATION_VERSION' | translate }} :</strong> {{row.ApplicationVersion}}
+                  </div>
+                  <div style="padding-top:10px;">
+                    <strong>{{ 'DOCKING_POINTS.STATE' | translate }} :</strong> {{row.State| dockingPointState}}
+                  </div>
+                </div>
+              </ng-template>
+            </ngx-datatable-row-detail>
+
+            <!-- Column Templates -->
+            <ngx-datatable-column [width]="20" [resizeable]="false" [sortable]="false" [draggable]="false"
+              [canAutoResize]="false" *ngIf="isMobile">
+              <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded"
+                  [class.datatable-icon-down]="expanded" title="Expand/Collapse Row" (click)="toggleExpandRow(row,1)">
+                </a>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column prop="VisualId" name="{{ 'DOCKING_POINTS.VISUAL_ID' | translate }}" [flexGrow]="0.5"
+              [minWidth]="50" *ngIf="!isMobile">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                {{ value }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column prop="HardwareId" name="{{ 'DOCKING_POINTS.HARDWARE_ID' | translate }}"
+              [flexGrow]="1.5" [minWidth]="165">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                {{ value }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column prop="ApplicationVersion"
+              name="{{ 'DOCKING_POINTS.APPLICATION_VERSION' | translate }}" *ngIf="!isMobile" [flexGrow]="1.25"
+              [minWidth]="125" [width]="125">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                {{ value }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column prop="State" name="{{ 'DOCKING_POINTS.STATE' | translate }}" [flexGrow]="1"
+              [minWidth]="80" *ngIf="!isMobile">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                {{ value | dockingPointState }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column prop="Bike" name="{{ 'DOCKING_POINTS.BIKE_VISUAL_ID' | translate }}" [flexGrow]="0.5"
+              [minWidth]="70">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                <div *ngIf="value && value.CurrentChargeLevel >= minChargeLevel" (click)="navigateToBikeDetails(value)"
+                  matTooltip="{{ 'BIKE.BATTERY_LEVEL' | translate }} {{(value.CurrentChargeLevel / 100) | percent:'1.0-1' | replace:'.0%':'%'}}">
+                  <a style="color:#007dbd;vertical-align: super;">{{value.VisualId}}</a>
+                  <a class="material-icons" style="color: rgb(37, 155, 35)">motorcycle</a>
+                </div>
+                <div *ngIf="value && value.CurrentChargeLevel < minChargeLevel" (click)="navigateToBikeDetails(value)"
+                  matTooltip="{{ 'BIKE.BATTERY_LEVEL' | translate }} {{(value.CurrentChargeLevel / 100) | percent:'1.0-1' | replace:'.0%':'%'}}">
+                  <a style="color:#007dbd;vertical-align: super;">{{value.VisualId}}</a>
+                  <a class="material-icons" style="color: rgb(208, 2, 27)">motorcycle</a>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column prop="DockingPointId" name="" [flexGrow]="0.5" [minWidth]="65">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                <a class="list-icon" matTooltip="{{ 'DOCKING_POINT.EDIT_DOCKING_POINT' | translate }}" mat-icon-button
+                  (click)="editDockingPoint(value)">
+                  <mat-icon>create</mat-icon>
+                </a>
+                <a class="list-icon" matTooltip="{{ 'DOCKING_POINT.DELETE_DOCKING_POINT' | translate }}" mat-icon-button
+                  (click)="deleteDockingPoint(value)">
+                  <mat-icon class="edit">delete</mat-icon>
+                </a>
+                <!-- <a class="list-icon" matTooltip="{{ 'DOCKING_POINT.ONBOARDING' | translate }}" mat-icon-button
+                  routerLink="/dockingStations/{{dockingStationId}}/dockingpoints/{{value}}/onboard">
+                  <mat-icon>queue</mat-icon>
+                </a> -->
+                <a *ngIf="dockingStationDetails.IsOnboardStation" class="list-icon"
+                  routerLink="/dockingStations/{{dockingStationId}}/dockingpoints/{{value}}/onboard" mat-icon-button
+                  matTooltip="{{ 'DOCKING_POINT.ONBOARDING' | translate }}">
+                  <img src="/assets/images/onboard.png" width="23" />
+                  <!-- <mat-icon class="edit">delete</mat-icon> -->
+                </a>
+              </ng-template>
+            </ngx-datatable-column>
+
+          </ngx-datatable>
+        </div>
+
+
+
+        <div style="padding-top: 10px;" *ngIf="isBikesAvilable">
+          <mat-card-title style="color: gray;padding-top: 30px;">
+            <div> <span style="color: gray; font-size: 22px;"> {{ 'COMMON.UNDOCKED_BIKES' | translate }}</span> </div>
+          </mat-card-title>
+
+          <mat-toolbar style="background-color: initial;padding-left: 0;height: 30px;">
+            <mat-nav-list class="list-horizontal" *ngFor="let bike of bikes">
+              <mat-list-item>
+                <div *ngIf="bike && bike.ChargeLevel >= minChargeLevel" (click)="navigateToBikeDetails(bike)"
+                  matTooltip="{{ 'BIKE.BATTERY_LEVEL' | translate }} {{(bike.ChargeLevel / 100) | percent:'1.0-1' | replace:'.0%':'%'}}">
+                  <a style="color:#007dbd;vertical-align: super;">{{bike.VisualId}}</a>
+                  <a class="material-icons" style="color: rgb(37, 155, 35)">motorcycle </a>
+                </div>
+                <div *ngIf="bike && bike.ChargeLevel < minChargeLevel" (click)="navigateToBikeDetails(bike)"
+                  matTooltip="{{ 'BIKE.BATTERY_LEVEL' | translate }} {{(bike.ChargeLevel / 100) | percent:'1.0-1' | replace:'.0%':'%'}}">
+                  <a style="color:#007dbd;vertical-align: super;">{{bike.VisualId}}</a>
+                  <a class="material-icons" style="color: rgb(208, 2, 27)">motorcycle </a>
+                </div>
+              </mat-list-item>
+            </mat-nav-list>
+          </mat-toolbar>
+        </div>
+
+        <mat-action-row>
+          <button mat-button color="warn" (click)="prevStep()">{{'DOCKING_STATION.PREVIOUS' | translate }}</button>
+
+        </mat-action-row>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)" hideToggle
+        [disabled]="isPriorityGroupInfoDisabled">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{'PRIORITY_GROUP.RESERVATIONS.TITLE' | translate}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="example-form docking-point-form" *ngIf="isAdmin">
+          <div fxLayout="row" fxLayoutAlign="space-between center" style="margin-bottom: 20px;">
+            <div fxFlex="100" *ngIf="priorityReservationInfo" style="padding-right: 10px;">
+              <span>{{'PRIORITY_GROUP.RESERVATIONS.RESERVED_BIKES' | translate}}
+                :{{priorityReservationInfo?.NumberOfPriorityReservations}}</span>
+            </div>
+            <!-- Add New Priority group button-->
+            <!-- <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center"  style="padding-left: 10px;">
+                <button mat-raised-button color="primary" type="button" (click)="openCreatePriorityGroup()">{{'PRIORITY_GROUP.ADD_PRIORITY_GROUP_BTN' | translate}}</button>
+              </div> -->
+            <!-- View Priority Group button-->
+            <!-- <div fxFlex="100" fxLayout="row" fxLayoutAlign="end center"  style="padding-left: 10px;">
+                <a mat-raised-button
+                  routerLink="/users/prioritygroup">
+                  <small class="font">{{'PRIORITY_GROUP.VIEW_PRIORITY_GROUP_BTN' | translate}}</small>
+                </a>
+              </div> -->
+          </div>
+
+          <!-- </mat-form-field> -->
+          <div fxLayout="column" fxLayoutAlign="start start">
+            <mat-form-field class="" [style.width.px]=295>
+
+              <mat-select placeholder="{{'PRIORITY_GROUP.RESERVATIONS.SELECT_PRIORITY_GROUP' | translate}}"
+                [(value)]="selectedPriorityGroup">
+                <mat-option *ngFor="let allFilteredGroup of allFilteredGroups" [value]="allFilteredGroup.Id">{{
+                  allFilteredGroup.PriorityGroupName }}
+                </mat-option>
+              </mat-select>
+
+            </mat-form-field>
+
+            <mat-form-field class="" [style.width.px]=295>
+              <input matInput placeholder="{{'PRIORITY_GROUP.RESERVATIONS.NO_OF_RESERVATIONS' | translate}}"
+                type="number" [(ngModel)]="numberOfReservations">
+            </mat-form-field>
+
+            <button mat-raised-button type="button"
+              [disabled]="(!selectedPriorityGroup || (!numberOfReservations || (numberOfReservations && numberOfReservations < 0)))"
+              (click)="assignPriorityReservation()">
+              <i class="material-icons">add</i>{{'PRIORITY_GROUP.RESERVATIONS.ASSIGN_PRIORITY_GROUP' |
+              translate}}</button>
+          </div>
+        </div>
+
+        <div>
+          <ngx-datatable class="material expandable docking-points-table" [rows]="priorityReservations"
+            [columnMode]="'force'" [headerHeight]="50" [scrollbarH]="true" #priorityReservationTable [footerHeight]="50"
+            [scrollbarH]="true" [rowHeight]="50" [limit]="13" [sorts]="[{prop: 'VisualId'}]">
+
+            <!-- Row Detail Template -->
+            <ngx-datatable-row-detail [rowHeight]="60" #dockingPointDetailRow *ngIf="isMobile">
+              <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                <div style="padding-left:15px;">
+                  <div>
+                    <strong>{{'PRIORITY_GROUP.RESERVATIONS.NUMBER_OF_RESERVED_BIKES' | translate}} :</strong>
+                    {{row.NumberOfReservedBikes}}
+                  </div>
+                </div>
+              </ng-template>
+            </ngx-datatable-row-detail>
+
+            <!-- Column Templates -->
+            <ngx-datatable-column [width]="20" [resizeable]="false" [sortable]="false" [draggable]="false"
+              [canAutoResize]="false" *ngIf="isMobile">
+              <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded"
+                  [class.datatable-icon-down]="expanded" title="Expand/Collapse Row" (click)="toggleExpandRow(row,2)">
+                </a>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <!-- <ngx-datatable-column prop="ActionId" name="{{'PRIORITY_GROUP.RESERVATIONS.PRIORITY_RESERVATION_ID' | translate}}" [flexGrow]="1" [minWidth]="50" [width]="100" *ngIf="!isMobile">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                {{ value }}
+              </ng-template>
+            </ngx-datatable-column> -->
+
+            <ngx-datatable-column prop="PriorityGroupId"
+              name="{{'PRIORITY_GROUP.RESERVATIONS.PRIORITY_GROUP_ID' | translate}}" [flexGrow]="1" [minWidth]="50"
+              [width]="100">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                {{ value }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column prop="PriorityGroupName"
+              name="{{'PRIORITY_GROUP.RESERVATIONS.PRIORITY_GROUP_NAME' | translate}}" [flexGrow]="2.5" [minWidth]="125"
+              [width]="700">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                {{ value }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column prop="NumberOfReservedBikes"
+              name="{{'PRIORITY_GROUP.RESERVATIONS.NUMBER_OF_RESERVED_BIKES' | translate}}" [flexGrow]="1"
+              [minWidth]="50" *ngIf="!isMobile" [width]="100">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                {{ value }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column prop="ActionId" name="" [flexGrow]="0.5" [minWidth]="25" *ngIf="isAdmin" [width]="50">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                <a class="list-icon" matTooltip="{{'PRIORITY_GROUP.RESERVATIONS.DELETE' | translate}}" mat-icon-button
+                  (click)="deletePriorityReservation(value)">
+                  <mat-icon class="edit">delete</mat-icon>
+                </a>
+              </ng-template>
+            </ngx-datatable-column>
+
+          </ngx-datatable>
+        </div>
+
+        <mat-action-row>
+          <button mat-button color="warn" (click)="prevStep()">{{'DOCKING_STATION.PREVIOUS' | translate }}</button>
+
+        </mat-action-row>
+      </mat-expansion-panel>
+
+
+    </mat-accordion>
+  </mat-card>
+</div>

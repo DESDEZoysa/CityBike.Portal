@@ -1,0 +1,12 @@
+<div class="service-main">
+  <div class="bike-workshop-status" fxLayout="column" fxLayoutAlign="center center">
+      <p class="go-to-workshop title">{{'LIVE_MAP.DOCKING_POINT_CONFIRM_POPUP.TITLE' | translate}}</p>
+      <ul class="go-to-content-wrapper">
+        <li class="go-to-workshop" *ngIf="isBikeExist">{{'LIVE_MAP.DOCKING_POINT_CONFIRM_POPUP.DESCRIPTION_ONE' | translate}}</li>
+        <li class="go-to-workshop">{{'LIVE_MAP.DOCKING_POINT_CONFIRM_POPUP.DESCRIPTION_TWO' | translate}}</li>
+      </ul>
+    <div class="go-to-workshop-btn-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+      <a mat-raised-button (click)="cancel()">{{'LIVE_MAP.DOCKING_POINT_CONFIRM_POPUP.CANCEL' | translate}}</a>
+      <a mat-raised-button (click)="confirmRepairReport()">{{'LIVE_MAP.DOCKING_POINT_CONFIRM_POPUP.OK' | translate}}</a>
+    </div>
+  </div>

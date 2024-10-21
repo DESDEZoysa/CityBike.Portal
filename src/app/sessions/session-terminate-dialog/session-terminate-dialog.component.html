@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>{{ 'SESSIONS.TERMINATE_SESSION' | translate }}</h1>
+<div mat-dialog-content style="height: 165px; margin-bottom: 20px">
+  <p style="margin-bottom: 3px;">{{ 'SESSIONS.COMMENT' | translate }}* :</p>
+  <mat-form-field style="margin-top: -5px;margin-bottom: 5px; width: 100%;">
+    <!-- <input matInput type="text" [(ngModel)]="data.comment" name="comment"> -->
+    <textarea matInput type="text" [(ngModel)]="data.comment" name="comment"
+      style="height: 55px; width: 250px;"></textarea>
+    <span style="color:red" *ngIf="isCommentEmpty && commentletters && commentletters?.length < 5">
+      {{ 'SESSIONS.COMMENTS_MIN_LENGTH' | translate }}
+    </span>
+    <span style="color:red" *ngIf="isCommentEmpty && !data.comment">
+      {{ 'SESSIONS.COMMENTS_REQUIRED' | translate }}
+    </span>
+  </mat-form-field>
+
+  <mat-radio-group (ngModel)="data.isFeeIncluded" fxLayout="row" fxLayoutAlign="space-between center"
+    (change)="changeSelection($event)">
+    <mat-radio-button value="false" [checked]='true'>Without Fee</mat-radio-button>
+    <mat-radio-button value="true">With Fee</mat-radio-button>
+  </mat-radio-group>
+
+</div>
+<div fxLayout="row" fxLayoutAlign="space-between center">
+  <button mat-button (click)="onNoClick()">{{ 'SESSIONS.CANCEL' | translate }}</button>
+  <button (click)="onConfirm(data)" mat-button color="primary" class="btn-block"
+    cdkFocusInitial>{{ 'SESSIONS.CONFIRM' | translate }}</button>
+</div>

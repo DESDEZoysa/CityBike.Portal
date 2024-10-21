@@ -1,0 +1,74 @@
+<div id="statistic-history" class="result-container bike-main" (window:resize)="onResize()">
+    <a (click)="closeDialog()" class="go-back">
+        <img src="/assets/images/map-icons/close.svg">
+    </a>
+    <mat-card>
+        <mat-card-title fxLayout="column">
+            <p class="popup-title">{{'BIKE_STATS_HISTORY.TITLE' | translate}}</p>
+
+            <div fxFlex="100" fxFlex.gt-xs="60" fxLayout="column" fxLayout.gt-xs="row wrap" fxLayoutAlign="end " style="font-size: 15px;" class="filters-wrapper">
+            <div fxFlex="100%" fxFlex.gt-xs="50%" fxLayoutAlign="end start">
+              <img class="excel_expor_icon download-desktop" src="assets/images/excel_export.svg" (click)="generateExcel()"
+                matTooltip="{{'SESSIONS.DOWNLOAD_EXCEL' | translate}}" />
+            </div>
+            <div fxFlex="100%" fxFlex.gt-xs="50%" class="bike-stats-date-filter">
+              <div>
+                <div>
+                  <mat-label class="dropdown-placeholder">{{'BIKE_STATS_HISTORY.FILTER_BY_DATE' | translate}}</mat-label>
+                  <mat-select  class="dropdown-content" placeholder="{{'BIKE_STATS_HISTORY.FILTER_BY_DATE' | translate}}" [(value)]="selectedDate" (selectionChange)="onDateChange()">
+                    <mat-option *ngFor="let dateRange of dateRanges" [value]="dateRange.id">{{dateRange.name | translate}}</mat-option>
+                  </mat-select>
+                </div>
+              </div>
+            </div>
+  
+            <div fxLayout="column" fxLayout.gt-xs="row" class="date-filter-wrapper" fxLayoutGap="5px" *ngIf="isCustomDateShown">
+              <div fxFlex="40%" fxLayoutAlign="center center">
+                <mat-form-field [style.width.%]="100">
+                  <input matInput [matDatepicker]="fromPicker" [(ngModel)]="fromDate"
+                    placeholder="{{'BIKE_STATS_HISTORY.DATE_FROM'|translate}}" (dateChange)="onStartDatePicked($event)">
+                  <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #fromPicker startView="year" [startAt]="startDate"></mat-datepicker>
+                </mat-form-field>
+              </div>
+          
+              <div fxFlex="40%" fxLayoutAlign="center center">
+                <mat-form-field [style.width.%]="100">
+                  <input matInput [matDatepicker]="toPicker" [(ngModel)]="toDate"
+                    placeholder="{{'BIKE_STATS_HISTORY.DATE_TO'|translate}}" (dateChange)="onEndDatePicked($event)">
+                  <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #toPicker startView="year" [startAt]="startDate"></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div fxFlex="20%" fxLayoutAlign="end center">
+                <button mat-raised-button (click)="onCustomDateSearchClicked()" class="mobile-filter-search">
+                  {{ 'COMMON.SEARCH' | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </mat-card-title>
+
+        <mat-card-content>
+            <ngx-datatable class="material expandable bike-stats-table" [rows]="operationalBikesData" [columnMode]="'force'"
+                [headerHeight]="50" #repairTable [footerHeight]="50" [rowHeight]="50" [limit]="10" [scrollbarV]="true"
+                [scrollbarH]="true" [loadingIndicator]="loadingIndicator">
+
+                <!-- Column Templates -->
+                <ngx-datatable-column prop="Timestamp" name="{{'BIKE_STATS_HISTORY.DATE' | translate}}" [flexGrow]="1" [minWidth]="100" [width]="150">
+                    <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+                        {{ value | convertTime:'YYYY-MM-DD'}}
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column prop="AverageOfSumOperationalBikes" name="{{'BIKE_STATS_HISTORY.COUNT' | translate}}" [flexGrow]="1.25"
+                    [minWidth]="100" [width]="150">
+                    <ng-template let-value="value" ngx-datatable-cell-template>
+                        {{ value }}
+                    </ng-template>
+                </ngx-datatable-column>
+
+            </ngx-datatable>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -1,0 +1,81 @@
+<div class="service-main">
+    <div class="service-main--loader" *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center center">
+        <img class="tire-pressure-loader" src="assets/images/preloader.svg" *ngIf="isLoading" />
+    </div>
+
+    <div class="bike-storage-status" fxLayout="column" fxLayoutAlign="center center">
+        <div fxLayout="row" fxLayoutAlign="start center">
+            <h3>{{'ROUTES.CREATE.ADD_WAYPOINT' | translate}}</h3>
+        </div>
+        <div class="workshop-selector">
+            <div>
+                <div>
+                    <h5>{{'ROUTES.CREATE.WAYPOINT_TYPES'| translate}}</h5>
+                </div>
+                <div>
+                    <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+                        [(ngModel)]="waypointTypeId">
+                        <mat-radio-button class="example-radio-button" *ngFor="let waypointType of waypointTypes"
+                            [value]="waypointType.id">
+                            {{waypointType.name | translate}}
+                        </mat-radio-button>
+                    </mat-radio-group>
+                </div>
+            </div>
+            <mat-form-field class="bike-selector">
+                <mat-select *ngIf="waypointTypeId == 1" [formControl]="dsCtrl" placeholder="{{'ROUTES.CREATE.SELECT_WAYPOINT' | translate}}"
+                    #singleSelect>
+                    <mat-option>
+                        <ngx-mat-select-search [formControl]="dsFilterCtrl"
+                            placeholderLabel="{{'ROUTES.CREATE.SEARCH_WAYPOINTS' | translate}}"
+                            noEntriesFoundLabel="{{'ROUTES.CREATE.NOT_FOUND_WAYPOINTS' | translate}}">
+                        </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let dockingStation of filteredDockingStations | async" [value]="dockingStation">
+                        {{dockingStation.Name}}
+                    </mat-option>
+                </mat-select>
+                <mat-select *ngIf="waypointTypeId == 2" [formControl]="bikeCtrl" placeholder="{{'ROUTES.CREATE.SELECT_WAYPOINT' | translate}}"
+                    #singleSelect>
+                    <mat-option>
+                        <ngx-mat-select-search [formControl]="bikeFilterCtrl"
+                            placeholderLabel="{{'ROUTES.CREATE.SEARCH_WAYPOINTS' | translate}}"
+                            noEntriesFoundLabel="{{'ROUTES.CREATE.NOT_FOUND_WAYPOINTS' | translate}}">
+                        </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let bike of filteredBikes | async" [value]="bike">
+                        {{bike.VisualId}} - {{bike.Serial}} - 
+                        <app-bike-address class="address-text-wp" [bike]="bike" [static]="true" (onAddressReceived)="updateAddress($event)"> </app-bike-address>
+                    </mat-option>
+                </mat-select>
+                <mat-select *ngIf="waypointTypeId == 3" [formControl]="wsCtrl" placeholder="{{'ROUTES.CREATE.SELECT_WAYPOINT' | translate}}"
+                    #singleSelect>
+                    <mat-option>
+                        <ngx-mat-select-search [formControl]="wsFilterCtrl"
+                            placeholderLabel="{{'ROUTES.CREATE.SEARCH_WAYPOINTS' | translate}}"
+                            noEntriesFoundLabel="{{'ROUTES.CREATE.NOT_FOUND_WAYPOINTS' | translate}}">
+                        </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let workshop of filteredWorkshops | async" [value]="workshop">
+                        {{workshop.Name}}
+                    </mat-option>
+                </mat-select>
+                <mat-select *ngIf="waypointTypeId == 4" [formControl]="storageCtrl" placeholder="{{'ROUTES.CREATE.SELECT_WAYPOINT' | translate}}"
+                    #singleSelect>
+                    <mat-option>
+                        <ngx-mat-select-search [formControl]="storageFilterCtrl"
+                            placeholderLabel="{{'ROUTES.CREATE.SEARCH_WAYPOINTS' | translate}}"
+                            noEntriesFoundLabel="{{'ROUTES.CREATE.NOT_FOUND_WAYPOINTS' | translate}}">
+                        </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let storage of filteredStorages | async" [value]="storage">
+                        {{storage.Name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="button-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+            <button mat-raised-button color="primary" class="add-btn" (click)="addWaypoint()">{{'ROUTES.CREATE.ADD' | translate}}</button>
+        </div>
+    </div>
+</div>

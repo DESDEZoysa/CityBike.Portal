@@ -1,0 +1,99 @@
+.btn-style {
+  background-color: #04a3e3;
+  border-radius: 35px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  width: 125px;
+  margin: 1px;
+  margin-top: 10px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.19);
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  display: block;
+}
+
+.fixed-height-table {
+  height: calc(100vh - 250px);
+  min-height: 200px;
+
+  @media (min-width: 560px) {
+    height: 100vh;
+  }
+
+  @media (min-width: 666px) {
+    height: calc(100vh - 100px);
+  }
+
+  @media (min-width: 768px) {
+    height: calc(100vh - 440px);
+  }
+
+  @media (min-width: 800px) and (max-width: 812px) {
+    height: 100vh;
+  }
+
+  @media (min-width: 900px) {
+    height: calc(100vh - 440px);
+  }
+}
+
+.dropdown-placeholder {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 13.5px;
+}
+
+.custom-fields-wrapper {
+  @media (min-width: 1280px) {
+    justify-content: flex-end;
+  }
+
+  &__inner {
+    font-size: 15px;
+    margin-right: 20px;
+    width: 170px;
+
+    @media (max-width: 767px) {
+      margin-bottom: 1.25em;
+
+      &:first-child {
+        margin-bottom: 0;
+      }
+    }
+
+    &:first-child {
+      // margin-right: 0;
+      width: 100%;
+
+      .mat-form-field {
+        width: 100%;
+      }
+
+      @media (min-width: 768px) {
+        width: 170px;
+      }
+
+      @media (min-width: 1024px) {
+        width: 250px;
+      }
+    }
+  }
+}
+
+.issues-custom-search {
+  .mat-form-field {
+    font-size: 14px;
+  }
+
+  button {
+    margin-bottom: 20px;
+    margin-left: 10px;
+  }
+}

@@ -1,0 +1,123 @@
+.full-width {
+  width: 250px;
+  font-size: 15px;
+}
+
+.btn-style {
+  background-color: #04A3E3;
+  border-radius: 35px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  width: 210px;
+  margin: 10px 5px 15px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.19);
+  font-size: medium;
+  font-stretch: expanded;
+  font-weight: 500;
+  font-variant: all-small-caps;
+}
+
+.btn-disabled {
+  cursor: not-allowed;
+}
+
+div,
+mat-checkbox,
+button {
+  font-family: Roboto, "Helvetica Neue", sans-serif
+}
+
+mat-checkbox {
+  margin-bottom: 5px;
+}
+
+.disabled-elem {
+  cursor: not-allowed;
+}
+
+.text-area-disabled {
+  background-color: rgb(247, 247, 242);
+}
+
+.report-error-popup-wrapper {
+
+  .mat-checkbox-label,
+  .mat-radio-label {
+    white-space: unset;
+  }
+}
+
+.ongoing-session-text {
+  color: red;
+}
+
+.faliure-type-model {
+  @media (min-width: 1280px) {
+    padding: 20px 50px 0;
+  }
+}
+
+
+.button-wrapper {
+  margin-top: 20px;
+}
+
+.problem {
+  &-modal {
+    padding: 20px 20px 0;
+  }
+
+  &-header {
+    margin-bottom: 45px;
+  }
+
+  &-vid {
+    font-size: 20px;
+    text-decoration: underline;
+    margin-bottom: 0;
+    margin: 0 0 0 20px;
+  }
+
+  &-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 15px 0 0;
+
+    @media (min-width: 600px) {
+      margin: 0 0 0 35px;
+    }
+  }
+
+  &-checkbox-wrapper {
+    margin-bottom: 45px;
+  }
+
+  &-checkbox {
+    margin-bottom: 10px;
+  }
+
+  &-textarea {
+    height: 100px;
+    resize: none;
+    width: 100%;
+  }
+
+  &-button-wrapper {
+    margin-top: 50px;
+
+    button {
+      background-color: #333F48;
+      color: #fff;
+      font-size: 11px;
+    }
+  }
+}
+
+.button-wrapper-diable { 
+    background-color: #333F48 !important;
+    color: gray !important;
+    font-size: 11px !important;
+}

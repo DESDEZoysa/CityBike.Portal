@@ -1,0 +1,23 @@
+<div class="service-main" fxLayout="row" fxLayoutAlign="center start">
+  <div class="service-main--details__tab">
+    <div>
+      <p class="service-main--details__text-with-no-data" *ngIf="!isDPHistoryLoading && resultLength == 0">
+        {{'LIVE_MAP.NO_DATA_TO_DISPLAY' | translate}}</p>
+    </div>
+
+    <!--Add expand class to show all items-->
+    <div *ngIf="undockCmdHistory && !isDPHistoryLoading"
+      [ngClass]="expandHistory == false ? 'indecators-container expand' : 'indecators-container'">
+
+      <div class="indecator-item-wrapper" *ngFor="let undockCommand of undockCmdHistory">
+        <div [ngClass]="getUndockIconCSS(undockCommand)" (click)="tooltip.toggle()"></div>
+        <div #tooltip="matTooltip" [matTooltip]="undockCommand.DisplayText" matTooltipPosition="above"
+          matTooltipClass="custom-tooltip" matTooltipTouchGestures="on" matTooltipHideDelay="5000"></div>
+      </div>
+    </div>
+    <span class="recent" *ngIf="!isDPHistoryLoading && resultLength > 0">
+      <span>{{'LIVE_MAP.RECENT' | translate}}</span>
+    </span>
+
+  </div>
+</div>

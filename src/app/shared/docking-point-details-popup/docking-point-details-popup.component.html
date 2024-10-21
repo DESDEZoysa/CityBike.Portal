@@ -1,0 +1,122 @@
+<div class="service-main">
+  <!-- Docking point sidebar left -->
+  <div class="service-main--left" fxLayout="column" fxLayoutAlign="space;-between none">
+    <div class="service-main--details">
+      <!-- Close button -->
+      <a (click)="closeDialog()" class="go-back">
+        <img src="/assets/images/map-icons/close.svg">
+      </a>
+      <!-- Docking point details header  -->
+      <div class="service-main--details__header" fxLayout="row wrap" fxLayoutAlign=" end">
+        <!-- Docking point details image -->
+        <!-- normal docking point -->
+        <img *ngIf="!dpDisabled && !dpDisabledReason" src="/assets/images/map-icons/docking-point-small.svg" width="54">
+        <!-- should be checked -->
+        <img *ngIf="!dpDisabled && dpDisabledReason == 2" src="/assets/images/map-icons/Should-be-checked-small.svg"
+          width="56">
+        <!-- disabled docking point -->
+        <img *ngIf="dpDisabled && dpDisabledReason == 1" src="/assets/images/map-icons/disabled-and-blocked-small.svg"
+          width="56">
+        <!-- needs repair docking point -->
+        <img *ngIf="dpDisabled && dpDisabledReason == 3" src="/assets/images/map-icons/must-be-checked-small.svg"
+          width="56">
+        <a class="service-main--details__bikeid">{{dockingPointData?.dpVisualId}}</a>
+        <div class="dp-name">
+          <span>{{dockingPointData?.dockingStationName}}</span>
+        </div>
+        <div>
+          <a (click)="openRepairHistory()" class="see-repair-history-link">{{'LIVE_MAP.DOCKING_POINT_DETAILS.VIEW_REPAIR_HISTORY' | translate}}</a>
+        </div>
+      </div>
+
+      <div class="service-main--footer" fxLayout="row" fxLayoutAlign="start start">
+        <!--check docking point as okay function -->
+        <!-- <div fxLayout="column" fxLayoutAlign="center center" (click)="setDockingPointAsOkay()">
+          <img src="/assets/images/map-icons/eye-done.svg">
+          <span>{{'LIVE_MAP.DOCKING_POINT_DETAILS.REGISTER_CHECK_OK' | translate}}</span>
+        </div> -->
+        <!-- report error function -->
+        <div *ngIf="!isDashboardFilter" [ngClass]="{'disabled': isSelectedDpHasErrorCategories}" fxLayout="column"
+          fxLayoutAlign="center center" (click)="reportIssueForDP()">
+          <img src="/assets/images/map-icons/eye-exclamation.svg">
+          <span class="service-main-handover">{{'LIVE_MAP.DOCKING_POINT_DETAILS.REPORT_ERROR' | translate}}</span>
+        </div>
+        <!-- docking point repair registratiom function -->
+        <div [ngClass]="{'disabled':isRepairRegistrationButtonDisabled}" fxLayout="column" fxLayoutAlign="center center"
+          (click)="openDockingPointIssueFixPopup()">
+          <img src="/assets/images/map-icons/dock-settings.svg">
+          <span>{{'LIVE_MAP.DOCKING_POINT_DETAILS.REPAIR_REGISTRATION' | translate}}</span>
+        </div>
+      </div>
+
+      <div class="service-main--details__tab" fxLayout="column">
+        <h3 class="service-main--details__title service-main--details__title--history">
+          {{'LIVE_MAP.DOCKING_POINT_DETAILS.REPORTED_ISSUES' | translate}}</h3>
+        <div *ngIf="isSelectedDpHasErrorCategories && !isDPIssuesLoading">
+          <ul role="list" class="error-cat-list">
+            <span class="service-main--details__date">
+              {{formattedDPIssueReport?.ReportedDateFormatted}} -
+              <strong>{{formattedDPIssueReport?.ReportedUser}}</strong>
+            </span>
+            <li role="listitem" *ngFor="let selectedErrorCategory of selectedDPErrorCategories">
+              {{selectedErrorCategory.Name
+              | translate}}</li>
+          </ul>
+        </div>
+        <div *ngIf="isSelectedDpHasErrorCategories && !isDPIssuesLoading">
+          <p class="error-label">
+            {{'REPAIR_HISTORY.COMMENTS' | translate}} :
+          </p>
+          <p class="error-comment"><i>{{activeDockingPointErrorComments}}</i></p>
+        </div>
+        <div>
+          <p class="service-main--details__text-with-no-data"
+            *ngIf="!isSelectedDpHasErrorCategories && !isDPIssuesLoading">
+            {{'LIVE_MAP.NO_DATA_TO_DISPLAY' | translate}}</p>
+        </div>
+        <div *ngIf="isDPIssuesLoading" class="bike-dp-loader">
+          <img src="assets/images/preloader-gray.svg" width="80" />
+        </div>
+      </div>
+
+      <div class="service-main--details__tab" fxLayout="column">
+        <h3 class="service-main--details__title service-main--details__title--history">
+          {{'LIVE_MAP.DOCKING_POINT_DETAILS.HISTORY_DETAILS' | translate}}</h3>
+        <div class="service-main--details__tab service-main--details__tab--scroller-history">
+          <div>
+            <p class="service-main--details__text-with-no-data" *ngIf="!isDPHistoryLoading && resultLength == 0">
+              {{'LIVE_MAP.NO_DATA_TO_DISPLAY' | translate}}</p>
+          </div>
+          <span *ngIf="resultLength > 0" class="see-more" (click)="expandHistoryDetail()">{{'LIVE_MAP.SEE_OLDER' |
+            translate}}</span>
+
+          <!--Add expand class to show all items-->
+          <div *ngIf="undockCmdHistory"
+            [ngClass]="expandHistory == false ? 'indecators-container expand' : 'indecators-container'">
+
+            <div class="indecator-item-wrapper" *ngFor="let undockCommand of undockCmdHistory">
+              <div [ngClass]="getUndockIconCSS(undockCommand)" (click)="tooltip.toggle();"></div>
+              <div #tooltip="matTooltip" [matTooltip]="undockCommand.DisplayText" matTooltipPosition="above"
+                matTooltipClass="custom-tooltip" matTooltipTouchGestures="on" matTooltipHideDelay="5000"></div>
+            </div>
+          </div>
+          <span class="recent" *ngIf="resultLength > 0">
+            <span>{{'LIVE_MAP.RECENT' | translate}}</span>
+          </span>
+          <span class="see-less">
+            <span *ngIf="!expandHistory" (click)="reduceHistoryDetail()">{{'LIVE_MAP.SEE_LESS' | translate}}</span>
+          </span>
+
+          <div *ngIf="isDPHistoryLoading" class="bike-dp-loader">
+            <img src="assets/images/preloader-gray.svg" width="80" />
+          </div>
+        </div>
+        <span class="error-rate" *ngIf="displayPercentage">{{'LIVE_MAP.ERROR_RATE' | translate}}:
+          {{displayPercentage}}%</span>
+      </div>
+
+    </div>
+
+  </div>
+  <!-- / Docking point sidebar left -->
+</div>

@@ -1,0 +1,510 @@
+.service-main {
+  height: 100%;
+  position: relative;
+  width: 100%;
+
+  &--loader {
+    background-color: rgba(#fff, 0.5);
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+
+    img {
+      width: 100px;
+    }
+  }
+
+  &--left {
+    height: 100%;
+  }
+
+  &__icon {
+    margin-right: 5px;
+    width: 100px;
+  }
+
+  &__icon-street-team {
+    margin-right: 5px;
+    width: 89px;
+  }
+
+  &--details {
+    padding-top: 30px;
+    position: relative;
+
+    &__issue {
+      margin-bottom: 15px;
+    }
+
+    &__header {
+      padding-left: 16px;
+
+      .go-back {
+        padding: 5px 5px 3px 5px;
+        position: absolute;
+        right: -5px;
+        top: -10px;
+        transition: 0.3s;
+
+        &:hover {
+          background-color: #f3f3f3;
+        }
+
+        &:focus,
+        &:active {
+          background-color: #f0f0f0;
+        }
+      }
+
+      .lock-status {
+        cursor: pointer;
+        font-size: 12px;
+        padding: 5px;
+        transition: 0.3s;
+
+        &:hover {
+          background-color: #f3f3f3;
+        }
+
+        &:focus,
+        &:active {
+          background-color: #f0f0f0;
+        }
+      }
+
+      .status-notice {
+        p {
+          margin-bottom: 0;
+
+          &:first-child {
+            margin-right: 70px;
+            font-weight: bold;
+          }
+
+          // &:last-child {
+          //   color: #00aa50;
+          // }
+        }
+      }
+    }
+
+    &__bikeid {
+      font-size: 33px;
+      margin: 0 24px;
+      text-decoration: underline;
+    }
+
+    &__tab {
+      border-bottom: 1px solid #adadad;
+      margin: 0;
+      min-height: 165px;
+      padding: 24px 16px 14px;
+      position: relative;
+
+      &--meta {
+        min-height: auto;
+
+        .service-main--details__tab--item {
+          div {
+            width: 35px;
+          }
+        }
+      }
+
+      &:last-child {
+        border: 0 none;
+      }
+
+      &--scroller {
+        position: relative;
+
+        .loader {
+          align-items: center;
+          background-color: rgba(#fff, 0.5);
+          display: flex;
+          height: 100%;
+          justify-content: center;
+          left: 0;
+          position: absolute;
+          top: 0;
+          width: 100%;
+        }
+
+        &-history {
+          position: relative;
+        }
+      }
+
+      &--item {
+        margin-bottom: 5px;
+
+        div {
+          img {
+            display: block;
+            margin: 0 auto;
+          }
+        }
+
+        p {
+          font-size: 12px;
+          margin: 0;
+        }
+      }
+
+      &--scroller-history {
+        border: 0 none;
+        margin: 0 0 15px;
+        min-height: 100px;
+        padding: 0;
+      }
+
+      &--history {
+        padding-bottom: 30px;
+      }
+    }
+
+    &__title {
+      font-size: 24px;
+      font-weight: 400;
+      margin: 0 0 10px;
+
+      &--history {
+        margin-bottom: 3px;
+        margin-left: 8px;
+      }
+    }
+
+    &__date {
+      font-size: 11px;
+    }
+
+    &__text-with-icon {
+      font-size: 14px;
+      margin: 5px 0 10px;
+      padding-left: 30px;
+      position: relative;
+
+      &:last-child {
+        margin-bottom: 20px;
+      }
+
+      &::before {
+        background-color: #000;
+        border-radius: 50%;
+        content: "";
+        display: block;
+        height: 8px;
+        left: 17px;
+        position: absolute;
+        top: 4px;
+        width: 8px;
+      }
+
+      &--sms {
+        &::before {
+          background-color: transparent;
+          background-image: url('/assets/images/sms.svg');
+          background-size: contain;
+          border-radius: 0;
+          height: 14px;
+          left: 11px;
+          top: 2px;
+          width: 15px;
+        }
+      }
+    }
+
+    &__text-with-no-data {
+      font-size: 14px;
+      margin-bottom: 0;
+      padding-left: 30px;
+      position: relative;
+
+      &:last-child {
+        margin-bottom: 20px;
+      }
+    }
+  }
+
+  &--footer {
+    border-bottom: 1px solid #adadad;
+    padding: 24px 15px;
+
+    >div {
+      cursor: pointer;
+      margin-right: 50px;
+      padding: 5px;
+      transition: 0.3s;
+
+      &:hover {
+        background-color: #f3f3f3;
+      }
+
+      &:focus,
+      &:active {
+        background-color: #f0f0f0;
+      }
+
+      span {
+        font-size: 12px;
+      }
+    }
+
+    a {
+      background-color: #333f48;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      padding: 13px 35px;
+      transition: 0.3s;
+
+      &:hover {
+        background-color: darken(#333f48, 5%);
+      }
+
+      &:active,
+      &:focus {
+        background-color: darken(#333f48, 10%);
+      }
+    }
+
+    p {
+      font-size: 12px;
+      margin: 7px 0 10px;
+
+      @media (min-width: 960px) {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &--right {
+    height: calc(100vh - 115px);
+    overflow: auto;
+    padding: 20px 60px;
+
+    h3 {
+      font-size: 35px;
+      margin-top: 0;
+      text-align: center;
+    }
+
+    &__item {
+      margin-bottom: 23px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &--img {
+        margin-right: 20px;
+        width: 40px;
+      }
+
+      &--details {
+        h4 {
+          font-weight: 400;
+          margin: 0;
+        }
+
+        p {
+          color: #adadad;
+          font-size: 13px;
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+.service-main-handover {
+  white-space: nowrap;
+}
+
+.freebike-lock-unlock {
+  opacity: 25%;
+  cursor: default !important;
+  pointer-events: none;
+}
+
+.see-more {
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 22px;
+  letter-spacing: -0.41px;
+  margin-left: 8px;
+  margin-top: 10px;
+  text-decoration-line: underline;
+}
+
+.see-less {
+  @extend .see-more;
+  text-decoration: none;
+  
+  display: block;
+  margin: 5px 0 0 0;
+  text-align: right;
+  width: 100%;
+}
+
+.recent {
+  @extend .see-less;
+
+  color: #ADADAD;
+  cursor: default;
+  margin-left: 0;
+}
+
+.indecators-container {
+  display: flex;
+  flex-direction: row-reverse;
+  flex-wrap: wrap-reverse;
+  height: 50px;
+  overflow: hidden;
+  padding: 10px 7px 0 0;
+
+  &.expand {
+    height: auto;
+  }
+}
+
+.indecator-item-wrapper {
+  cursor: pointer;
+  margin: 30px 8px 0;
+}
+
+.indecator-item {
+  background-color: #00AA50;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 23px;
+  min-width: 23px;
+  position: relative;
+  transition: 0.2s;
+  width: 23px;
+
+  &.clicked {
+    border: 2px solid #00AA50;
+  }
+
+  &.red {
+    background-color: #DF2A2A;
+
+    &.clicked {
+        border: 2px solid #DF2A2A;
+      }
+
+    &::before {
+      background-image: url("/assets/images/history-red-cross.svg");
+      background-repeat: no-repeat;
+      content: "";
+      display: block;
+      height: 100%;
+      left: 3.5px;
+      position: absolute;
+      top: 4px;
+      width: 100%;
+    }
+  }
+
+  &.key {
+    &::after {
+      background-image: url("/assets/images/key.svg");
+      background-repeat: no-repeat;
+      content: "";
+      display: block;
+      height: 16px;
+      right: -16px;
+      position: absolute;
+      top: -10px;
+      width: 14px;
+    }
+  }
+
+  &.eye {
+    &::after {
+      background-image: url("/assets/images/eye.svg");
+        background-repeat: no-repeat;
+        content: "";
+        display: block;
+        height: 14px;
+        left: 1px;
+        margin: auto;
+        position: absolute;
+        right: 0;
+        top: -15px;
+        width: 14px;
+    }
+  }
+}
+
+.error-rate {
+  bottom: 30px;
+  color: #ADADAD;
+  font-size: 11px;
+  left: 0;
+  margin-left: 10px;
+  position: absolute;
+}
+
+.custom-tooltip {
+  background-color: #FFFFFF;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  bottom: 15px;
+  color: #000000 !important;
+  font-size: 14px;
+  line-height: 22px;
+  padding: 5px 5px 10px;
+  position: relative;
+  white-space: pre-line;
+
+  // &::after {
+  //   border-left: 12px solid transparent;
+  //   border-right: 14px solid transparent;
+  //   border-top: 12px solid #000;
+  //   bottom: -5px;
+  //   content: "";
+  //   display: block;
+  //   left: 50%;
+  //   position: absolute;
+  //   transform: translateX(-50%);
+  //   width: 1px;
+  // }
+}
+
+.bike-dp-loader {
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.skip-done-btn-wrapper {
+  margin: 20px 0 10px 10px;
+
+  button {
+    align-items: center;
+    box-shadow: 0px 0.5px 1px 1px rgba(#000, 0.2);
+    display: inline-flex;
+    height: 25px;
+    justify-content: center;
+    transition: 0.2s;
+    margin-top: -10px;
+    width: 25px;
+
+    &:hover {
+      box-shadow: 0px 1px 5px 1px rgba(#000, 0.2);
+    }
+
+    &:not(:last-of-type) {
+      margin-right: 10px;
+    }
+  }
+}

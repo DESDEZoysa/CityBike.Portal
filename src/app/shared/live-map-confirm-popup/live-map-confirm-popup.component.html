@@ -1,0 +1,25 @@
+<div class="service-main">
+  <div class="service-main--loader" *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center center">
+    <img class="tire-pressure-loader" src="assets/images/preloader.svg" *ngIf="isLoading" />
+  </div>
+
+  <div class="bike-workshop-status" fxLayout="column" fxLayoutAlign="center center">
+    <img *ngIf="isBikeOkay && !isShouldBeChecked && !isBikeNeedsRepair" src="assets/images/map-icons/to-ws-popup.svg">
+    <img *ngIf="isBikeOkay && isShouldBeChecked" src="assets/images/map-icons/docked-yellow.svg">
+    <img *ngIf="isBikeOkay && isBikeNeedsRepair" src="assets/images/map-icons/docked-purple.svg">
+    <p *ngIf="isBikeOkay"  class="bike-sb-ok-text">{{'LIVE_MAP.FINISHED' | translate}}</p>
+    <p *ngIf="isBikeOkay && isShouldBeChecked"  class="bike-sb-ok-text">{{'LIVE_MAP.KEEP_IN_USE_STATUS' | translate}}</p>
+    <a *ngIf="isBikeOkay" mat-raised-button (click)="this.dialogRef.close()" class="ok-green-btn">{{'LIVE_MAP.OK' | translate}}</a>
+
+    <div *ngIf="!isBikeOkay">
+      <img class="go-to-workshop" src="assets/images/map-icons/ready-from-ws.svg">
+      <p class="go-to-workshop">{{'LIVE_MAP.YOU_CAN_BRING_TO_WORKSHOP' | translate}} {{bike.VisualId}}
+        {{'LIVE_MAP.TAKE_TO_WORKSHOP' | translate}}</p>
+      <p class="go-to-workshop">{{'LIVE_MAP.KEEP_IT_AT_SAME_PLACE' | translate}}</p>
+    </div>
+    <div class="go-to-workshop-btn-wrapper" fxLayout="column" fxLayout.gt-xs="row wrap" fxLayoutAlign="center center" fxLayoutAlign.gt-xs="space-between center">
+      <a [disabled]="isBikeDisabled" *ngIf="!isBikeOkay" mat-raised-button (click)="placeBikeShouldBeChecked()" class="keep-in-use" [ngClass]="isBikeDisabled ? 'disabled' : ''">{{'LIVE_MAP.KEEP_IN_USE' | translate}}</a>
+      <a *ngIf="!isBikeOkay" class="go-to-workshop-purple"  mat-raised-button (click)="placeAtSamePlace()">{{'LIVE_MAP.LET_STAND_HERE' | translate}}</a>
+      <a  *ngIf="!isBikeOkay" class="go-to-workshop" mat-raised-button (click)="takeToWorkshop()">{{'LIVE_MAP.TAKE_TO_CAR_NOW' | translate}}</a>
+    </div>
+  </div>

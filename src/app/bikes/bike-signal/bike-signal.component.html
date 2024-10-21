@@ -1,0 +1,67 @@
+<div class="result-container">
+  <div class="quality-loader" fxLayout="row" fxLayoutAlign="center center" *ngIf="isLoading">
+    <img src="assets/images/preloader.svg" width="100" />
+  </div>
+  <mat-card class="pad">
+    <mat-card-title style="margin-left: 24px;margin-top: 24px">
+      <div class="signal-title-wrapper" style="padding-bottom: 10px;">
+        <a [routerLink]="['/bikes']" class="bc-link">{{ 'COMMON.BIKES' | translate }}</a>
+        <span class="bc-separator"> / </span>
+        <a [routerLink]="['/bikes/',bikeId,'details']" class="bc-link">{{visualId}}</a>
+        <span class="bc-separator"> / </span>
+        <span class="bc-current"> {{ 'SIGNAL.TITLE' | translate }}</span>
+      </div>
+    </mat-card-title>
+    <mat-card>
+      <div fxLayout="column" fxLayout.gt-xs="row">
+        <div fxFlex="100%" fxFlex.gt-xs="55%">
+          <div class="detail-field" fxLayout="row" fxLayoutAlign="start center">
+            <span class="detail-field-label">{{ 'SIGNAL.ANALYSIS' | translate }} :</span>
+            <mat-select class="bike-signal-selector" [(value)]="selectedFilter">
+			          <mat-option *ngFor="let connectionFilter of connectionsFilters" [disabled]="connectionFilter.Disabled" [value]="connectionFilter.Id" (selectionChange)="onConnectionFilterChange($event)">{{connectionFilter.Name}}</mat-option>
+			      </mat-select >
+          </div>
+
+          <div class="detail-field button-wrapper" fxLayout="row" fxLayoutAlign="start center">
+            <span class="detail-field-label"></span>
+            <a mat-raised-button color="primary" class="bike-signal-refresh" (click)="onRefreshQualityObservation()">{{ 'SIGNAL.REFRESH' | translate }}</a>
+          </div>
+
+          <div class="detail-field" fxLayout="row" style="margin-bottom: 20px;" fxLayoutAlign="start center">
+            <span class="detail-field-label">{{ 'SIGNAL.CONNECTION' | translate }} :</span>
+            <span class="detail-field-value">{{connection}}</span>
+          </div>
+
+<!------------GSM SECTION-------------------------------------------------------------------------->
+          <div *ngIf="isGSM && connection" class="detail-field" fxLayout="row" fxLayoutAlign="start center">
+            <span class="detail-field-label">{{ 'SIGNAL.RSSI' | translate }} :</span>
+            <div fxLayout="column" fxLayoutAlign="start start">
+              <div class="color-indecator" [ngClass]="getRSSIStyle()">{{qualityRSSIValue}}</div>
+            </div>
+          </div>
+
+
+<!------------CAT SECTION-------------------------------------------------------------------------->
+          <div *ngIf="!isGSM && connection" class="detail-field" fxLayout="row" fxLayoutAlign="start center">
+            <span class="detail-field-label">{{ 'SIGNAL.RSRP' | translate }} :</span>
+            <div  fxLayout="column" fxLayoutAlign="start start">
+              <div class="color-indecator" [ngClass]="getRSRPStyle()">{{qualityRSRPValue}}</div>
+            </div>
+          </div>
+          <div *ngIf="!isGSM && connection" class="detail-field" fxLayout="row" fxLayoutAlign="start center">
+            <span class="detail-field-label">{{ 'SIGNAL.SINR' | translate }} :</span>
+            <div  fxLayout="column" fxLayoutAlign="start start">
+              <div class="color-indecator" [ngClass]="getSINRStyle()">{{qualitySINRValue}}</div>
+            </div>
+          </div>
+          <div *ngIf="!isGSM && connection" class="detail-field" fxLayout="row" fxLayoutAlign="start center">
+            <span class="detail-field-label">{{ 'SIGNAL.RSRQ' | translate }} :</span>
+            <div fxLayout="column" fxLayoutAlign="start start">
+              <div class="color-indecator" [ngClass]="getRSRQStyle()">{{qualityRSRQValue}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </mat-card>
+</div>

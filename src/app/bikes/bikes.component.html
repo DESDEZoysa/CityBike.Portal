@@ -1,0 +1,263 @@
+<div id="bikes" class="result-container" (window:resize)="onResize()">
+  <mat-card>
+    <mat-card-title fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="space-between center">
+      <span class="card-title"> {{ 'COMMON.BIKES' | translate }} </span>
+
+
+      <div class="search-bar" fxFlex style="">
+        <form class="search-form" fxShow="true" fxShow.gt-xs>
+          <i class="material-icons"> search </i>
+          <input #search autofocus type="text" [(ngModel)]="searchItem" placeholder="{{'COMMON.SEARCH' | translate}}"
+            autofocus="true" (ngModelChange)="searchBike($event)" id="search" name="search" />
+        </form>
+      </div>
+
+      <!-- Web view -->
+      <div class="bike-selector-wrapper" fxLayout="row">
+        <div fxShow="false" fxShow.gt-sm>
+          <!-- <div class="dropdown">
+            <button class="btn-tc">
+              <i class="material-icons">file_download</i>
+            </button>
+            <div class="dropdown-content">
+              <button (click)="downLoadPdf()">Pdf</button>
+              <button (click)="downLoadExcel()">Excel</button>
+            </div>
+          </div> -->
+          <div fxLayout="row">
+            <mat-form-field style="margin-right: 10px;" class="bike-selector bike-selector__area">
+              <mat-select [formControl]="areaMultiCtrl" placeholder="{{'DOCKING_STATION.AREA' | translate}}"
+                #multiSelect [multiple]="true" (openedChange)="filterByAreas($event)">
+                <mat-option>
+                  <ngx-mat-select-search [showToggleAllCheckbox]="true" [(toggleAllCheckboxChecked)]="toggleAllSelected"
+                    (toggleAll)="toggleSelectAll($event)" [formControl]="areaMultiFilterCtrl"
+                    placeholderLabel="{{'DOCKING_STATION.AREA_SEARCH' | translate}}"
+                    noEntriesFoundLabel="{{'DOCKING_STATION.NOT_FOUND_AREA' | translate}}">
+                  </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let area of filteredAreaMulti | async" [value]="area">
+                  {{area.Name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field style="margin-right: 10px;" class="bike-selector">
+              <mat-select [(value)]="selectedVal" (selectionChange)="filterBikesByModeId()">
+                <mat-option *ngFor="let mode of bikeModes" value={{mode.Id}}>
+                  {{ mode.Name | translate}} ({{mode.TotalCount}})
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <a mat-raised-button routerLink="/bikes/live">
+              <i class="material-icons" matTooltip="{{ 'BIKES_LIST.ALL' | translate }}">place</i>
+              <small> {{ 'BIKES_LIST.ALL' | translate }}</small>
+            </a>
+          </div>
+        </div>
+
+
+        <!-- Mobile View -->
+        <div fxHide="false" fxHide.gt-sm fxLayout="row wrap" fxFlex>
+          <!-- <div class="dropdown">
+            <button class="btn-tc">
+              <i class="material-icons">file_download</i>
+            </button>
+            <div class="dropdown-content">
+              <button (click)="downLoadPdf()">Pdf</button>
+              <button (click)="downLoadExcel()">Excel</button>
+            </div>
+          </div> -->
+          <mat-form-field class="bike-selector" fxFlex="100" fxFlex.gt-xs="50">
+            <mat-select [formControl]="areaMultiCtrl" placeholder="{{'DOCKING_STATION.AREA' | translate}}" #multiSelect
+              [multiple]="true" (openedChange)="filterByAreas($event)">
+              <mat-option>
+                <ngx-mat-select-search [showToggleAllCheckbox]="true" [toggleAllCheckboxChecked]="true"
+                  (toggleAll)="toggleSelectAll($event)" [formControl]="areaMultiFilterCtrl"
+                  placeholderLabel="{{'DOCKING_STATION.AREA_SEARCH' | translate}}"
+                  noEntriesFoundLabel="'no matching area found'">
+                </ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let area of filteredAreaMulti | async" [value]="area">
+                {{area.Name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="bike-selector">
+            <mat-select [(value)]="selectedVal" (selectionChange)="filterBikesByModeId()">
+              <mat-option *ngFor="let mode of bikeModes" value={{mode.Id}}>
+                {{ mode.Name}} ({{mode.TotalCount}})
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <a mat-raised-button routerLink="/bikes/live" class="map-button">
+            <i class="material-icons" matTooltip="{{ 'BIKES_LIST.ALL' | translate }}">place</i>
+            <small class="font-mobile"> {{ 'BIKES_LIST.ALL' | translate }}</small>
+          </a>
+        </div>
+      </div>
+    </mat-card-title>
+
+    <mat-card-content>
+      <ngx-datatable class="material expandable fixed-height-table" [rows]="bikes" [loadingIndicator]="loadingIndicator"
+        [columnMode]="'force'" [headerHeight]="50" #bikeTable [footerHeight]="50" [scrollbarH]="false"
+        [scrollbarV]="true" [rowHeight]="50" [sorts]="[{prop: 'VisualId'}]">
+
+        <!-- Row Detail Template -->
+        <ngx-datatable-row-detail [rowHeight]="200" #bikeDetailRow *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+            <div style="padding-left:15px;">
+              <div>
+                <strong>{{'BIKE.SERIAL'|translate}} :</strong> {{row.Serial}}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'BIKE.MODE'|translate}} :</strong> {{row.BikeModeId | bikeModes}}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'BIKE.CHARGE_LEVEL'|translate}} :</strong> {{row.ChargeLevel}}
+              </div>
+              <!-- <div style="padding-top:10px;">
+                <strong>{{'BIKE.GRACE_PERIOD'|translate}} :</strong> {{row.GracePeriodDuration}}
+              </div> -->
+              <div style="padding-top:10px;">
+                <strong>{{'BIKE.ODOMETER'|translate}} :</strong> {{ row.AccumulateTotalDistance > 0 ?
+                row.AccumulateTotalDistance.toFixed(2):0 }} km
+              </div>
+              <div style="padding-top:10px;" class="wordwrap">
+                <strong>{{'BIKE.ADDRESS'|translate}} : </strong>
+                <app-bike-address [bike]="row" (onAddressReceived)="updateAddress($event)" style="padding-right:15px;">
+                </app-bike-address>
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'BIKE.SESSION'|translate}} :
+                  <span *ngIf="row.SessionId" (click)="navigateToBikeSession(row.SessionId)">
+                    <a style="color:#007dbd;">Yes</a>
+                  </span>
+                  <span *ngIf="!row.SessionId">No</span>
+                </strong>
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-row-detail>
+
+        <!-- Column Templates -->
+        <ngx-datatable-column [width]="20" [resizeable]="false" [sortable]="false" [draggable]="false"
+          [canAutoResize]="false" *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+            <a [ngClass]="{'disable':row.Disabled === true}" href="javascript:void(0)"
+              [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+              title="Expand/Collapse Row" (click)="toggleExpandRow(row)">
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column fxFlex="22" fxHide.sm prop="bikeStatusColor" name=" " [flexGrow]="0" [minWidth]="55"
+          [width]="2" [maxWidth]="100">
+          <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+            <div *ngIf="value && row.SessionId == null" class="circle" [style.background-color]="value"
+              matTooltip="{{row.bikeStatus | translate}}">
+            </div>
+            <div *ngIf="value && row.SessionId != null" matTooltip="{{row.bikeStatus | translate}}">
+              <img src="/assets/images/map-icons/bike-session-large.svg" style="margin-left: -11px; width: 28px;" />
+            </div>
+            <div *ngIf="!value && row.DisabledReason != 26 && row.DisabledReason != 27" class="circle-with-border "
+              matTooltip="{{row.bikeStatus | translate}}">
+            </div>
+            <div *ngIf="!value && row.DisabledReason == 26" matTooltip="{{row.bikeStatus | translate}}">
+              <img src="/assets/images/map-icons/bike-street-team-circle-lg.svg"
+                style="margin-left: -4px; width: 23px;" />
+            </div>
+            <div *ngIf="!value && row.DisabledReason == 27" matTooltip="{{row.bikeStatus | translate}}">
+              <img src="/assets/images/map-icons/bike-on-loan.svg" style="margin-left: -11px; width: 28px;" />
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+
+        <ngx-datatable-column prop="VisualId" fxFlex="22" fxHide.sm name="Id" [flexGrow]="0.25" [width]="50"
+          [maxWidth]="150">
+          <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+            <!-- (click)="navigateToBikeDetails(row.BikeId)" -->
+            <span [ngClass]="{'disable':row.Disabled === true}">
+              <a routerLink="/bikes/{{row.BikeId}}/details"
+                style="color:#007dbd;vertical-align: super;">{{row.VisualId}}</a>
+            </span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="Serial" name="{{'BIKE.SERIAL'|translate}}" [flexGrow]="0.5" [minWidth]="100"
+          [width]="50" [maxWidth]="175" *ngIf="!isMobile && layout > LAYOUT.SM">
+          <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+            <span [ngClass]="{'disable':row.Disabled === true}">{{ value }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="{{'BIKE.ADDRESS'|translate}}" [flexGrow]="1.5" [minWidth]="200" [width]="250"
+          *ngIf="!isMobile && layout > LAYOUT.MD">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <app-bike-address [ngClass]="{'disable':row.Disabled === true}" [bike]="row"
+              (onAddressReceived)="updateAddress($event)"></app-bike-address>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="BikeModeId" name="{{'BIKE.MODE'|translate}}" [flexGrow]="0.5" [minWidth]="100"
+          [width]="50" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+            <span>{{ value | bikeModes }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="ChargeLevel" name="{{'BIKE.CHARGE_LEVEL'|translate}}" [flexGrow]="0.5"
+          [minWidth]="60" [maxWidth]="150" [width]="70" *ngIf="!isMobile && layout > LAYOUT.XS">
+          <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+            <span [ngClass]="{'disable':row.Disabled === true}">{{ (value / 100) | percent:'1.0-1' | replace:'.0%':'%'
+              }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <!-- <ngx-datatable-column prop="GracePeriodDuration" name="{{'BIKE.GRACE_PERIOD'|translate}}" [flexGrow]="0.5"
+          [minWidth]="60" [width]="70" [maxWidth]="185" *ngIf="!isMobile && layout > LAYOUT.XS">
+          <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+            <span [ngClass]="{'disable':row.Disabled === true}">{{ value }}</span>
+          </ng-template>
+        </ngx-datatable-column> -->
+
+        <ngx-datatable-column prop="AccumulateTotalDistance" name="{{'BIKE.ODOMETER'|translate}}" [flexGrow]="0.5"
+          [minWidth]="60" [width]="70" [maxWidth]="185" *ngIf="!isMobile && layout > LAYOUT.XS">
+          <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+            <span [ngClass]="{'disable':row.Disabled === true}">
+              {{ value > 0 ? value.toFixed(2):0 }} km</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+
+        <ngx-datatable-column prop="SessionId" name="{{'BIKE.SESSION'|translate}}" [flexGrow]="0.2" [minWidth]="20"
+          [maxWidth]="125" [width]="20" *ngIf="!isMobile && layout > LAYOUT.SM">
+          <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+
+            <span [ngClass]="{'disable':row.Disabled === true}" *ngIf="row.SessionId"
+              (click)="navigateToBikeSession(row.SessionId)">
+              <a style="color:#007dbd;vertical-align: super;">Yes</a>
+            </span>
+            <span *ngIf="!row.SessionId">No</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="BikeId" name="" [flexGrow]="0.75" [width]="110" [maxWidth]="165">
+          <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+            <a class="list-icon" matTooltip="{{ 'COMMON.DETAILS_HINT' | translate }}" mat-icon-button
+              routerLink="/bikes/{{value}}/details">
+              <mat-icon>list</mat-icon>
+            </a>
+            <a class="list-icon" matTooltip="{{ 'BIKE.LOCATION' | translate }}" mat-icon-button
+              routerLink="/bikes/{{value}}/track">
+              <mat-icon>place</mat-icon>
+            </a>
+            <a class="list-icon" matTooltip="{{ 'BIKE.SUPPORT' | translate }}" mat-icon-button
+              (click)="navigateToBikeSupportPage(row.VisualId)">
+              <mat-icon>info</mat-icon>
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </mat-card-content>
+  </mat-card>
+</div>

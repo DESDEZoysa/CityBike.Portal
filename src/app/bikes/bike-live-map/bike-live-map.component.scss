@@ -1,0 +1,33 @@
+.font {
+    font-size: 12px;
+}
+
+.date-picker-row {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.date-picker-column {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+}
+
+.date-picker-row md-form-field,
+.date-picker-row button {
+    margin: 0 20px;
+}
+
+.toggle-bar {
+    height: 40px;
+    margin-top: -5px; // margin-top: 10px;
+    // margin-bottom: 10px;
+    // margin-right: 10px; 
+}
+
+.font-mobile {
+    font-size: 12px;
+    margin-left: -2px;
+    margin-right: -2px;
+}

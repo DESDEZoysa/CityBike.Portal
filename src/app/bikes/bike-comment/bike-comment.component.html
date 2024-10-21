@@ -1,0 +1,16 @@
+<div class="comment-wrapper">
+  <!-- <div class="center"> -->
+  <div class="container">
+    <br>
+    <mat-form-field>
+      <textarea matInput placeholder="{{ 'BIKE.COMMENT'| translate}}" style="font-size: 14px;" [(ngModel)]="comments"></textarea>
+    </mat-form-field>
+  </div>
+  <!-- </div> -->
+  <div style="position: relative; padding-right: 5px;padding-bottom: 5px;">
+    <div fxFlex="1 1 auto" class="fill-remaining-space"></div>
+    <button mat-raised-button color="primary" (click)="saveComment()">
+      <small class="font"> {{ 'COMMON.SAVE' | translate }}</small>
+    </button>
+  </div>
+</div>

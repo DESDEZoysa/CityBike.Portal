@@ -1,0 +1,7 @@
+<!-- bread crumb -->
+<div class="bc bc-top">
+  <a [routerLink]="['/dockingStations']" class="bc-link">{{ 'COMMON.DOCKING_STATIONS' | translate }}</a>
+  <span class="bc-separator"> / </span>
+  <span class="bc-current">{{ 'COMMON.LIVE' | translate }}</span>
+</div>
+<app-live-map class="live-map-zoom"></app-live-map>

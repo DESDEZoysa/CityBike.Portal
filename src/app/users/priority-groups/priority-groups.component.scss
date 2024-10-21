@@ -1,0 +1,17 @@
+.fixed-height-table {
+  height: calc(100vh - 160px);
+  min-height: 200px;
+
+  @media (min-width: 768px) {
+    height: calc(100vh - 170px);
+  }
+
+  @media (min-width: 960px) {
+    height: calc(100vh - 165px);
+  }
+}
+
+.column-value {
+  // margin-left: 7px;
+  position: relative;
+}

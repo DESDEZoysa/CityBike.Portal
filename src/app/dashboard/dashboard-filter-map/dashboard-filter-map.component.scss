@@ -1,0 +1,1057 @@
+.map {
+  width: 100%;
+  height: 92.5vh;
+}
+
+.popup {
+  background: #ff2c00;
+  padding: 3px;
+  color: white;
+  opacity: 0.8;
+  position: relative;
+  white-space: nowrap;
+  font-size: 0.9em;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.map-legend {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.legend-item {
+  line-height: 30px; //padding: 0 10px;
+  font-size: 0.9em;
+}
+
+.quarts {
+  float: left;
+  width: 100px;
+  // margin-left: 20px;
+  font-size: 13px;
+  height: 40px;
+  color: black;
+}
+
+.circle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  float: left;
+  margin: 5px;
+  border: 2px solid;
+}
+
+.legend-mobile {
+  position: absolute;
+  height: 15vh;
+  width: 100%;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.square {
+  width: 20px;
+  height: 20px;
+  float: left;
+  margin: 5px;
+  border: 2px solid;
+}
+
+.square-mini {
+  width: 15px;
+  height: 15px;
+  float: left;
+  margin: 5px;
+  border: 2px solid;
+}
+
+.marker-txt {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  width: 35px;
+  height: 35px;
+  background-color: rgba(#333f48, 0.9);
+  border-radius: 4px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.marker-txt2 {
+  position: absolute;
+  right: -9px;
+  top: -9px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 7pt;
+  width: 16px;
+  height: 16px;
+  background-color: red;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.docking-stations-map {
+  height: calc(100vh - 56px);
+  min-height: 200px;
+
+  @media (min-width: 768px) {
+    height: calc(100vh - 66px);
+  }
+
+  // @media only screen and (min-device-width: 768px) and (max-device-width: 1366px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: landscape) {
+  //   height: calc(100vw - 66px);
+  // }
+}
+
+.example-container {
+  // width: 500px;
+  // height: 300px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.example-sidenav-content {
+  display: block;
+  height: 100%;
+}
+
+.mat-drawer-content {
+  position: relative;
+  z-index: 1;
+  display: contents;
+  height: 100%;
+  overflow: auto;
+}
+
+.example-card {
+  margin: 0 auto;
+
+  &:first-child {
+    margin-bottom: 7px;
+  }
+
+  &.mat-card {
+    padding: 0 30px 0 40px;
+
+    @media (max-width: 959px) {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    @media (max-width: 767px) {
+      padding-left: 0;
+    }
+  }
+
+  &.header-card {
+    padding: 25px 30px 10px 40px;
+  }
+
+  &.header-card-bikes {
+    padding: 50px 10px 15px 20px;
+  }
+
+  &.sub-card {
+    mat-card-content {
+      padding: 20px 10px 15px 20px;
+
+      @media (min-width: 1024px) {
+        padding: 20px 0 15px;
+      }
+    }
+  }
+}
+
+.example-header-image {
+  background-image: url("https://material.angular.io/assets/img/examples/shiba1.jpg");
+  background-size: cover;
+}
+
+.example-sidenav {
+  max-width: 578px;
+  width: 50%;
+  z-index: 100000 !important;
+
+  @media (max-width: 767px) {
+    width: 90%;
+  }
+}
+
+mat-card {
+  mat-card-header {
+    position: relative;
+    // width: 100%;
+
+    .close {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+    mat-card-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+
+      mat-form-field {
+        font-size: initial;
+        margin-bottom: -1.25em;
+      }
+    }
+
+    .card-marker {
+      cursor: pointer;
+      padding: 5px;
+      position: absolute;
+      right: 40px;
+      top: 40px;
+      transition: 0.3s;
+
+      @media (min-width: 768px) {
+        top: 30px;
+      }
+
+      &:hover {
+        background-color: #f3f3f3;
+      }
+
+      &:focus,
+      &:active {
+        background-color: #f0f0f0;
+      }
+
+      &__cycle {
+        border-radius: 5px;
+        color: #fff;
+        height: 35px;
+        min-width: 35px;
+        padding: 0 5px;
+        position: relative;
+
+        &--count {
+          font-size: 11px;
+          height: 15px;
+          min-width: 15px;
+          padding: 0 2px;
+          position: absolute;
+          right: 0;
+          top: 0;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+.bike-details {
+  min-width: 180px;
+
+  @media (max-width: 959px) {
+    min-width: 160px;
+  }
+
+  a {
+    font-size: 24px;
+    text-decoration: underline;
+  }
+
+  &__icon-wrapper {
+    margin-bottom: 7px;
+  }
+
+  &__icon {
+    margin-right: 5px;
+
+    &.right {
+      margin-right: 15px;
+
+      @media (min-width: 768px) and (max-width: 959px) {
+        max-width: 100px;
+      }
+    }
+  }
+
+  p.item-title {
+    margin-top: 0;
+  }
+
+  &__dock-bike {
+    white-space: nowrap;
+  }
+
+  span.item-subtitle {
+    color: #979797;
+    font-size: 13px;
+  }
+
+  &__red_dot {
+    margin-left: 70px;
+    height: 10px;
+    width: 10px;
+    background-color: #d0021b;
+    border-radius: 50%;
+    display: inline-block;
+
+    &--left-margin {
+      margin-left: 25px;
+    }
+  }
+
+  &__yellow_dot {
+    margin-left: 70px;
+    height: 10px;
+    width: 10px;
+    background-color: #f5a623;
+    border-radius: 50%;
+    display: inline-block;
+
+    &--left-margin {
+      margin-left: 25px;
+    }
+  }
+
+  p.dot {
+    margin: 0;
+    margin-left: 7px;
+  }
+}
+
+.battery {
+  width: 59px;
+
+  &__icon {
+    margin-right: 5px;
+  }
+
+  &__percentage {
+    font-size: 12px;
+  }
+}
+
+.dager {
+  margin-left: 10px;
+
+  &__icon {
+    margin-right: 5px;
+  }
+}
+
+.bike-options {
+
+  &__item {
+    padding: 0 10px;
+    transition: 0.3s;
+
+    @media (max-width: 767px) {
+      margin-top: 20px;
+    }
+
+    @media (min-width: 768px) {
+      width: 100%;
+    }
+    
+    @media (min-width: 1024px) {
+      padding: 0 20px;
+    }
+
+    .grey-text {
+      color: #adadad;
+    }
+
+    img {
+      margin-bottom: 4px;
+    }
+
+    span {
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    p {
+      font-size: 13px;
+      margin: -20px 0 0;
+      word-break: break-word;
+    }
+
+    > div {
+      cursor: pointer;
+      padding: 5px;
+
+      &:hover {
+        background-color: #f3f3f3;
+      }
+
+      &:focus,
+      &:active {
+        background-color: #f0f0f0;
+      }
+    }
+
+    &.no-hover {
+      > div {
+        cursor: default;
+        background-color: transparent;
+      }
+    }
+
+    .green {
+      color: #00aa50;
+    }
+
+    .cursor-default {
+      cursor: default;
+    }
+  }
+}
+
+.bike-options-taken-out {
+  @media (max-width: 767px) {
+    margin-top: 20px;
+  }
+
+  &__item {
+    padding: 0 10px;
+    transition: 0.3s;
+
+    @media (min-width: 1024px) {
+      padding: 0 20px;
+    }
+
+    &:first-child {
+      padding-left: 0;
+    }
+
+    &:last-child {
+      padding-right: 0;
+    }
+
+    img {
+      margin-bottom: 4px;
+    }
+
+    span {
+      font-size: 12px;
+    }
+
+    > div {
+      cursor: pointer;
+      padding: 5px;
+
+      &:hover {
+        background-color: #f3f3f3;
+      }
+
+      &:focus,
+      &:active {
+        background-color: #f0f0f0;
+      }
+    }
+
+    .green {
+      color: #00aa50;
+    }
+
+    .cursor-default {
+      cursor: default;
+    }
+  }
+}
+
+.bike-taken-out-opacity {
+  opacity: 25%;
+  cursor: default !important;
+}
+
+.skyler {
+  font-size: 14px;
+}
+
+.antall {
+  color: #333f48;
+  font-size: 14px;
+}
+
+.service-sidenav {
+  display: flex;
+  max-width: 450px;
+  padding-top: 45px;
+  width: 50%;
+  z-index: 9999 !important;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
+
+  .service-main {
+    position: relative;
+    width: 100%;
+
+    &--loader {
+      background-color: rgba(#fff, 0.5);
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 1;
+
+      img {
+        width: 100px;
+      }
+    }
+
+    &--left {
+      box-shadow: 1px 2px 2px 1px rgba(0, 0, 0, 0.2);
+      overflow: auto;
+    }
+
+    &--details {
+      padding: 26px 0 40px 18px;
+      position: relative;
+
+      @media (max-width: 960px) {
+        padding-top: 60px;
+      }
+
+      &__issue {
+        margin-bottom: 15px;
+      }
+
+      &__header {
+        .go-back {
+          padding: 5px 5px 3px 5px;
+          position: absolute;
+          right: 33px;
+          top: 26px;
+          transition: 0.3s;
+
+          @media (max-width: 960px) {
+            right: 15px;
+          }
+
+          &:hover {
+            background-color: #f3f3f3;
+          }
+
+          &:focus,
+          &:active {
+            background-color: #f0f0f0;
+          }
+        }
+
+        .lock-status {
+          cursor: pointer;
+          font-size: 12px;
+          padding: 5px;
+          transition: 0.3s;
+
+          &:hover {
+            background-color: #f3f3f3;
+          }
+
+          &:focus,
+          &:active {
+            background-color: #f0f0f0;
+          }
+
+          img {
+            margin-bottom: 4px;
+          }
+        }
+      }
+
+      &__bikeid {
+        font-size: 33px;
+        margin: 0 24px;
+        text-decoration: underline;
+      }
+
+      &__tab {
+        margin-top: 40px;
+        padding: 0 30px;
+
+        &--item {
+          margin-bottom: 10px;
+
+          div {
+            width: 35px;
+
+            img {
+              display: block;
+              margin: 0 auto;
+            }
+          }
+
+          p {
+            font-size: 12px;
+            margin: 0;
+          }
+        }
+
+        &__black_dot {
+          height: 10px;
+          width: 10px;
+          background-color: #000;
+          border-radius: 50%;
+          display: inline-block;
+        }
+
+        &--scroller {
+          height: 200px;
+          overflow-y: auto;
+          position: relative;
+
+          .loader {
+            align-items: center;
+            background-color: rgba(#fff, 0.5);
+            display: flex;
+            height: 100%;
+            justify-content: center;
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 100%;
+          }
+        }
+      }
+
+      &__title {
+        font-size: 24px;
+        font-weight: 400;
+        margin: 0 0 7px;
+      }
+
+      &__date {
+        font-size: 11px;
+      }
+
+      &__text-with-icon {
+        font-size: 14px;
+        margin-bottom: 0;
+        padding-left: 30px;
+        position: relative;
+
+        &::before {
+          background-color: #000;
+          border-radius: 50%;
+          content: "";
+          display: block;
+          height: 8px;
+          left: 17px;
+          position: absolute;
+          top: 4px;
+          width: 8px;
+        }
+
+        &--sms {
+          &::before {
+            background-color: transparent;
+            background-image: url("/assets/images/sms.svg");
+            background-size: contain;
+            border-radius: 0;
+            height: 14px;
+            left: 11px;
+            top: 2px;
+            width: 15px;
+          }
+        }
+      }
+
+      &__text-with-no-data {
+        font-size: 14px;
+        margin-bottom: 0;
+        padding-left: 30px;
+        position: relative;
+
+        &:last-child {
+          margin-bottom: 20px;
+        }
+      }
+    }
+
+    &--footer {
+      border-top: 1px solid #adadad;
+      padding: 40px 35px 25px;
+
+      a {
+        background-color: #333f48;
+        border-radius: 5px;
+        display: flex;
+        height: 25px;
+        padding: 13px 35px;
+        transition: 0.3s;
+
+        &:hover {
+          background-color: darken(#333f48, 5%);
+        }
+
+        &:active,
+        &:focus {
+          background-color: darken(#333f48, 10%);
+        }
+
+        &.bike-ok {
+          background-color: #00AA50;
+
+          &:hover {
+            background-color: darken(#00AA50, 5%);
+          }
+
+          &:active,
+          &:focus {
+            background-color: darken(#00AA50, 10%);
+          }
+        }
+      }
+
+      p {
+        font-size: 12px;
+        margin: 7px 0 10px;
+
+        @media (min-width: 960px) {
+          margin-bottom: 0;
+        }
+      }
+
+      & > div {
+        margin: 0;
+        width: 70%;
+
+        &:last-child {
+          margin-top: 15px;
+
+          &>div {
+            &:last-child {
+              a {
+                padding-inline: 16px;
+              }
+            }
+          }
+        }
+      }
+
+      >div {
+        &:hover {
+          background-color: transparent;
+        }
+      }
+    }
+
+    &--right {
+      height: calc(100vh - 115px);
+      overflow: auto;
+      padding: 20px 60px;
+
+      h3 {
+        font-size: 35px;
+        margin-top: 0;
+        text-align: center;
+      }
+
+      &__item {
+        margin-bottom: 23px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        &--img {
+          margin-right: 20px;
+          width: 40px;
+        }
+
+        &--details {
+          h4 {
+            font-weight: 400;
+            margin: 0;
+          }
+
+          p {
+            color: #adadad;
+            font-size: 13px;
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+//Loader animation
+
+@keyframes loader {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.bike-options__item img.loading {
+  animation: loader 1s ease infinite;
+}
+
+// .bike-options-taken-out {
+//   * {
+//     cursor: default !important;
+//   }
+// }
+
+// @media (orientation: landscape) {
+//   body {
+//     -webkit-transform: rotate(-90deg);
+//     -moz-transform: rotate(-90deg);
+//     -o-transform: rotate(-90deg);
+//     -ms-transform: rotate(-90deg);
+//     transform: rotate(-90deg);
+//   }
+// }
+
+.car-header {
+  background: #f5f5f5;
+  margin-top: 25px;
+  min-width: 180px;
+  padding: 15px 10px;
+
+  p {
+    font-size: 18px;
+    margin: 0;
+  }
+
+  i {
+    display: block;
+    font-size: 13px;
+    font-style: normal;
+    margin-bottom: 20px;
+  }
+
+  span {
+    font-size: 36px;
+  }
+}
+
+.map-overlay {
+  background-color: rgba(#fff, 0.5);
+  height: 100vh;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  z-index: 1;
+
+  .loading {
+    animation: loader 1s ease infinite;
+  }
+}
+
+.filter-icon {
+  bottom: 24px;
+  cursor: pointer;
+  position: absolute;
+  right: 24px;
+  width: 20px;
+}
+
+.filter-box {
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 2px 2px 9px rgba(0, 0, 0, 0.25);
+  font-size: 14px;
+  padding: 10px 20px 12px 8px;
+  position: absolute;
+  right: 54px;
+  bottom: 22px;
+  height: 175px;
+  overflow: auto;
+}
+
+.custom-controls {
+  top: 110px;
+  left: 10px;
+  position: absolute;
+  z-index: 1000;
+  font-size: 0.9em;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+  @media (max-width: 1366px) {
+    top: 130px;
+    left: 13px;
+  }
+
+  @media (max-width: 767px) {
+    left: 6px;
+  }
+
+  .mat-icon {
+    color: rgba(0, 60, 136, 0.5);
+    font-size: 30px;
+    height: 30px;
+    width: 30px;
+
+    @media (max-width: 1366px) {
+      font-size: 33px;
+      height: 33px;
+      width: 33px;
+    }
+  }
+}
+
+.show-options {
+  background: #fff;
+  display: block !important;
+  top: 36px;
+  position: absolute;
+  left: 10px;
+  padding: 10px;
+  box-shadow: 0px 2px 6px 1px rgba(0, 0, 0, 0.2);
+}
+
+.bike-options-selector {
+  // margin-left: 20px;
+  margin-top: 20px;
+}
+
+.dock-close {
+  height: 24px;
+  position: absolute;
+  right: 7px;
+  top: 7px;
+  width: 24px;
+  cursor: pointer;
+}
+
+.ds-side-panel {
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+  padding: 50px 15px;
+  width: 475px;
+  z-index: 9999 !important;
+
+  .close {
+    position: absolute;
+    right: 13px;
+    top: 13px;
+  }
+
+  &__header {
+    background-color: #f5f5f5;
+    margin-bottom: 15px;
+    padding: 15px;
+
+    &-title {
+      font-size: 20px;
+      margin: 0 0 20px;
+    }
+
+    &-count {
+      font-size: 36px;
+      margin: 0;
+    }
+  }
+
+  &__body {
+    &-item {
+      border-top: 1px solid #cdcdcd;
+      padding: 15px;
+
+      &:last-of-type {
+        border-bottom: 1px solid #cdcdcd;
+      }
+
+      &-title {
+        color: #000;
+        font-size: 13px;
+        font-weight: 600;
+        margin: 0 0 5px;
+        text-transform: uppercase;
+        text-decoration: underline;
+      }
+
+      &-subtitle {
+        color: #9c9a9a;
+        font-size: 13px;
+        margin-block: 7px;
+      }
+
+      &--no-border {
+        border-top: 0;
+        padding-bottom: 0;
+      }
+    }
+
+    &-sub-items-wrapper {
+      margin-left: 15px;
+
+      &:not(:last-of-type) {
+        border-bottom: 1px solid #cdcdcd;
+        
+        ul {
+          padding-bottom: 10px;
+        }
+      }
+
+      ul {
+        margin: 7px 0 0;
+        padding-left: 14px;
+
+        li {
+          color: #9c9a9a;
+          font-size: 13px;
+          line-height: 1.3;
+        }
+      }
+    }
+
+    &-sub-item {
+      height: 44px;
+
+      &-error-count {
+        margin-left: 10px;
+        text-decoration: underline;
+      }
+
+      &-title {
+        font-size: 12px;
+        margin-left: 20px;
+      }
+    }
+  }
+}
+
+.service-main--new {
+  background-color: rgba(#fff, 0.8);
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.ds-comment {
+  font-size: 13px;
+  line-height: 1.3;
+  font-style: italic;
+  padding-bottom: 10px;
+
+  img {
+    margin-right: 10px;
+  }
+}
+
+.issues-list {
+  margin-bottom: 5px;
+  margin-top: 10px;
+  padding-left: 17px;
+}
+
+.see-operational-bikes-stats-link {
+  display: block;
+  font-size: 14px;
+  margin-top: 10px;
+  text-decoration: underline;
+}

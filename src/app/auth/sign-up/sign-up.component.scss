@@ -1,0 +1,37 @@
+.middle {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -52%);
+}
+
+.btn-tc {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  background: transparent;
+  border: 0px;
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+  outline: 0;
+  -webkit-tap-highlight-color: transparent;
+  display: inline-block;
+  white-space: nowrap;
+  text-decoration: none;
+  vertical-align: baseline;
+  text-align: center;
+  margin: 0;
+  min-width: 88px;
+  padding: 0 16px;
+}
+
+.logo-main {
+  margin-right: 10px;
+}
+
+.logo-text {
+  font-size: 23px;
+  color: white;
+  font-weight: 400;
+}

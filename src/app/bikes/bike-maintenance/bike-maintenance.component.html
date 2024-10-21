@@ -1,0 +1,39 @@
+<ngx-datatable class="material expandable" #commandsTable [rows]="commands" [groupRowsBy]="'Category'"
+  [columnMode]="'flex'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="50" [scrollbarH]="true"
+  [groupExpansionDefault]="true" [limit]="5">
+
+  <!-- Group Header Template -->
+  <ngx-datatable-group-header [rowHeight]="50">
+    <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
+      <div style="padding-left:5px;">
+        <a [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded" title="Expand/Collapse Group"
+          (click)="toggleExpandGroup(group)">
+          <b>{{group.value[0].Category}}</b>
+        </a>
+      </div>
+    </ng-template>
+  </ngx-datatable-group-header>
+
+  <ngx-datatable-column prop="Name" name="{{'REMOTE_CONTROL.NAME'|translate}}" [flexGrow]="3">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <span [ngClass]="{'disable': row.IsUpgradable === false }"> {{ value | translate}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column prop="Status" name="{{'REMOTE_CONTROL.STATUS'|translate}}" [flexGrow]="2">
+    <ng-template let-value="value" ngx-datatable-cell-template>
+      <div class="chip" ngClass="status-{{value}}">
+        {{ value }}</div>
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column prop="CommandId" name="" [flexGrow]="1">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <a class="list-icon" [ngClass]="{'disable': row.IsUpgradable === false }" mat-icon-button
+        matTooltip="{{ 'COMMON.SEND' | translate }}" (click)="sendCommand(value)">
+        <mat-icon>play_arrow</mat-icon>
+      </a>
+    </ng-template>
+  </ngx-datatable-column>
+
+</ngx-datatable>

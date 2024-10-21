@@ -1,0 +1,8 @@
+.form-style {
+    width: 100%;
+    margin-top: 20px;
+
+    @media (min-width: 600px) {
+        max-width: 500px;
+    }
+}

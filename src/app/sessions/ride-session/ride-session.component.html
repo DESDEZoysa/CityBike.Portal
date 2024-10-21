@@ -1,0 +1,176 @@
+<div id="session" class="result-container" (window:resize)="onResize()">
+  <mat-card class="pad">
+    <mat-card-title fxLayout="row" fxLayoutAlign="space-between center" style="margin-bottom: 15px">
+      <div>
+        <a [routerLink]="['/sessions']" class="bc-link"> Sessions</a>
+        <span class="bc-separator"> / </span>
+        <span class="bc-current"> Bike {{rideSession?.VisualId}} started
+          {{rideSession?.StartTime | convertTime}}</span>
+      </div>
+      <a *ngIf="isDetailsDialog" (click)="closeDialog()">
+        <img src="/assets/images/map-icons/close.svg">
+      </a>
+    </mat-card-title>
+
+    <mat-card-content>
+
+      <div class="container" fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap="10px">
+
+        <div fxFlex.gt-sm="30%">
+          <mat-card style="padding: 10px 5px 10px 24px">
+            <mat-card-content>
+
+              <div class="container" fxLayout="row wrap" fxLayout="column">
+
+                <div class="detail-field" fxLayout="row">
+                  <span class="detail-field-label-md">{{'SESSIONS.BIKEID' | translate }} : </span>
+                  <span class="detail-field-value"><a class="search-link"
+                      routerLink='/bikes/{{rideSession?.BikeId}}/details'
+                      style="word-break: break-all;">{{rideSession?.VisualId}}</a></span>
+                </div>
+
+                <div class="detail-field" fxLayout="row">
+                  <span class="detail-field-label-md">{{'SESSIONS.RIDE_SESSION_ID' | translate }} : </span>
+                  <span> {{rideSession?.RideSessionId}}</span>
+                </div>
+
+                <div class="detail-field" fxLayout="row">
+                  <span class="detail-field-label-md">{{'SESSIONS.END_USER_ID' | translate }} : </span>
+                  <span> {{rideSession?.EndUserId}}</span>
+                </div>
+
+                <div class="detail-field" fxLayout="row">
+                  <span class="detail-field-label-md">{{'SESSIONS.START_LOCATION' | translate }} : </span>
+                  <span *ngIf="rideSession && rideSession.StartDockingStationId;else startLocation"><a
+                      class="search-link"
+                      [routerLink]="['/dockingStations',rideSession.StartDockingStationId,'dockingpoints']">Docking
+                      Station - {{rideSession?.StartDockingStationName}}
+                      <div> {{rideSession?.StartAddress|address}} </div>
+                    </a></span>
+                  <ng-template #startLocation>
+                    <span> {{rideSession?.StartAddress|address}}</span>
+                  </ng-template>
+                </div>
+
+                <div class="detail-field" fxLayout="row" *ngIf="rideSession && rideSession.StartDockingPointId">
+                  <span class="detail-field-label-md">{{'SESSIONS.START_DOCKING_POINT_VISUAL_ID' | translate }} : </span>
+                  <span> {{rideSession?.StartDockingPointVisualId }}</span>
+                </div>
+
+                <div class="detail-field" fxLayout="row">
+                  <span class="detail-field-label-md">{{'SESSIONS.START_TIME' | translate }} : </span>
+                  <span> {{rideSession?.StartTime | convertTime }}</span>
+                </div>
+
+                <div class="detail-field" fxLayout="row">
+                  <span class="detail-field-label-md">{{'SESSIONS.END_LOCATION' | translate }} : </span>
+                  <span *ngIf="rideSession && rideSession.EndDockingStationId;else endLocation"><a class="search-link"
+                      [routerLink]="['/dockingStations',rideSession.EndDockingStationId,'dockingpoints']">Docking
+                      Station - {{rideSession?.EndDockingStationName}}
+                      <div>{{rideSession?.EndAddress|address}}</div>
+                    </a></span>
+                  <ng-template #endLocation>
+                    <span> {{rideSession?.EndAddress|address}}</span>
+                  </ng-template>
+                </div>
+
+                <div class="detail-field" fxLayout="row" *ngIf="rideSession && rideSession.EndDockingPointId">
+                  <span class="detail-field-label-md">{{'SESSIONS.END_DOCKING_POINT_VISUAL_ID' | translate }} : </span>
+                  <span> {{rideSession?.EndDockingPointVisualId }}</span>
+                </div>
+
+                <div class="detail-field mb-30" fxLayout="row">
+                  <span class="detail-field-label-md">{{'SESSIONS.END_TIME' | translate }} : </span>
+                  <span> {{rideSession?.EndTime | convertTime }}</span>
+                </div>
+
+                <div class="detail-field" fxLayout="row">
+                  <span class="detail-field-label-md">{{'SESSIONS.CHARGE_LEVEL' | translate }} : </span>
+                  <span> {{'SESSIONS.BEGIN' | translate }} : &nbsp;</span>
+                  <span> {{rideSession?.StartChargeLevel|number:'1.0-2'}}<span *ngIf="rideSession">%</span></span>
+                </div>
+
+                <div class="detail-field" fxLayout="row">
+                  <span class="detail-field-label-md"></span>
+                  <span *ngIf="!rideSession?.EndTime">{{'SESSIONS.CURRENT' | translate }} : &nbsp;</span>
+                  <span *ngIf="rideSession?.EndTime">{{'SESSIONS.END' | translate }} : &nbsp;&nbsp;</span>
+                  <span>{{rideSession?.CurrentChargeLevel|number:'1.0-2'}}<span *ngIf="rideSession">%</span></span>
+                </div>
+
+                <div class="detail-field" fxLayout="row" *ngIf="rideSession && rideSession?.BikeStateValue">
+                  <span class="detail-field-label-md">Bike State : </span>
+                  <span> {{rideSession?.BikeStateValue}}</span>
+                </div>
+
+                <div class="detail-field" fxLayout="row" *ngIf="rideSession && rideSession?.LockStateValue">
+                  <span class="detail-field-label-md">{{'SESSIONS.LOCK_STATE' | translate }} : </span>
+                  <span> {{rideSession?.LockStateValue}}</span>
+                </div>
+
+                <div class="detail-field" fxLayout="row" *ngIf="rideSession && rideSession?.EndTime">
+                  <span class="detail-field-label-md">{{'SESSIONS.POWER_STATE' | translate }} : </span>
+                  <span> {{rideSession?.PowerStateValue}}</span>
+                </div>
+
+                <div class="detail-field" fxLayout="row">
+                  <span class="detail-field-label-md">{{'SESSIONS.MAX_SPEED' | translate }} : </span>
+                  <span> {{(rideSession?.MaximumSpeed)*3.6 |number:'1.0-2'}} km/h</span>
+                </div>
+
+                <div class="detail-field mb-30" fxLayout="row">
+                  <span class="detail-field-label-md">{{'SESSIONS.TRIP_DISTANCE' | translate }} : </span>
+                  <span> {{rideSession?.CurrentTripDistance|number:'1.0-2'}} km</span>
+                </div>
+
+                <div class="detail-field" fxLayout="row" *ngIf="rideSession && rideSession?.StartedReason">
+                  <span class="detail-field-label-md">{{'SESSIONS.START_REASON' | translate }} : </span>
+                  <span> {{rideSession.StartedReason | SessionStartEndReasons}} </span>
+                </div>
+
+                <div class="detail-field" fxLayout="row" *ngIf="rideSession && rideSession?.EndedReason">
+                  <span class="detail-field-label-md">{{'SESSIONS.END_REASON' | translate }} : </span>
+                  <span> {{rideSession.EndedReason | SessionStartEndReasons}} </span>
+                </div>
+
+                <div class="detail-field" fxLayout="row" *ngIf="rideSession && rideSession?.PriceModelId">
+                  <span class="detail-field-label-md">{{'SESSIONS.PRICE_MODEL' | translate }} : </span>
+                  <span> {{rideSession?.PriceModelId}} </span>
+                </div>
+
+                <div class="detail-field" fxLayout="row" *ngIf="rideSession && rideSession?.IsTerminated">
+                  <span class="detail-field-label-md">{{'SESSIONS.TERMINATED_BY' | translate }} : </span>
+                  <span> {{rideSession?.FirstName}} {{rideSession?.LastName}}</span>
+                </div>
+
+                <div class="detail-field" fxLayout="row" *ngIf="rideSession && rideSession?.IsTerminated">
+                  <span class="detail-field-label-md">{{'SESSIONS.COMMENT' | translate }} : </span>
+                  <span> {{rideSession?.Comment}} </span>
+                </div>
+
+                <div class="detail-field" fxLayout="row" *ngIf="rideSession && rideSession?.FeeDetails">
+                  <span class="detail-field-label-md">{{'SESSIONS.INCLUDED_FEES' | translate }} : </span>
+                  <!-- <span> {{feeTextList}} </span> -->
+                  <ul>
+                    <li *ngFor="let feeText of feeTextList; let i = index">
+                      {{feeText}}
+                    </li>
+                  </ul>
+                </div>
+
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <div fxFlex.gt-sm="70%">
+          <div #map class="map">
+            <div #popup class="popup"></div>
+          </div>
+        </div>
+
+
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+</div>

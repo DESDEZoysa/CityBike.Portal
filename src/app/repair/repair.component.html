@@ -1,0 +1,190 @@
+<div id="repair_history" class="result-container" (window:resize)="onResize()">
+  <mat-card>
+    <mat-card-title fxLayout="column">
+      {{ 'REPAIR_HISTORY.HISTORY' | translate }}
+
+      <div class="container" fxLayout="row wrap" fxLayout.xs="column" style="font-size: 15px;">
+        <div fxFlex="100%" fxFlex.gt-sm="15%" fxFlex.gt-xs="50%" class="py-1 px-1">
+          <div>
+            <div>
+              <mat-label class="dropdown-placeholder">{{'REPAIR_HISTORY.FILTER_BY_BIKE' | translate}}</mat-label>
+              <mat-select placeholder="Filter By Visual Id" [(value)]="selectedBike"
+                (selectionChange)="onBikeChange($event)">
+                <mat-option *ngFor="let bike of bikeList" [value]="bike.visualId">{{bike.visualId}}</mat-option>
+              </mat-select>
+            </div>
+          </div>
+        </div>
+
+        <div fxFlex="100%" fxFlex.gt-sm="20%" fxFlex.gt-xs="50%" class="py-1 px-1">
+          <div>
+            <div>
+              <mat-label class="dropdown-placeholder">{{'REPAIR_HISTORY.FILTER_BY_PART' | translate}}</mat-label>
+              <mat-select placeholder="Filter By Part" [(value)]="selectedPart"
+                (selectionChange)="onPartChange($event)">
+                <mat-option *ngFor="let part of bikePartList" [value]="part.id">{{part.name}}</mat-option>
+              </mat-select>
+            </div>
+          </div>
+        </div>
+
+        <div fxFlex="100%" fxFlex.gt-sm="15%" fxFlex.gt-xs="50%" class="py-1 px-1">
+          <div>
+            <div>
+              <mat-label class="dropdown-placeholder">{{'REPAIR_HISTORY.FILTER_BY_DATE' | translate}}</mat-label>
+              <mat-select placeholder="Filter By Date" [(value)]="selectedDate"
+                (selectionChange)="onDateChange($event)">
+                <mat-option *ngFor="let dateRange of dateRanges" [value]="dateRange.id">{{dateRange.name}}</mat-option>
+              </mat-select>
+            </div>
+          </div>
+        </div>
+
+        <div fxFlex="100%" fxFlex.gt-sm="20%" fxFlex.gt-xs="50%" class="py-1 px-1">
+          <div>
+            <div>
+              <mat-label class="dropdown-placeholder">{{'REPAIR_HISTORY.FILTER_BY_REPAIRED_PERSON' | translate}}</mat-label>
+              <mat-select placeholder="Filter By Repair Person" [(value)]="selectedPerson"
+                (selectionChange)="onRepairPersonChange($event)">
+                <mat-option *ngFor="let repairPerson of repairPersonList" [value]="repairPerson.id">
+                  {{repairPerson.name}}</mat-option>
+              </mat-select>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div fxFlex="20%">
+          <a mat-raised-button routerLink="/repair/create">
+            <i class="material-icons">add</i>
+            <small class="font"> {{ 'REPAIR_HISTORY.LOG_ACTION' | translate }}</small>
+          </a>
+        </div> -->
+      </div>
+    </mat-card-title>
+
+    <mat-card-content>
+      <ngx-datatable class="material expandable fixed-height-table" [loadingIndicator]="loadingIndicator" [rows]="repairHistory" [columnMode]="'force'" [headerHeight]="50"
+        #repairTable [footerHeight]="50" [rowHeight]="50" [scrollbarH]="true" [scrollbarV]="true">
+
+        <!-- Row Detail Template -->
+        <ngx-datatable-row-detail [rowHeight]="180" #bikeDetailRow *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+            <div style="padding-left:15px;font-size: 13px;">
+              <div class="wordwrap">
+                <strong>Part :</strong> {{row.Part.PartName}}
+                <a *ngIf="row.Part" md-icon class="material-icons"
+                  style="display: inline-block;vertical-align: middle; margin-bottom: 2px;margin-left: 5px;"
+                  (click)="openPart(row.Part)"> image </a>
+              </div>
+              <div class="wordwrap">
+                <strong>Variant :</strong> {{row.Variant.VariantName}}
+                <a *ngIf="row.Variant" md-icon class="material-icons"
+                  style="display: inline-block;vertical-align: middle; margin-bottom: 2px;margin-left: 5px;"
+                  (click)="openVariant(row.Variant)"> image </a>
+              </div>
+              <div style="padding-top:10px;">
+                <strong>Reason :</strong> {{row.Reason.Description}}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>RepairedBy :</strong> {{row.RepairedBy.FirstName}} {{row.RepairedBy.LastName}}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>RepairedAt :</strong> {{row.RepairedAt}}
+              </div>
+              <div style="padding-top:10px;" class="wordwrap">
+                <strong>Comments :</strong> {{row.Comments}}
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-row-detail>
+
+        <!-- Column Templates -->
+        <ngx-datatable-column [width]="10" [resizeable]="false" [sortable]="false" [draggable]="false"
+          [canAutoResize]="false" *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+            <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+              title="Expand/Collapse Row" (click)="toggleExpandRow(row)">
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="VisualId" name="Id" [flexGrow]="0.1" [minWidth]="10" [width]="20">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="Part" name="{{'REPAIR_HISTORY.PART'|translate}}" [flexGrow]="1" [minWidth]="75"
+          [width]="100">
+          <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+            <a *ngIf="value" md-icon class="material-icons"
+              style="display: inline-block;vertical-align: middle; margin-bottom: 2px;margin-right: 5px;"
+              (click)="openPart(value)"> image </a>
+            {{ value.PartName}}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="Variant" name="{{'REPAIR_HISTORY.VARIANT'|translate}}" [flexGrow]="2"
+          [minWidth]="125" [width]="300" *ngIf="layout > LAYOUT.XS">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <a *ngIf="value" md-icon class="material-icons"
+              style="display: inline-block;vertical-align: middle; margin-bottom: 2px;margin-right: 5px;"
+              (click)="openVariant(value)"> crop_original </a>
+            {{ value.VariantName }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="Reason" name="{{'REPAIR_HISTORY.REASON'|translate}}" [flexGrow]="1"
+          [minWidth]="125" [width]="175" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value.Description }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="RepairedBy" name="{{'REPAIR_HISTORY.REPAIREDBY'|translate}}" [flexGrow]="1"
+          [minWidth]="100" [width]="100" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value.FirstName }} {{ value.LastName }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="RepairedAt" name="{{'REPAIR_HISTORY.REPAIREDAT'|translate}}" [flexGrow]="1"
+          [minWidth]="50" [width]="100" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <!-- <ngx-datatable-column prop="CompletedAt" name="CompletedAt" [flexGrow]="1" [minWidth]="50" [width]="100"
+          *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column> -->
+
+        <ngx-datatable-column prop="Comments" name="{{'REPAIR_HISTORY.COMMENTS'|translate}}" [flexGrow]="1.5"
+          [minWidth]="100" [width]="150" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <!-- <ngx-datatable-column prop="IsCompleted" name="Completed" [flexGrow]="0.5" [minWidth]="50" [width]="50"
+          *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <span *ngIf="value">Yes</span>
+            <span *ngIf="!value">No</span>
+          </ng-template>
+        </ngx-datatable-column> -->
+
+        <!-- <ngx-datatable-column prop="RepairId" name="" [flexGrow]="1" [minWidth]="50" [width]="110">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <span class="list-icon btn-style" (click)="completeRepair(row.RepairId)" *ngIf="!row.IsCompleted">
+              Repair Completed
+            </span>
+          </ng-template>
+        </ngx-datatable-column> -->
+      </ngx-datatable>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,352 @@
+<div id="transportation-orders" class="result-container" (window:resize)="onResize()">
+  <mat-card>
+    <mat-card-title fxLayout="column" fxLayout.gt-md="row wrap" fxLayoutAlign="space-between start">
+      {{ 'COMMON.ISSUES' | translate }}
+      <!-- Web view -->
+      <div fxShow="false" fxShow.gt-xs fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign.gt-md="space-between start">
+        <div fxLayout="column" fxLayout.gt-md="row" class="custom-fields-wrapper">
+          <!-- <span class="material-icons download-excel download-desktop" (click)="generateExcel()"
+            matTooltip="{{'SESSIONS.DOWNLOAD_EXCEL' | translate}}">
+            cloud_download
+          </span> -->
+          <img class="excel_expor_icon download-desktop" src="assets/images/excel_export.svg" (click)="generateExcel()"
+            matTooltip="{{'SESSIONS.DOWNLOAD_EXCEL' | translate}}" />
+
+          <div fxLayout="row wrap">
+            <div class="custom-fields-wrapper__inner">
+              <mat-label class="dropdown-placeholder">{{'REPORT_ERROR.SELECT_CATEGORY' | translate}}</mat-label>
+              <mat-form-field class="issue-cat-select">
+                <mat-select [formControl]="categoryCtrl" [multiple]="true" (openedChange)="filterByCategories($event)">
+                  <mat-option>
+                    <ngx-mat-select-search [showToggleAllCheckbox]="true" [toggleAllCheckboxChecked]="true"
+                      (toggleAll)="toggleSelectAll($event)" style="font-size: 15px;" [formControl]="categoryFilterCtrl"
+                      noEntriesFoundLabel="{{'REPORT_ERROR.NOT_FOUND' | translate}}"
+                      placeholderLabel="{{'REPORT_ERROR.FILTER_BY_CATEGORIES' | translate}}">
+                    </ngx-mat-select-search>
+                  </mat-option>
+                  <mat-option *ngFor="let category of filteredCategories | async" [value]="category">
+                    {{category.DisplayName}}({{category.Count}})
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="custom-fields-wrapper__inner">
+              <mat-label class="dropdown-placeholder">{{'REPORT_ERROR.END_USERS' | translate}}</mat-label>
+              <mat-form-field class="issue-cat-select">
+                <mat-select [formControl]="enduserCtrl" [(value)]="selectedAppUser"
+                  (selectionChange)="onAppUserChange()" #endUserSelect>
+                  <mat-option>
+                    <ngx-mat-select-search placeholderLabel="{{'REPORT_ERROR.SEARCH_FOR_USERS' | translate}}"
+                      style="font-size: 15px;" noEntriesFoundLabel="{{'REPORT_ERROR.NO_RECORDS_FOUND' | translate}}"
+                      [formControl]="enduserFilterCtrl">
+                    </ngx-mat-select-search>
+                  </mat-option>
+                  <mat-option *ngFor="let endUser of filteredEndUsers | async" [value]="endUser"> {{endUser |
+                    translate}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="custom-fields-wrapper__inner">
+              <mat-label class="dropdown-placeholder">{{'REPORT_ERROR.BIKE' | translate}}</mat-label>
+              <mat-form-field class="issue-cat-select">
+                <mat-select [formControl]="bikeCtrl" [(value)]="selectedBike" (selectionChange)="onBikeChange($event)"
+                  #bikeSelect>
+                  <mat-option>
+                    <ngx-mat-select-search placeholderLabel="{{'REPORT_ERROR.SEARCH_FOR_BIKES' | translate}}"
+                      style="font-size: 15px;" noEntriesFoundLabel="{{'REPORT_ERROR.NO_RECORDS_FOUND' | translate}}"
+                      [formControl]="bikeFilterCtrl">
+                    </ngx-mat-select-search>
+                  </mat-option>
+                  <mat-option *ngFor="let bike of filteredBikes | async" [value]="bike.id"> {{bike.visualId |
+                    translate}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="custom-fields-wrapper__inner">
+              <mat-label class="dropdown-placeholder">{{'REPORT_ERROR.STATUS' | translate}}</mat-label>
+              <mat-select placeholder="{{'REPORT_ERROR.FILTER_BY_STATUS' | translate}}" [(value)]="selectedStatus"
+                (selectionChange)="onIssueStatusChange()">
+                <mat-option *ngFor="let status of issueStatus" [value]="status.id">{{status.name | translate}}
+                </mat-option>
+              </mat-select>
+            </div>
+            <!-- filter by date time -->
+            <div class="events-custom-fields" style="font-size: 15px;">
+              <div>
+                <mat-label class="dropdown-placeholder">{{'EVENTS.FILTER_DATE' | translate}}</mat-label>
+                <mat-select placeholder="Filter By Date" [(value)]="selectedDate"
+                  (selectionChange)="onDateChange($event)">
+                  <mat-option *ngFor="let dateRange of dateRanges" [value]="dateRange.id">{{dateRange.name | translate}}
+                  </mat-option>
+                </mat-select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="custom-date-field-wrapper" fxLayout="column" fxLayout.gt-md="row"
+          fxLayoutAlign.gt-sm="space-around end" fxLayoutAlign.gt-md="end start">
+          <!-- from date -->
+          <div style="font-size: 15px; padding-top: 12px;" *ngIf="isCustomDateShown">
+            <mat-form-field style="width: 135px;font-size: 14px;">
+              <input matInput [matDatepicker]="picker" [(ngModel)]="fromDate"
+                placeholder="{{'EVENTS.DATE_FROM' | translate}}" (dateChange)="onStartDatePicked($event)">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker startView="year" [startAt]="startDate"></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <!-- to date -->
+          <div style="font-size: 15px; padding-top: 12px;" *ngIf="isCustomDateShown">
+            <mat-form-field style="width: 135px;font-size: 14px;">
+              <input matInput [matDatepicker]="picker" [(ngModel)]="toDate"
+                placeholder="{{'EVENTS.DATE_TO' | translate}}" (dateChange)="onEndDatePicked($event)">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker startView="year" [startAt]="startDate"></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <div *ngIf="isCustomDateShown">
+            <button mat-raised-button (click)="onCustomDateSearchClicked()">
+              <small class="font"> {{ 'COMMON.SEARCH' | translate }}</small>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile View -->
+      <div fxHide="false" fxHide.gt-xs class="mobile-custom-fields">
+        <div class="mobile-download">
+          <!-- <span class="material-icons download-excel" (click)="generateExcel()"
+            matTooltip="{{'SESSIONS.DOWNLOAD_EXCEL' | translate}}">
+            cloud_download
+          </span> -->
+          <img class="excel_expor_icon" src="assets/images/excel_export.svg" (click)="generateExcel()"
+            matTooltip="{{'SESSIONS.DOWNLOAD_EXCEL' | translate}}" />
+
+        </div>
+        <mat-label class="dropdown-placeholder">{{'REPORT_ERROR.SELECT_CATEGORY' | translate}}</mat-label>
+        <mat-form-field class="issue-cat-select">
+          <mat-select [formControl]="categoryCtrl" [multiple]="true" (openedChange)="filterByCategories($event)">
+            <mat-option>
+              <ngx-mat-select-search [showToggleAllCheckbox]="true" [toggleAllCheckboxChecked]="true"
+                (toggleAll)="toggleSelectAll($event)" style="font-size: 15px;" [formControl]="categoryFilterCtrl"
+                noEntriesFoundLabel="{{'REPORT_ERROR.NOT_FOUND' | translate}}"
+                placeholderLabel="{{'REPORT_ERROR.FILTER_BY_CATEGORIES' | translate}}">
+              </ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let category of filteredCategories | async" [value]="category">
+              {{category.DisplayName}}({{category.Count}})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-label class="dropdown-placeholder">{{'REPORT_ERROR.END_USERS' | translate}}</mat-label>
+        <mat-select placeholder="{{'REPORT_ERROR.FILTER_BY_END_USERS' | translate}}" [(value)]="selectedAppUser"
+          (selectionChange)="onAppUserChange()">
+          <mat-option *ngFor="let endUser of endUsers" [value]="endUser">{{ endUser }}
+          </mat-option>
+        </mat-select>
+        <mat-label class="dropdown-placeholder">{{'REPORT_ERROR.BIKE' | translate}}</mat-label>
+        <mat-select placeholder="{{'REPORT_ERROR.FILTER_BY_VISUAL_ID' | translate}}" [(value)]="selectedBike"
+          (selectionChange)="onBikeChange($event)">
+          <mat-option *ngFor="let bike of bikeList" [value]="bike.id">{{bike.visualId | translate}}</mat-option>
+        </mat-select>
+        <mat-label class="dropdown-placeholder">{{'REPORT_ERROR.STATUS' | translate}}</mat-label>
+        <mat-select placeholder="{{'REPORT_ERROR.FILTER_BY_STATUS' | translate}}" [(value)]="selectedStatus"
+          (selectionChange)="onIssueStatusChange()">
+          <mat-option *ngFor="let status of issueStatus" [value]="status.id">{{status.name | translate}}
+          </mat-option>
+        </mat-select>
+        <div class="events-filters">
+          <mat-label class="dropdown-placeholder">{{'REPORT_ERROR.FILTER_DATE' | translate}}</mat-label>
+          <mat-select placeholder="Filter By Date" [(value)]="selectedDate" (selectionChange)="onDateChange($event)">
+            <mat-option *ngFor="let dateRange of dateRanges" [value]="dateRange.id">{{dateRange.name |
+              translate}}</mat-option>
+          </mat-select>
+        </div>
+
+        <div style="font-size: 15px;padding-top: 15px;" *ngIf="isCustomDateShown">
+          <mat-form-field style="font-size: 14px;">
+            <input matInput [matDatepicker]="picker" [(ngModel)]="fromDate"
+              placeholder="{{'REPORT_ERROR.DATE_FROM' | translate}}" (dateChange)="onStartDatePicked($event)">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker startView="year" [startAt]="startDate"></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div style="font-size: 15px;padding-top: 15px;" *ngIf="isCustomDateShown">
+          <mat-form-field style="font-size: 14px;">
+            <input matInput [matDatepicker]="picker" [(ngModel)]="toDate"
+              placeholder="{{'REPORT_ERROR.DATE_TO' | translate}}" (dateChange)="onEndDatePicked($event)">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker startView="year" [startAt]="startDate"></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div style="padding-top: 15px;" *ngIf="isCustomDateShown">
+          <button mat-raised-button (click)="onCustomDateSearchClicked()">
+            <small class="font"> {{ 'COMMON.SEARCH' | translate }}</small>
+          </button>
+        </div>
+      </div>
+    </mat-card-title>
+
+    <mat-card-content>
+      <ngx-datatable class="material expandable fixed-height-table" [rows]="filteredErrorReports" [columnMode]="'flex'"
+        [headerHeight]="50" [loadingIndicator]="loadingIndicator" [scrollbarH]="false" #ordersTable [footerHeight]="50"
+        [rowHeight]="50" [scrollbarV]="true">
+
+        <!-- Row Detail Template -->
+        <ngx-datatable-row-detail [rowHeight]="180" #bikeDetailRow *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+            <div style="padding-left:15px;font-size: 13px;">
+              <div style="padding-top:10px;">
+                <strong>{{'REPORT_ERROR.BIKE_ID' | translate}} :</strong> <span [style.color]="row.ReasonColor">{{
+                  row.BikeId }}</span>
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'REPORT_ERROR.CATEGORIES' | translate}} :</strong>
+                <span class="truncate" matTooltip="{{ row.ErrorCategoriesText }}">{{row.ErrorCategoriesText}}</span>
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'DOCKING_STATION.NAME' | translate}} :</strong>
+                <span>{{row.DockingStationName}}</span>
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'REPORT_ERROR.DPVISUAL_ID' | translate}} :</strong>
+                <span>{{row.DPVisualId}}</span>
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'REPORT_ERROR.RIDE_SESSION_ID' | translate}} :</strong>
+                <a href="javascript:void(0)"
+                  (click)="openDetailsInNewWindow('/sessions/' + row.SessionId, row.SessionId)"
+                  style="color:#007dbd;vertical-align: super;">{{row.SessionId}}</a>
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'REPORT_ERROR.USER' | translate}} :</strong>
+                <span>{{row.EndUser}}</span>
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'REPORT_ERROR.END_USER' | translate}} :</strong>
+                <span>{{row.EndAppUserId}}</span>
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'REPORT_ERROR.REPORTED_DATE' | translate}} :</strong>
+                <span>{{ row.ReportedDate | convertTime }}</span>
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'REPORT_ERROR.COMPLETED_DATE' | translate}} :</strong>
+                <span>{{ row.CompletedDate | convertTime }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-row-detail>
+
+        <!-- Column Templates -->
+        <ngx-datatable-column [width]="10" [resizeable]="false" [sortable]="false" [draggable]="false"
+          [canAutoResize]="false" *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+            <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+              title="Expand/Collapse Row" (click)="toggleExpandRow(row)">
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+
+        <ngx-datatable-column prop="BikeId" name="{{'REPORT_ERROR.BIKE_ID' | translate}}" [flexGrow]="0.20"
+          [minWidth]="80">
+          <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+            <div>
+              <a href="/bikes/support?visualId={{row.VisualId}}"
+                style="color:#007dbd;vertical-align: super;">{{row.VisualId}}</a>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="Categories" name="{{'REPORT_ERROR.CATEGORIES' | translate}}" [flexGrow]="0.85"
+          [minWidth]="100" [width]="100" *ngIf="!isMobile">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <span matTooltip="{{ row.ErrorCategoriesText }}" class="truncate" matTooltipClass="custom-tooltip">{{
+              row.ErrorCategoriesText }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="DockingStationName" name="{{'SESSION_SUMMARY.DOCKING_STATION_NAME'|translate}}"
+          [flexGrow]="0.65" [minWidth]="80" [width]="80" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template let-row="row">{{value}} </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="DPVisualId" name="{{'REPORT_ERROR.DPVISUAL_ID'|translate}}" [flexGrow]="0.65"
+          [minWidth]="80" [width]="80" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template let-row="row">{{value}} </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="SessionId" name="{{'REPORT_ERROR.RIDE_SESSION_ID'|translate}}" [flexGrow]="0.65"
+          [minWidth]="80" [width]="80" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+            <a href="javascript:void(0)" (click)="openDetailsInNewWindow('/sessions/' + value, value)"
+              style="color:#007dbd;vertical-align: super;"> {{value}} </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="EndUser" name="{{'REPORT_ERROR.USER' | translate}}" [flexGrow]="0.5"
+          [minWidth]="100" [width]="125" *ngIf="!isMobile">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <span>{{ row.EndUser }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="EndAppUserId" name="{{'REPORT_ERROR.END_USER' | translate}}" [flexGrow]="0.5"
+          [minWidth]="100" [width]="125" *ngIf="!isMobile">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <span>{{ row.EndAppUserId }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="ReportedDate" name="{{'REPORT_ERROR.REPORTED_DATE' | translate}}" [flexGrow]="0.5"
+          [minWidth]="100" [width]="125" *ngIf="!isMobile">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <span>{{ row.ReportedDate | convertTime }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column *ngIf="reportFilterToggle!=0 && !isMobile" prop="CompletedDate"
+          name="{{'REPORT_ERROR.COMPLETED_DATE' | translate}}" [flexGrow]="0.5" [minWidth]="100" [width]="125">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <span>{{ row.CompletedDate | convertTime }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="ReportMore" name="" [flexGrow]="0.3" [minWidth]="50" [width]="50">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <span class="list-icon btn-style" fxHide fxShow.gt-sm (click)="OpenIndividualIssueDetail(row)">
+              {{'REPORT_ERROR.DETAILS' | translate}}
+            </span>
+
+            <a class="list-icon" fxHide.gt-sm matTooltip="{{ 'REPORT_ERROR.DETAILS' | translate }}" mat-icon-button
+              (click)="OpenIndividualIssueDetail(row)">
+              <mat-icon>list</mat-icon>
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <!-- <ngx-datatable-column prop="ViewRepairAction" name="" [flexGrow]="0.5" [minWidth]="100" [width]="125">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <span class="list-icon btn-style" fxHide fxShow.gt-sm (click)="OpenIssueRepairAction(row)">
+              {{'REPORT_ERROR.VIEW_REPAIR_ACTIONS' | translate}}
+            </span>
+
+            <a class="list-icon" fxHide.gt-sm matTooltip="{{ 'REPORT_ERROR.VIEW_REPAIR_ACTIONS' | translate }}"
+              mat-icon-button (click)="OpenIssueRepairAction(row)">
+              <mat-icon>pageview</mat-icon>
+            </a>
+          </ng-template>
+        </ngx-datatable-column> -->
+
+      </ngx-datatable>
+    </mat-card-content>
+  </mat-card>
+</div>

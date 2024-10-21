@@ -1,0 +1,202 @@
+<div id="workshop_history" class="result-container" (window:resize)="onResize()">
+  <mat-card style="padding-top: 10px;">
+    <mat-card-title style="margin-bottom: 0px;" fxLayout="column">
+      <div class="container repair-history-container" fxLayout="row wrap" fxLayoutAlign.gt-sm="end start" style="font-size: 15px;">
+
+        <div fxFlex="100%" fxFlex.gt-xs="50%" fxFlex.gt-sm="20%" fxFlex.gt-md="10%" class="py-1 px-1">
+          <mat-label class="dropdown-placeholder">{{'WORKSHOP_HISTORY.FILTER_BY_STATUS' | translate}}</mat-label>
+          <mat-select placeholder="Filter By Status" [(value)]="selectedStatus"
+            (selectionChange)="onRepairStatusChange()">
+            <mat-option *ngFor="let status of repairStatus" [value]="status.id">{{status.name | translate}}
+            </mat-option>
+          </mat-select>
+        </div>
+
+        <!-- <div fxFlex="100%" fxFlex.gt-xs="50%" fxFlex.gt-sm="20%" fxFlex.gt-md="12%" class="py-1 px-1">
+          <div>
+            <mat-label class="dropdown-placeholder">{{'WORKSHOP_HISTORY.FILTER_BY_WORKSHOP' | translate}}</mat-label>
+            <mat-select placeholder="{{'WORKSHOP_HISTORY.FILTER_BY_WORKSHOP' | translate}}" [(value)]="selectedWorkshop"
+              (selectionChange)="onWorkshopChange($event)">
+              <mat-option *ngFor="let workshop of workshopList" [value]="workshop.Id">{{workshop.Name}}</mat-option>
+            </mat-select>
+          </div>
+        </div> -->
+
+        <div fxFlex="100%" fxFlex.gt-xs="50%" fxFlex.gt-sm="20%" fxFlex.gt-md="15%" class="py-1 px-1">
+          <div>
+            <mat-label
+              class="dropdown-placeholder">{{'WORKSHOP_HISTORY.FILTER_BY_USERS'|translate}}</mat-label>
+            <mat-select placeholder="Filter By Repair Person" [(value)]="selectedPerson"
+              (selectionChange)="onRepairPersonChange($event)">
+              <mat-option *ngFor="let repairPerson of repairPersonList" [value]="repairPerson.id">
+                {{repairPerson.name | translate}}</mat-option>
+            </mat-select>
+          </div>
+        </div>
+
+        <div fxFlex="100%" fxFlex.gt-xs="50%" fxFlex.gt-sm="20%" fxFlex.gt-md="15%" class="py-1 px-1" fxLayout="column">
+          <div>
+            <mat-label class="dropdown-placeholder">{{'WORKSHOP_HISTORY.FILTER_BY_DATE'|translate}}</mat-label>
+            <mat-select placeholder="Filter By Date" [(value)]="selectedDate" (selectionChange)="onDateChange($event)">
+              <mat-option *ngFor="let dateRange of dateRanges" [value]="dateRange.id">{{dateRange.name | translate}}</mat-option>
+            </mat-select>
+          </div>
+        </div>
+
+
+        <!--  Need to add new form -->
+        <div fxFlex="100%" fxFlex.gt-xs="50%" fxFlex.gt-sm="20%" fxFlex.gt-md="15%" class="py-1" fxLayoutAlign="end end" fxHide fxShow.gt-xs>
+          <a mat-raised-button routerLink="/workshop/history" class="history-btn"> <i
+              class="material-icons">assignment</i> {{ 'WORKSHOP_HISTORY.ALL_HISTORY' | translate}}</a>
+        </div>
+      </div>
+
+      <div *ngIf="isCustomDateShown" class="rs-custom-search" fxLayout="column" fxLayout.gt-xs="row"
+        fxLayoutAlign="end end">
+        <mat-form-field>
+          <input matInput [matDatepicker]="fromPicker" [(ngModel)]="fromDate"
+            placeholder="{{'WORKSHOP_HISTORY.DATE_FROM' | translate}}" (dateChange)="onStartDatePicked($event)">
+          <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+          <mat-datepicker #fromPicker startView="year" [startAt]="startDate"></mat-datepicker>
+        </mat-form-field>
+      
+        <mat-form-field>
+          <input matInput [matDatepicker]="endPicker" [(ngModel)]="toDate"
+            placeholder="{{'WORKSHOP_HISTORY.DATE_TO' | translate}}" (dateChange)="onEndDatePicked($event)">
+          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker startView="year" [startAt]="startDate"></mat-datepicker>
+        </mat-form-field>
+      
+        <button mat-raised-button (click)="onCustomDateSearchClicked()">
+          <small class="font"> {{ 'COMMON.SEARCH' | translate }}</small>
+        </button>
+      </div>
+      <div fxFlex="100%" fxHide.gt-xs class="pb-1">
+        <a mat-raised-button routerLink="/workshop/history" class="history-btn"> <i class="material-icons">assignment</i>
+          {{ 'WORKSHOP_HISTORY.ALL_HISTORY' | translate}}</a>
+      </div>
+    </mat-card-title>
+
+    <mat-card-content>
+      <ngx-datatable class="material expandable fixed-height-table" [rows]="repairHistory" [columnMode]="'force'"
+        [headerHeight]="50" #repairTable [footerHeight]="50" [rowHeight]="50" [limit]="10" [scrollbarV]="true"
+        [scrollbarH]="true" [loadingIndicator]="loadingIndicator">
+
+        <!-- Row Detail Template -->
+        <ngx-datatable-row-detail [rowHeight]="170" #bikeDetailRow *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+            <div style="padding-left:15px;font-size: 13px;">
+              <!-- <div style="padding-top:10px;">
+                <strong>{{'WORKSHOP_HISTORY.DATE_FINISHED'|translate}} :</strong> {{row.RepairedAt | convertTime }}
+              </div> -->
+              <!-- <div style="padding-top:10px;">
+                <strong>{{'WORKSHOP_HISTORY.WORKSHOP'|translate}} :</strong> {{row.WorkshopName}}
+              </div> -->
+              <div style="padding-top:10px;">
+                <strong>{{'WORKSHOP_HISTORY.CREATED_BY'|translate}} :</strong> {{row.CreatedUser}}
+              </div>
+              <!-- <div style="padding-top:10px;">
+                <strong>{{'WORKSHOP_HISTORY.WORK_TYPE'|translate}} :</strong>
+                <div *ngFor="let part of row.Parts">
+                  <img *ngIf="part" src="assets/images/citybike_logo.png" />
+                </div>
+              </div> -->
+              <div style="padding-top:10px;" class="wordwrap">
+                <strong>{{'WORKSHOP_HISTORY.DETAILS_BODY.HOURS_SPENT'|translate}} :</strong> {{row.HoursSpent}}
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-row-detail>
+
+        <!-- Column Templates -->
+        <ngx-datatable-column [width]="10" [resizeable]="false" [sortable]="false" [draggable]="false"
+          [canAutoResize]="false" *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+            <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+              title="Expand/Collapse Row" (click)="toggleExpandRow(row)">
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="CreatedAt" name="{{'WORKSHOP_HISTORY.CREATED_ON'|translate}}" [flexGrow]="1"
+          [minWidth]="75" [width]="100">
+          <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+            {{ value | timeZone}}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <!-- <ngx-datatable-column prop="WorkshopName" name="{{'WORKSHOP_HISTORY.WORKSHOP'|translate}}" [flexGrow]="2.5"
+          [minWidth]="125" [width]="250" *ngIf="layout > LAYOUT.XS">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value}}
+          </ng-template>
+        </ngx-datatable-column> -->
+
+        <ngx-datatable-column prop="CreatedUser" name="{{'WORKSHOP_HISTORY.CREATED_BY'|translate}}" [flexGrow]="1.25"
+          [minWidth]="100" [width]="100" *ngIf="!isMobile && layout > LAYOUT.SM">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="WorkshopEventGroup" name="{{'WORKSHOP_HISTORY.WORK_TYPE'|translate}}"
+          [flexGrow]="1.5" [minWidth]="150" [width]="200" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <div fxLayout="row">
+              <div *ngFor="let workEvent of value.WorkEventDTOs;" fxLayout="row" fxLayoutAlign="center center">
+                <img style="max-height: 25px; max-width: 35px;margin: 0 5px;" *ngIf="workEvent.WorkCategory"
+                  src="{{workEvent.WorkCategory.WorkCategoryImageURL}}" />
+              </div>
+            </div>
+          </ng-template>
+
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="HoursSpent" name="{{'WORKSHOP_HISTORY.DETAILS_BODY.HOURS_SPENT'|translate}}"
+          [flexGrow]="1" [minWidth]="50" [width]="100" *ngIf="!isMobile && layout > LAYOUT.SM">
+          <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+            <span *ngIf="value>0">{{value}} hr</span>&nbsp;<span *ngIf="row.MinutesSpent>0">{{row.MinutesSpent}}
+              min</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="ReportMore" name="" [flexGrow]="0.5" [minWidth]="100" [width]="125">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <span class="list-icon btn-style" (click)="openHistoryDetails(row)">
+              {{'WORKSHOP_HISTORY.DETAILS' | translate}}
+            </span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-footer *ngIf="isMobile">
+          <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+            let-curPage="curPage" let-offset="offset">
+            <div style="padding: 5px 10px">
+              <hr style="width:100%" />
+              <div> Total: {{rowCount}} | {{curPage}} of {{(rowCount/pageSize).toFixed(0)}} </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-footer>
+        <ngx-datatable-footer *ngIf="!isMobile">
+          <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+            let-curPage="curPage" let-offset="offset">
+            <div style="padding: 5px 10px;width: 100%;">
+              <!-- <hr style="width:100%" /> -->
+              <div fxLayout="row" fxLayoutAlign="space-between none">
+                <div fxFlex="73" *ngIf="rowCount>1 || rowCount==0"><strong>{{rowCount}} {{ 'WORKSHOP_HISTORY.REPAIRS' |
+                    translate}}</strong> </div>
+                <div fxFlex="73" *ngIf="rowCount==1"><strong>{{rowCount}} {{ 'WORKSHOP_HISTORY.REPAIR' |
+                    translate}}</strong> </div>
+                <div fxFlex="27"><strong>{{'WORKSHOP_HISTORY.HOURS_TOTAL' | translate}} :
+                    <span *ngIf="totalHours>0">{{totalHours }} hr</span>&nbsp;
+                    <span *ngIf="remaingMinutes>0"> {{remaingMinutes}} min</span></strong>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-footer>
+      </ngx-datatable>
+
+    </mat-card-content>
+  </mat-card>
+</div>

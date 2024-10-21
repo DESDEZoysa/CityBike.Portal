@@ -1,0 +1,124 @@
+<!-- Web view -->
+<div *ngIf="!allMap" fxShow="false" fxShow.gt-sm>
+  <mat-card class="bike-title-card" style="padding-bottom: 16px; box-shadow: none;">
+    <mat-card-title>
+      <div class="map-title-wrapper" style="padding-bottom: 10px;">
+        <a [routerLink]="['/bikes']" class="bc-link">{{ 'COMMON.BIKES' | translate }}</a>
+        <span class="bc-separator"> / </span>
+        <a [routerLink]="['/bikes/',bikeId,'details']" class="bc-link">{{bikeVisualId}}</a>
+        <span class="bc-separator"> / </span>
+        <span class="bc-current"> {{ 'COMMON.MAP' | translate }}</span>
+      </div>
+
+      
+    </mat-card-title>
+  </mat-card>
+  <div class="map-filter-wrapper">
+    <div fxLayout="row" fxLayoutAlign="start start" class="bike-track-map-filter">
+      <mat-button-toggle-group #group="matButtonToggleGroup" class="toggle-bar map-views">
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>layers</mat-icon>
+        </button>
+      </mat-button-toggle-group>
+    
+      <mat-button-toggle-group #group="matButtonToggleGroup" value="LastKnown" (change)="tabChanged($event.value)"
+        class="toggle-bar" style="margin-bottom: 25px; margin-right: 15px;">
+        <mat-button-toggle value="LastKnown">
+          <small class="font"> {{ 'COMMON.LAST_KNOWN' | translate }}</small>
+        </mat-button-toggle>
+        <mat-button-toggle value="LastHour">
+          <small class="font"> {{ 'COMMON.LAST_HOUR' | translate }}</small>
+        </mat-button-toggle>
+        <mat-button-toggle value="LastDay">
+          <small class="font">{{ 'COMMON.LAST_DAY' | translate }}</small>
+        </mat-button-toggle>
+        <mat-button-toggle value="LastWeek">
+          <small class="font"> {{ 'COMMON.LAST_WEEK' | translate }}</small>
+        </mat-button-toggle>
+        <mat-button-toggle value="LastMonth">
+          <small class="font"> {{ 'COMMON.LAST_MONTH' | translate }}</small>
+        </mat-button-toggle>
+        <mat-button-toggle value="Custom">
+          <small class="font"> {{ 'COMMON.CUSTOM' | translate }}</small>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    
+      <app-date-range-selector [visible]="selectedTab =='Custom'" (select)="searchData($event)" style="margin-top: 4px;">
+      </app-date-range-selector>
+    </div>
+    <app-track-map [from]='from' [to]='to' [isLastKnown]='isLastKnown'></app-track-map>
+  </div>
+</div>
+
+
+<!-- Hamburger Menu -->
+<mat-menu #menu="matMenu" class="track-map-options">
+
+  <mat-radio-group class="map-radio-group menu-font" [(ngModel)]="selectedMap">
+    <mat-radio-button class="map-radio-button" (click)="changeMap(map.key)" name="map" *ngFor="let map of mapDetails"
+      [value]="map.key" style="padding-bottom: 5px;font-size: 14px;height: 25px;">
+      {{map.name | translate}}
+    </mat-radio-button>
+  </mat-radio-group>
+
+</mat-menu>
+
+<!-- Mobile view -->
+<div *ngIf="!allMap" fxHide="false" fxHide.gt-sm>
+  <mat-card style="padding-bottom: 10px; box-shadow: none;">
+    <mat-card-title fxLayout="column" class="bike-title-card">
+
+      <div style="padding-bottom: 10px;">
+        <a [routerLink]="['/bikes']" class="bc-link">{{ 'COMMON.BIKES' | translate }}</a>
+        <span class="bc-separator"> / </span>
+        <a [routerLink]="['/bikes/',bikeId,'details']" class="bc-link">{{bikeVisualId}}</a>
+        <span class="bc-separator"> / </span>
+        <span class="bc-current"> {{ 'COMMON.MAP' | translate }}</span>
+      </div>
+
+      <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutAlign=" flex-start" fxLayoutAlign.gt-xs=" center" class="toggle-button-wrapper">
+        <mat-button-toggle-group #group="matButtonToggleGroup" class="toggle-bar map-views">
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>menu</mat-icon>
+          </button>
+        </mat-button-toggle-group>
+  
+        <mat-button-toggle-group #group="matButtonToggleGroup" value="LastHour" (change)="tabChanged($event.value)"
+          class="toggle-bar">
+          <mat-button-toggle value="LastKnown">
+            <small class="font-mobile"> {{ 'COMMON.LAST_KNOWN' | translate }}</small>
+          </mat-button-toggle>
+          <mat-button-toggle value="LastHour">
+            <small class="font-mobile">  {{ 'COMMON.LAST_HOUR' | translate }}</small>
+          </mat-button-toggle>
+          <mat-button-toggle value="LastDay">
+            <small class="font-mobile"> {{ 'COMMON.LAST_DAY' | translate }}</small>
+          </mat-button-toggle>
+          <mat-button-toggle value="LastWeek">
+            <small class="font-mobile"> {{ 'COMMON.LAST_WEEK' | translate }}</small>
+          </mat-button-toggle>
+          <mat-button-toggle value="LastMonth">
+            <small class="font-mobile"> {{ 'COMMON.LAST_MONTH' | translate }}</small>
+          </mat-button-toggle>
+          <mat-button-toggle value="Custom">
+            <small class="font-mobile"> {{ 'COMMON.CUSTOM' | translate }}</small>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <app-date-range-selector [visible]="group.value =='Custom'" (select)="searchData($event)" style="margin-top: 10px;">
+      </app-date-range-selector>
+
+    </mat-card-title>
+  </mat-card>
+  <app-track-map [from]='from' [to]='to' [isLastKnown]='isLastKnown' class="mobile-map"></app-track-map>
+</div>
+
+<div *ngIf="allMap">
+  <div class="bc bc-top">
+    <a [routerLink]="['/bikes']" class="bc-link">{{ 'COMMON.BIKES' | translate }}</a>
+    <span class="bc-separator">&nbsp;/&nbsp;</span>
+    <span class="bc-current">{{ title | translate }}</span>
+  </div>
+  <app-track-map [from]='from' [to]='to' [isLastKnown]='isLastKnown'></app-track-map>  
+</div>

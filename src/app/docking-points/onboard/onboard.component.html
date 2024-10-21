@@ -1,0 +1,121 @@
+<div id="docking-stations" class="result-container" (window:resize)="onResize()">
+  <mat-card>
+    <mat-card-title fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="space-between start">
+
+      <div>
+        <a [routerLink]="['/dockingStations']" class="bc-link">{{ 'COMMON.DOCKING_STATIONS' | translate }}</a>
+        <span class="bc-separator"> / </span>
+        <a [routerLink]="['/dockingStations/',dockingStationId,'dockingpoints']" class="bc-link">
+          {{ dockingStationName }}</a>
+        <span class="bc-separator"> / </span>
+        <a [routerLink]="['/dockingStations/',dockingStationId,'dockingpoints']" class="bc-link">
+          {{ 'COMMON.DOCKING_POINTS' | translate }}</a>
+        <span class="bc-separator"> / </span>
+        <a [routerLink]="['/dockingStations/',dockingStationId,'dockingpoints',dockingPointId,'edit']" class="bc-link">
+          {{ dockingPointDetails?.VisualId}}</a>
+        <span class="bc-separator"> / </span>
+        <span class="bc-current">Onboard</span>
+      </div>
+
+    </mat-card-title>
+
+    <mat-card-content style=" margin-top: 30px;">
+      <div class="container form-wrapper" fxFlex="100" fxLayout="column" fxLayout.gt-md="row" fxFlexAlign="space-between start">
+        <form [formGroup]="onboardForm" fxFlex="100" fxFlex.gt-md="75" fxLayout="column">
+          <div fxLayout="column" fxLayout.gt-sm="row" class="onboarding-form-row">
+            <label fxFlex.gt-sm="15">{{'ONBOARD.BIKE_PCB_SERIAL'| translate}} : </label>
+            <div class="input-wrapper" fxFlex.gt-sm="20">
+              <mat-form-field class="example-full-width onboarding"
+                [ngClass]="MId ? 'example-full-width-filled-serial' : 'example-full-width-empty-serial'">
+                <input matInput placeholder="
+                {{'ONBOARD.BIKE_PCB_SERIAL'| translate}}" type="text" formControlName="Serial">
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-sm="65">
+              <button *ngIf="!MId" mat-raised-button type="button" class="button-grey" (click)="getNextBike()">{{'COMMON.GET_BIKE' | translate }}</button>
+              <button *ngIf="MId && !isOnBoardSucess" mat-raised-button type="button" class="button-red"
+                (click)="cancelBike()">{{'COMMON.CANCEL' | translate }}</button>
+                <button *ngIf="MId && isOnBoardSucess" mat-raised-button type="button" class="button-red"
+                (click)="cancelExistingBike()">{{'COMMON.CANCEL' | translate }}</button>
+              <span *ngIf="!MId">{{readyForOnboard}}</span>
+            </div>
+          </div>
+
+          <div fxLayout="column" fxLayout.gt-sm="row" class="onboarding-form-row">
+            <label fxFlex.gt-sm="15" class="visual">{{'ONBOARD.BIKE_VISUAL'| translate}} : </label>
+            <div class="input-wrapper" fxFlex.gt-sm="20">
+              <mat-form-field class="example-full-width onboarding"
+                [ngClass]="(!onboardForm.value.VisualId || (onboardForm.value.VisualId && onboardForm.value.VisualId.length == 0) || onboardForm.controls['VisualId'].touched) ? 'example-full-width-touched-visual' : 'example-full-width-untouched-visual' ">
+                <input matInput placeholder="{{'ONBOARD.BIKE_VISUAL_ID' | translate }}" type="text"
+                  formControlName="VisualId">
+                <mat-error
+                  *ngIf="onboardForm.controls['VisualId'].hasError('required') && onboardForm.controls['VisualId'].touched"
+                  class="md-text-warn">{{'ONBOARD.VISUAL_ID_REQUIRED' | translate }}</mat-error>
+                <mat-error
+                  *ngIf="onboardForm.controls['VisualId'].hasError('pattern') && onboardForm.controls['VisualId'].touched"
+                  class="md-text-warn">{{'ONBOARD.VISUAL_ID_INCORRECT_FORMAT' | translate }}</mat-error>
+                <mat-hint align="start"><strong>eg:0052 </strong> </mat-hint>
+              </mat-form-field>
+            </div>
+            <div fxFlex.gt-sm="65">
+              <button
+                *ngIf="onboardForm.value.VisualId && onboardForm.value.VisualId.length >= 4 && isVisualChanged && (!isOnBoardSucess || (isOnBoardSucess && isVisualChanged)) && MId && !isNonPreparedBike"
+                class="button-green" mat-raised-button type="button" (click)="saveBike()">{{'COMMON.SAVE_AND_UNDOCK' | translate }}</button>
+            </div>
+          </div>
+
+          <div fxLayout="column">
+            <p *ngIf="isNonPreparedBike"><span class="material-icons yellow">
+                warning
+              </span>{{'ONBOARD.STILL_IN_PROCESS' | translate }}
+            </p>
+            <p *ngIf="nextBike"><span class="material-icons green">
+                done
+              </span>{{'ONBOARD.IDENTIFIED_BIKE_PCB' | translate }} {{nextBike?.Serial}}
+            </p>
+            <p *ngIf="nextBike && nextBike.PulseTimestamp"><span class="material-icons green">
+                done
+              </span>{{'ONBOARD.PULSE_RECEIVED_AT' | translate }} {{nextBike?.PulseTimestamp | convertTime}}
+              ({{ formatBikeOnboardTimeDuration(nextBike?.PulseTimestamp) }})
+            </p>
+            <p *ngIf="nextBike && nextBike.LastPositionTimestamp"><span class="material-icons green">
+                done
+              </span>{{'ONBOARD.POSITION_UPDATED_AT' | translate }} {{nextBike?.LastPositionTimestamp | convertTime}}
+              ({{ formatBikeOnboardTimeDuration(nextBike?.LastPositionTimestamp) }})
+            </p>
+            <p *ngIf="nextBike && nextBike.FirmwareUpgradedTimestamp"><span class="material-icons green">
+                done
+              </span>{{'ONBOARD.FIRMWARE_UPGRADED_AT' | translate }} {{nextBike?.FirmwareUpgradedTimestamp | convertTime}}
+              ({{ formatBikeOnboardTimeDuration(nextBike?.FirmwareUpgradedTimestamp) }})
+            </p>
+            <p *ngIf="nextBike && nextBike.FWVersion"><span class="material-icons green">
+                done
+              </span>{{'ONBOARD.FIRMWARE_VERSION' | translate }} : {{nextBike?.FWVersion}}
+            </p>
+            <p *ngIf="nextBike"><span class="material-icons green">
+                done
+              </span>{{'ONBOARD.PREPARED' | translate }} ({{'ONBOARD.FINISHED_AT' | translate }}
+              {{nextBike?.formatedPreparedTimestamp}})
+            </p>
+            <p *ngIf="nextBike && !isOnBoardSucess"><span class="material-icons red">
+                close
+              </span>{{'ONBOARD.ONBOARDING_NOT_COMPLETED' | translate }}</p>
+            <p *ngIf="nextBike && onboardUser && isOnBoardSucess"><span class="material-icons green">
+                done
+              </span>{{'ONBOARD.ONBOARDING_FINISHED_AT' | translate }} {{onboardedDate}}
+              {{'ONBOARD.ONBOARD_BY' | translate }} {{onboardUser.FirstName}}
+              {{onboardUser.LastName}}</p>
+              
+          </div>
+        </form>
+        <div fxFlex="100" fxFlex.gt-md="25" class="pcb-btn-wrapper">
+          <button [disabled]="!isLoaded" mat-raised-button type="button" class="button-grey"
+            (click)="OpenOnboardPopup()">{{'ONBOARD.VIEW_ONBOARD_LOGS' | translate }}</button>
+          <button [disabled]="!MId" mat-raised-button type="button" class="button-grey clear-pcb"
+            (click)="resetDockingPoint()">{{'ONBOARD.CLEAR_PCB' | translate }}</button>
+        </div>
+      </div>
+    </mat-card-content>
+
+  </mat-card>
+</div>

@@ -1,0 +1,29 @@
+<div class="session-content">
+  <!-- <div class="session-wrapper inner" style="width:600px;"> -->
+  <div class="session-wrapper">
+    <mat-card class="mat-card-header-title">
+      <mat-card-content>
+        <div class="text-xs-center pb-1">
+          <p *ngIf="operationType == 1" class="text-muted">{{'PRIORITY_GROUP.ADD_TITLE' | translate}}</p>
+          <p *ngIf="operationType == 2" class="text-muted">{{'PRIORITY_GROUP.EDIT_TITLE' | translate}}</p>
+        </div>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div fxLayout="column" fxLayoutAlign="space-around">
+
+            <mat-form-field class="pb-1">
+              <input matInput placeholder="{{'PRIORITY_GROUP.RESERVATIONS.PRIORITY_GROUP_ID' | translate}}" type="text" [formControl]="form.controls['PriorityGroupId']">
+              <mat-error *ngIf="form.controls['PriorityGroupId'].hasError('required') && form.controls['PriorityGroupId'].touched" class="md-text-warn">{{'PRIORITY_GROUP.ID_REQUIRED' | translate}}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="pb-1">
+              <input matInput placeholder="{{'PRIORITY_GROUP.RESERVATIONS.PRIORITY_GROUP_NAME' | translate}}" type="text" [formControl]="form.controls['PriorityGroupName']">
+              <mat-error *ngIf="form.controls['PriorityGroupName'].hasError('required') && form.controls['PriorityGroupName'].touched" class="md-text-warn">{{'PRIORITY_GROUP.PRIORITY_GROUP_NAME_REQUIRED' | translate}}</mat-error>
+            </mat-form-field>
+            <button mat-raised-button color="primary" class="btn-block" type="submit" [disabled]="!form.valid">{{'PRIORITY_GROUP.SUBMIT' | translate}}</button>
+          </div>
+          
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

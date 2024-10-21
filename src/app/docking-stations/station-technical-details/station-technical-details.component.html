@@ -1,0 +1,131 @@
+<!-- bread crumb -->
+<div fxLayout="row" fxLayoutAlign="space-between center" class="tech-details-title-wrapper">
+    <p class="tech-details-title">{{ 'DOCKING_STATION.TECHNICAL_DETAILS' | translate }} </p>
+    <div class='icons-container'>
+        <a (click)="editTechDetails()" class='icon-link' *ngIf="technicalDetails && !isEdit">
+            <mat-icon class="material-icons mat-edit-icon" aria-label="edit">edit</mat-icon>
+        </a>
+        <a (click)="onClose()" class="icon-link go-back">
+            <mat-icon class="material-icons" aria-label="close">close</mat-icon>
+        </a>
+    </div>
+</div>
+
+<!-- Docking station details -->
+<div fxLayout="row wrap" style="padding-bottom: 7px;" *ngIf="!isEdit">
+    <div fxLayout="column" fxFlex="100">
+        <div class="detail-field" fxFlex.gt-sm="100%" fxFlex="100">
+            <span class="detail-field-label">{{ 'DOCKING_STATION.ELECTRICITY_SUPPLIED_DATE' | translate }} :</span>
+            <span class="detail-field-value">{{ technicalDetails?.ElectricitySuppliedDate }}</span>
+        </div>
+        <div class="detail-field" fxFlex.gt-sm="100%" fxFlex="100">
+            <span class="detail-field-label">{{ 'DOCKING_STATION.FUSE_LOCATION' | translate }} :</span>
+            <span class="detail-field-value">{{ technicalDetails?.FuseLocation }}</span>
+        </div>
+        <div class="detail-field" fxFlex.gt-sm="100%" fxFlex="100">
+            <span class="detail-field-label">{{'DOCKING_STATION.FUSE_CURRENT' | translate}} :</span>
+            <span class="detail-field-value">{{technicalDetails?.FuseCurrent}}</span>
+        </div>
+        <div class="detail-field" fxFlex.gt-sm="100%" fxFlex="100">
+            <span class="detail-field-label">{{'DOCKING_STATION.EMERGENCY_CONTACT' | translate}} :</span>
+            <span class="detail-field-value">{{technicalDetails?.EmergencyContact}}</span>
+        </div>
+    </div>
+</div>
+
+<div style="padding-bottom: 7px;" *ngIf="isEdit">
+    <form [formGroup]="tecDetailsForm" (ngSubmit)="onSubmit()">
+        <div fxLayout="column" fxFlex="100">
+            <div class="detail-field-edit" fxFlex.gt-sm="100%" fxFlex="100">
+                <mat-form-field fxFlex.gt-sm="100%" fxFlex="100">
+                    <input matInput
+                        placeholder="{{ 'DOCKING_STATION.ELECTRICITY_SUPPLIED_DATE' | translate }} :"
+                        [matDatepicker]="picker"
+                        [formControl]="tecDetailsForm.controls['ElectricitySuppliedDate']"
+                        id="ElectricitySuppliedDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="detail-field-edit" fxFlex.gt-sm="100%" fxFlex="100">
+                <mat-form-field fxFlex.gt-sm="100%" fxFlex="100">
+                    <input matInput
+                        placeholder="{{ 'DOCKING_STATION.FUSE_LOCATION' | translate }} :"
+                        [formControl]="tecDetailsForm.controls['FuseLocation']"
+                        id="FuseLocation"
+                        required
+                    />
+                    <mat-error
+                        *ngIf="
+                        tecDetailsForm.controls['FuseLocation'].hasError('required') &&
+                        tecDetailsForm.controls['FuseLocation'].touched"
+                        class="mat-text-warn"
+                        >{{ 'DOCKING_STATION.TECHNICAL_DETAILS_VALIDATIONS.FUSE_LOCATION' | translate}}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="detail-field-edit" fxFlex.gt-sm="100%" fxFlex="100">
+                <mat-form-field fxFlex.gt-sm="100%" fxFlex="100">
+                    <input matInput
+                        placeholder="{{ 'DOCKING_STATION.FUSE_CURRENT' | translate }} :"
+                        [formControl]="tecDetailsForm.controls['FuseCurrent']"
+                        id="FuseCurrent"
+                        required
+                    />
+                    <mat-error
+                        *ngIf="
+                        tecDetailsForm.controls['FuseCurrent'].hasError('required') &&
+                        tecDetailsForm.controls['FuseCurrent'].touched"
+                        class="mat-text-warn"
+                        >{{ 'DOCKING_STATION.TECHNICAL_DETAILS_VALIDATIONS.FUSE_CURRENT' | translate}}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="detail-field-edit" fxFlex.gt-sm="100%" fxFlex="100">
+                <mat-form-field fxFlex.gt-sm="100%" fxFlex="100">
+                    <input matInput
+                        placeholder="{{ 'DOCKING_STATION.EMERGENCY_CONTACT' | translate }} :"
+                        [formControl]="tecDetailsForm.controls['EmergencyContact']"
+                        id="EmergencyContact"
+                        required
+                    />
+                    <mat-error
+                        *ngIf="
+                        tecDetailsForm.controls['EmergencyContact'].hasError('required') &&
+                        tecDetailsForm.controls['EmergencyContact'].touched"
+                        class="mat-text-warn"
+                        >{{ 'DOCKING_STATION.TECHNICAL_DETAILS_VALIDATIONS.EMERGENCY_CONTACT' | translate}}
+                    </mat-error>
+                    <mat-error
+                        *ngIf="
+                        tecDetailsForm.controls['EmergencyContact'].hasError('maxlength') &&
+                        tecDetailsForm.controls['EmergencyContact'].touched"
+                        class="mat-text-warn"
+                        >{{ 'DOCKING_STATION.TECHNICAL_DETAILS_VALIDATIONS.EMERGENCY_CONTACT_MAX' | translate}}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+                <button
+                    mat-raised-button
+                    type="button"
+                    class="mr-1"
+                    id="cancelBtn"
+                    (click)="onCancel()"
+                    [disabled]="isSubmitted"
+                >
+                    {{ 'DOCKING_STATION.CANCEL' | translate }}
+                </button>
+                <button
+                    mat-raised-button
+                    type="submit"
+                    class="mr-1"
+                    id="submitBtns"
+                    [disabled]="!tecDetailsForm.valid || isSubmitted"
+                >
+                    {{ 'DOCKING_STATION.UPDATE' | translate }}
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

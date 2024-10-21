@@ -1,0 +1,73 @@
+<div id="docking-point-edit" class="result-container">
+  <mat-card>
+
+    <mat-card-title>
+      <!-- bread crumb -->
+      <div>
+        <a [routerLink]="['/dockingStations']" class="bc-link">{{ 'COMMON.DOCKING_STATIONS' | translate }}</a>
+        <span class="bc-separator"> / </span>
+        <a [routerLink]="['/dockingStations/',dockingStationId,'dockingpoints']" class="bc-link"> {{ dockingStationName }}</a>
+        <span class="bc-separator"> / </span>
+        <a [routerLink]="['/dockingStations/',dockingStationId,'dockingpoints']" class="bc-link"> {{ 'COMMON.DOCKING_POINTS' | translate }}</a>
+        <span [routerLink]="['/dockingStations/',dockingStationId,'dockingpoints']" class="bc-link" *ngIf="dockingPointDetails.VisualId"> / </span>
+        <span class="bc-current"> {{ dockingPointDetails.VisualId }}</span>       
+      </div>
+    </mat-card-title>
+
+    <mat-card-content style=" margin-top: 30px;">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-style">
+        <div fxLayout="column" fxLayoutAlign="space-around">
+
+          <!-- <mat-form-field class="pb-1">
+            <input matInput placeholder="DockingStationId" type="text" [formControl]="form.controls['DockingStationId']" [(ngModel)]="dockingPointDetails.DockingStationId" [readonly]="true">
+            <mat-error *ngIf="form.controls['DockingStationId'].hasError('required') && form.controls['DockingStationId'].touched" class="md-text-warn">{{ 'DOCKING_POINT.REQ_ERROR' | translate }}</mat-error>
+          </mat-form-field> -->
+
+          <mat-form-field class="pb-1">
+            <input matInput placeholder="{{ 'DOCKING_STATION.DOCKING_STATION_NAME' | translate}}" type="text" [formControl]="form.controls['DockingStationId']" [(ngModel)]="dockingStationName"
+              [readonly]="true">
+            <mat-error *ngIf="form.controls['DockingStationId'].hasError('required') && form.controls['DockingStationId'].touched" class="md-text-warn">{{ 'DOCKING_POINT.REQ_ERROR' | translate }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="pb-1">
+            <input matInput placeholder="{{ 'DOCKING_POINTS.HARDWARE_ID' | translate }}" type="text" [formControl]="form.controls['HardwareId']" [(ngModel)]="dockingPointDetails.HardwareId">
+            <mat-error *ngIf="form.controls['HardwareId'].hasError('required') && form.controls['HardwareId'].touched" class="md-text-warn">{{ 'DOCKING_POINT.REQ_ERROR' | translate }}</mat-error>
+            <mat-error *ngIf="form.controls['HardwareId'].errors?.maxlength && form.controls['HardwareId'].touched" class="md-text-warn">{{ 'DOCKING_POINT.NUMBER_OF_CHARACTER_ERROR' | translate }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="pb-1">
+            <input matInput placeholder="{{ 'DOCKING_POINTS.VISUAL_ID' | translate }}" type="text" [formControl]="form.controls['VisualId']" [(ngModel)]="dockingPointDetails.VisualId" pattern="[0-9]+">
+            <mat-error *ngIf="form.controls['VisualId'].hasError('required') && form.controls['VisualId'].touched" class="md-text-warn">{{ 'DOCKING_POINT.REQ_ERROR' | translate }}</mat-error>
+            <mat-error *ngIf="form.controls['VisualId'].hasError('pattern') && form.controls['VisualId'].touched"  class="md-text-warn">{{ 'DOCKING_POINT.NUMBERS_ONLY_ERROR' | translate }}</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="pb-1">
+            <input matInput placeholder="{{ 'DOCKING_POINTS.APPLICATION_VERSION' | translate }}" type="text" [formControl]="form.controls['ApplicationVersion']" [(ngModel)]="dockingPointDetails.ApplicationVersion" [readonly]="true">
+          </mat-form-field>
+
+          <!-- <mat-form-field class="pb-1">
+            <input matInput placeholder="State" type="text" [formControl]="form.controls['State']" [(ngModel)]="dockingPointDetails.State">
+            <mat-error *ngIf="form.controls['State'].hasError('required') && form.controls['State'].touched" class="md-text-warn">{{ 'DOCKING_POINT.REQ_ERROR' | translate }}</mat-error>
+          </mat-form-field> -->
+
+          <mat-form-field class="pb-1">
+            <mat-select placeholder="{{ 'DOCKING_POINTS.STATE' | translate }}" [(value)]="selected" (selectionChange)="onStateChange($event)" [disabled]="dropdownDisable">
+              <mat-option value="1">Available</mat-option>
+              <mat-option value="2">Occupied</mat-option>
+              <mat-option value="3">Disabled</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!-- <mat-form-field class="pb-1">
+            <mat-select placeholder="State" [formControl]="form.controls['State']" (selectionChange)="onStateChange($event)">
+              <mat-option *ngFor="let state of dockingPointState" [(value)]="state.value">{{state.viewValue}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.controls['State'].hasError('required') && form.controls['State'].touched" class="md-text-warn">{{ 'DOCKING_POINT.REQ_ERROR' | translate }}</mat-error>
+          </mat-form-field> -->
+
+          <button mat-raised-button color="primary" class="btn-block" type="submit" [disabled]="!form.valid">{{ 'COMMON.SUBMIT' | translate }}</button>
+        </div>
+      </form>
+    </mat-card-content>
+
+  </mat-card>
+</div>

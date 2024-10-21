@@ -1,0 +1,226 @@
+<div id="session_history" class="result-container" (window:resize)="onResize()">
+  <mat-card>
+    <mat-card-title *ngIf="!isMobile">
+
+      {{ 'COMMON.SESSION_HISTORY' | translate }}
+
+      <div fxFlex="1 1 auto" class="fill-remaining-space"></div>
+
+      <div style="font-size: 15px; padding-right: 35px">
+        <div style="width:150px;">
+          <mat-label class="dropdown-placeholder">{{ 'SESSIONS.SESSION_STATE' | translate }}</mat-label>
+          <mat-select placeholder="Active" [(value)]="sessionStatus" (selectionChange)="onActiveChange($event)">
+            <mat-option *ngFor="let active of activeFilters" [value]="active.id">{{active.name}}</mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <!-- filter by date time -->
+      <div style="font-size: 15px;" *ngIf="sessionStatus!=0">
+        <div style="width:150px; font-size:15px;">
+          <mat-label class="dropdown-placeholder">{{ 'SESSIONS.FILTER_DATE' | translate }}</mat-label>
+          <mat-select placeholder="Filter By Date" [(value)]="selectedDate" (selectionChange)="onDateChange($event)">
+            <mat-option *ngFor="let dateRange of dateRanges" [value]="dateRange.id">{{dateRange.name}}</mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <!-- from date -->
+      <div style="font-size: 15px; padding-left: 35px; padding-top: 12px;" *ngIf="isCustomDateShown">
+        <mat-form-field style="width: 135px;font-size: 14px;">
+          <input matInput [matDatepicker]="picker" [(ngModel)]="fromDate" placeholder="Filter Date From" (dateChange)="onStartDatePicked($event)">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker startView="year" [startAt]="startDate"></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <!-- to date -->
+      <div style="font-size: 15px; padding-left: 35px; padding-top: 12px;" *ngIf="isCustomDateShown">
+        <mat-form-field style="width: 135px;font-size: 14px;">
+          <input matInput [matDatepicker]="picker" [(ngModel)]="toDate" placeholder="Filter Date To" (dateChange)="onEndDatePicked($event)">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker startView="year" [startAt]="startDate"></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </mat-card-title>
+
+    <!-- Mobile view -->
+    <mat-card-title *ngIf="isMobile">
+
+      {{ 'COMMON.SESSION_HISTORY' | translate }}
+      <div class="container" fxLayout="row wrap" fxLayout.xs="column" style="font-size: 15px; margin-top: 20px;">
+        <div fxFlex="50%">
+          <div class="session-history-filters">
+            <mat-label class="dropdown-placeholder">{{ 'SESSIONS.SESSION_STATE' | translate }}</mat-label>
+            <mat-select placeholder="Active" [(value)]="sessionStatus" (selectionChange)="onActiveChange($event)">
+              <mat-option *ngFor="let active of activeFilters" [value]="active.id">{{active.name}}</mat-option>
+            </mat-select>
+          </div>
+        </div>
+        <div fxFlex="50%">
+          <div class="session-history-filters" *ngIf="sessionStatus!=0">
+            <mat-label class="dropdown-placeholder">{{ 'SESSIONS.FILTER_DATE' | translate }}</mat-label>
+            <mat-select placeholder="Filter By Date" [(value)]="selectedDate" (selectionChange)="onDateChange($event)">
+              <mat-option *ngFor="let dateRange of dateRanges" [value]="dateRange.id">{{dateRange.name}}</mat-option>
+            </mat-select>
+          </div>
+        </div>
+
+        <div fxFlex="50%">
+          <div style="font-size: 15px;padding-top: 15px;" *ngIf="isCustomDateShown">
+            <mat-form-field style="width: 135px;font-size: 14px;">
+              <input matInput [matDatepicker]="picker" [(ngModel)]="fromDate" placeholder="Filter Date From" (dateChange)="onStartDatePicked($event)">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker startView="year" [startAt]="startDate"></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div fxFlex="50%">
+          <div style="font-size: 15px;" *ngIf="isCustomDateShown">
+            <mat-form-field style="width: 135px;font-size: 14px;">
+              <input matInput [matDatepicker]="picker" [(ngModel)]="toDate" placeholder="Filter Date To" (dateChange)="onEndDatePicked($event)">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker startView="year" [startAt]="startDate"></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </mat-card-title>
+
+    <mat-card-content>
+      <ngx-datatable class="material expandable" [rows]="rideSessions" [columnMode]="'force'" [headerHeight]="50"
+        #sessionHistoryTable [scrollbarH]="false" [footerHeight]="50" [rowHeight]="50" [limit]="13"
+        [loadingIndicator]="loadingIndicator">
+
+        <!-- Row Detail Template -->
+        <ngx-datatable-row-detail [rowHeight]="'100%'" #sessionResponsive *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+            <div style="padding-left:15px;font-size: 13px;">
+              <div class="wordwrap">
+                <strong>{{'SESSION_HISTORY_SUPPORT.BIKE_ID'|translate}} :</strong> {{row.VisualId}}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'SESSION_HISTORY_SUPPORT.START_DOCKING_STATION'|translate}} :</strong>
+                <div *ngIf="row.StartDockingStationName != null"> {{ row.StartDockingStationName }} </div>
+                <app-bike-address *ngIf="row.StartDockingStationName == null" [bike]="row.Start"
+                  (onAddressReceived)="updateStartAddress($event,row)"></app-bike-address>
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'SESSION_HISTORY_SUPPORT.START_TIME'|translate}} :</strong> {{row.StartTime | convertTime}}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'SESSION_HISTORY_SUPPORT.END_DOCKING_STATION'|translate}} :</strong>
+                <div *ngIf="row.EndDockingStationName != null"> {{ row.EndDockingStationName }} </div>
+                <app-bike-address *ngIf="row.EndDockingStationName == null" [bike]="row.End"
+                  (onAddressReceived)="updateEndAddress($event,row)"></app-bike-address>
+              </div>
+              <div style="padding-top:10px;" *ngIf="row.EndTime; else onGoing">
+                <strong>{{'SESSION_HISTORY_SUPPORT.END_TIME'|translate}} :</strong> {{row.EndTime | convertTime}}
+              </div>
+              <ng-template #onGoing>
+                <div style="padding-top:10px;">
+                  <strong>{{'SESSION_HISTORY_SUPPORT.END_TIME'|translate}} :</strong> OnGoing
+                </div>
+              </ng-template>
+              <div style="padding-top:10px;">
+                <strong>{{'SESSION_HISTORY_SUPPORT.IS_TERMINATED'|translate}} :</strong>
+                <span>
+                  {{ row.IsTerminated ? 'Yes' : 'No' }}
+                </span>
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'SESSION_HISTORY_SUPPORT.TERMINATED_USER'|translate}} :</strong> {{row.TerminatedUser}}
+              </div>
+              <div style="padding-top:10px;" class="wordwrap">
+                <strong>{{'SESSION_HISTORY_SUPPORT.COMMENT'|translate}} :</strong> {{row.Comment}}
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-row-detail>
+
+        <!-- Column Templates -->
+        <ngx-datatable-column [width]="20" [resizeable]="false" [sortable]="false" [draggable]="false"
+          [canAutoResize]="false" *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+            <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+              title="Expand/Collapse Row" (click)="toggleExpandRow(row)">
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="VisualId" name="{{'SESSION_HISTORY_SUPPORT.BIKE_ID'|translate}}" [flexGrow]="0.1" [minWidth]="50" [width]="30">
+          <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+            <div (click)="navigateToBikeDetailPage(row.BikeId)">
+              <a style="color:#007dbd;vertical-align: super;">{{value}}</a>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="StartDockingStationName" name="{{'SESSION_HISTORY_SUPPORT.START_DOCKING_STATION'|translate}}" [flexGrow]="2"
+          [minWidth]="125" [width]="200" *ngIf="!isMobile">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div *ngIf="row.StartDockingStationName != null"> {{ row.StartDockingStationName }} </div>
+            <app-bike-address *ngIf="row.StartDockingStationName == null" [bike]="row.Start"
+              (onAddressReceived)="updateStartAddress($event,row)"></app-bike-address>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="StartTime" name="{{'SESSION_HISTORY_SUPPORT.START_TIME'|translate}}" [flexGrow]="0.5" [minWidth]="80" [width]="100" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value | convertTime }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="EndDockingStationName" name="{{'SESSION_HISTORY_SUPPORT.END_DOCKING_STATION'|translate}}" [flexGrow]="2" [minWidth]="125"
+          [width]="250" *ngIf="!isMobile">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div *ngIf="row.EndDockingStationName != null"> {{ row.EndDockingStationName }} </div>
+            <app-bike-address *ngIf="row.EndDockingStationName == null" [bike]="row.End"
+              (onAddressReceived)="updateEndAddress($event,row)"></app-bike-address>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="EndTime" name="{{'SESSION_HISTORY_SUPPORT.END_TIME'|translate}}" [flexGrow]="0.5" [minWidth]="80" [width]="100" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <div *ngIf="value; else onGoing">
+              {{ value | convertTime }}
+            </div>
+          </ng-template>
+          <ng-template #onGoing>
+            <div>
+              <b>Ongoing</b>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="IsTerminated" name="{{'SESSION_HISTORY_SUPPORT.IS_TERMINATED'|translate}}" [flexGrow]="0.25" [minWidth]="25" [width]="35" *ngIf="!isMobile && layout > LAYOUT.SM">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <div >
+              <span>{{ value ? 'Yes' : 'No' }}</span>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="TerminatedUser" name="{{'SESSION_HISTORY_SUPPORT.TERMINATED_USER'|translate}}" [flexGrow]="0.5" [minWidth]="50" [width]="70" *ngIf="!isMobile && layout > LAYOUT.SM">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="Comment" name="{{'SESSION_HISTORY_SUPPORT.COMMENT'|translate}}" [flexGrow]="0.5" [minWidth]="60" [width]="240" *ngIf="!isMobile && layout > LAYOUT.SM">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="BikeId" name="" [flexGrow]="0.5" [minWidth]="30" [width]="70">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <a class="list-icon" matTooltip="{{ 'COMMON.DETAILS_HINT' | translate }}" mat-icon-button
+              routerLink="/sessions/{{row.RideSessionId}}">
+              <mat-icon>list</mat-icon>
+            </a>            
+          </ng-template>
+        </ngx-datatable-column>
+
+      </ngx-datatable>
+    </mat-card-content>
+  </mat-card>

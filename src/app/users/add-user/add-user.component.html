@@ -1,0 +1,107 @@
+<div id="system-users" class="result-container">
+  <mat-card>
+    <mat-card-title>
+      <div>
+        <a [routerLink]="['/users']" class="bc-link">{{ 'COMMON.USERS' | translate }}</a>
+        <span class="bc-separator"> / </span>
+        <span class="bc-current">{{ 'REGISTER.INVITE_USER' | translate}}</span>
+      </div>
+    </mat-card-title>
+
+    <mat-card-content fxLayout="column" fxLayout.gt-xs="row" fxLayoutAlign="start start">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="add-user-form">
+        <div fxLayout="column" fxLayoutAlign="space-around" class="user-edit-form">
+
+          <mat-form-field class="pb-1">
+            <input matInput placeholder="{{ 'REGISTER.FIRST_NAME' | translate }}" type="text"
+              [formControl]="form.controls['FirstName']">
+            <mat-error *ngIf="form.controls['FirstName'].hasError('required') && form.controls['FirstName'].touched"
+              class="md-text-warn">
+              {{ 'REGISTER.FIRST_NAME_REQ_ERROR' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="pb-1">
+            <input matInput placeholder="{{ 'REGISTER.LAST_NAME' | translate }}" type="text"
+              [formControl]="form.controls['LastName']">
+            <mat-error *ngIf="form.controls['LastName'].hasError('required') && form.controls['LastName'].touched"
+              class="md-text-warn">
+              {{ 'REGISTER.LAST_NAME_REQ_ERROR' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="pb-1">
+            <mat-select placeholder="{{ 'REGISTER.COUNTRY' | translate }}" [formControl]="form.controls['CountryId']"
+              (selectionChange)="onCountryChange($event)">
+              <mat-option *ngFor="let country of countries" [value]="country.CountryId">{{country.Name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.controls['CountryId'].hasError('required') && form.controls['CountryId'].touched"
+              class="md-text-warn">
+              {{ 'REGISTER.COUNTRY_REQ_ERROR' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="pb-1">
+            <input matInput placeholder="{{ 'REGISTER.MOBILE_NO' | translate }}" type="text"
+              [formControl]="form.controls['PhoneNumber']" [(ngModel)]="countryCode">
+            <mat-error *ngIf="form.controls['PhoneNumber'].hasError('required') && form.controls['PhoneNumber'].touched"
+              class="md-text-warn">
+              {{ 'REGISTER.MOBILE_NO_REQ_ERROR' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="pb-1">
+            <input matInput placeholder="{{ 'REGISTER.EMAIL' | translate }}" type="email"
+              [formControl]="form.controls['Email']">
+            <mat-error *ngIf="form.controls['Email'].hasError('required') && form.controls['Email'].touched"
+              class="md-text-warn">
+              {{ 'REGISTER.EMAIL_REQ_ERROR' | translate }}
+            </mat-error>
+            <mat-error *ngIf="form.controls['Email'].errors?.email && form.controls['Email'].touched"
+              class="md-text-warn">
+              {{ 'REGISTER.EMAIL_VALIDATION_ERROR' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="pb-1">
+            <mat-select placeholder="{{ 'REGISTER.ROLES' | translate }}" [formControl]="form.controls['RoleId']"
+              (selectionChange)="onRoleChange($event)">
+              <mat-option *ngFor="let role of roles" [value]="role.RoleId">{{role.Name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.controls['Email'].hasError('required') && form.controls['Email'].touched"
+            class="md-text-warn">
+             {{ 'REGISTER.ROLE_REQ_ERROR' | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="pb-1" *ngIf="privileges && isStreetTeam">          
+                <mat-select placeholder="{{ 'REGISTER.PRIVILEGES' | translate }}" [formControl]="form.controls['PrivilegeId']" 
+                  (selectionChange)="onPrivilegeChanges($event)">
+                  <mat-option *ngFor="let privilege of privileges" 
+                    [value]="privilege.PrivilegeId">{{privilege.Name}}</mat-option>
+                </mat-select>        
+          </mat-form-field>
+
+          <mat-form-field class="pb-1">         
+              <mat-select placeholder="{{ 'REGISTER.MUNICIPALITIES' | translate }}" [formControl]="areaMultiCtrl" 
+                placeholder="{{'DOCKING_STATION.AREA' | translate}}" #multiSelect [multiple]="true">
+                <mat-option>
+                  <ngx-mat-select-search [showToggleAllCheckbox]="true" [toggleAllCheckboxChecked]="checkAll"
+                    (toggleAll)="toggleSelectAll($event)" [formControl]="areaMultiFilterCtrl"
+                    placeholderLabel="{{'DOCKING_STATION.AREA_SEARCH' | translate}}"
+                    noEntriesFoundLabel="{{'DOCKING_STATION.NOT_FOUND_AREA' | translate}}">
+                  </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let area of filteredAreaMulti | async" [value]="area">
+                  {{area.Name}}
+                </mat-option>
+              </mat-select>  
+        </mat-form-field>
+
+          <button mat-raised-button color="primary" class="btn-block" type="submit" [disabled]="!form.valid">
+            {{'REGISTER.INVITE_USER' | translate }}</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,87 @@
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+th {
+  background-color: #4caf50;
+  color: white;
+}
+
+.block-custom {
+  height: -webkit-calc(100vh - 200px);
+  height: -moz-calc(100vh - 200px);
+  height: calc(100vh - 200px);
+}
+
+mat-nav-list.list-horizontal {
+  padding: 0;
+
+  .mat-list-item {
+    display: inline-block;
+    height: auto;
+    width: auto;
+  }
+}
+
+.station-address {
+  @media (min-width: 960px) {
+    text-align: right;
+  }
+}
+
+.fixed-height-table {
+  height: auto;
+  min-height: 150px;
+  max-height: 520px;
+  overflow-y: auto;
+
+  @media (min-width: 768px) {
+    max-height: 740px;
+  }
+
+  @media (min-width: 1367px) {
+    max-height: 1140px;
+  }
+}
+
+.edit-ds {
+  margin-top: 10px;
+
+  @media (min-width: 600px) {
+    margin-top: 0;
+  }
+}
+
+.tech-details {
+  margin-right: 10px;
+  margin-top: 10px;
+
+  @media (min-width: 600px) {
+    margin-top: 0;
+  }
+}
+
+.visualId {
+  text-decoration: underline;
+  padding-bottom: 2px;
+}
+
+.dis-comment {
+  color: #c83a32;
+}
+
+.dp-detail-field-label {
+  font-weight: 600;
+  min-width: 10px;
+}

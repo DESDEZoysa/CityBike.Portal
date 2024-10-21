@@ -1,0 +1,31 @@
+<div mat-dialog-content>
+  <p style="margin: 0 0 30px 0">
+    {{ "DOCKING_STATION.DISABLE_POPUP.MESSAGE" | translate }}
+  </p>
+</div>
+<mat-form-field class="full-width">
+  <textarea
+    matInput
+    placeholder="Add comment here"
+    [formControl]="comment"
+    required
+  ></textarea>
+  <mat-error *ngIf="comment.hasError('required')">{{
+    "DOCKING_STATION.DISABLE_POPUP.REQUIRED_ERROR_MSG" | translate
+  }}</mat-error>
+</mat-form-field>
+<div fxLayout="row" fxLayoutAlign="space-between center">
+  <button mat-raised-button (click)="onCancelClick()">
+    {{ "DOCKING_STATION.DISABLE_POPUP.CANCEL" | translate }}
+  </button>
+  <button
+    mat-raised-button
+    (click)="onOkClick()"
+    color="primary"
+    class="btn-block"
+    [disabled]="comment.hasError('required')"
+    cdkFocusInitial
+  >
+    {{ "DOCKING_STATION.DISABLE_POPUP.OK" | translate }}
+  </button>
+</div>

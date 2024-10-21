@@ -1,0 +1,98 @@
+<div id="create-routes" class="result-container" (window:resize)="onResize()">
+  <mat-card class="">
+    <mat-card-title>
+      <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between center">
+        <div>
+          <a [routerLink]="['/routes']" class="bc-link">{{ 'COMMON.ROUTES' | translate }}</a>
+          <span class="bc-separator"> / </span>
+          <span class="bc-current" *ngIf="routeId">{{ 'COMMON.UPDATE' | translate }}</span>
+          <span class="bc-current" *ngIf="!routeId">{{ 'COMMON.CREATE' | translate }}</span>
+        </div>
+      </div>
+    </mat-card-title>
+    <mat-card-content>
+      <div fxLayout="row" fxLayoutGap="10">
+        <div fxFlex="50%">
+          <div class="bike-selector-wrapper" fxLayout="column" fxLayoutAlign="end " fxLayout.lg="row"
+            fxLayoutAlign.lg="start start">
+            <mat-form-field *ngIf="!isStreetTeam">
+              <mat-select [formControl]="userCtrl" placeholder="{{'ROUTES.SELECT_USER' | translate}}" #singleSelect
+                style="margin-right: 10px; width: 260px;" class="user-selector">
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="userFilterCtrl"
+                    placeholderLabel="{{'ROUTES.SEARCH_USERS' | translate}}"
+                    noEntriesFoundLabel="{{'ROUTES.NOT_FOUND_USERS' | translate}}">
+                  </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+                  {{user.Name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <button mat-raised-button color="primary" class="mt-40" (click)="addNewWaypoint()">
+            {{'ROUTES.CREATE.ADD_WAYPOINT' | translate}} <i class="material-icons">add_circle_outline</i>
+          </button>
+
+          <div cdkDropList class="waypoint-list" (cdkDropListDropped)="dropWaypoint($event)">
+            <div>
+
+            </div>
+            <div class="waypoint-box" *ngFor="let waypoint of waypoints, index as i" cdkDrag [cdkDragDisabled]="waypoint.CompletedDate">
+              <div class="drag-index">{{i+1}}</div>
+              <div>
+                <div *ngIf="!waypoint?.CompletedDate">
+                  <img *ngIf="waypoint?.DockingStationId" src="/assets/images/insight-icons/ds-default.svg" width="30" />
+                  <img *ngIf="waypoint?.BikeId" src="/assets/images/insight-icons/bike-default.svg" width="30" />
+                  <img *ngIf="waypoint?.WorkshopId" src="/assets/images/insight-icons/workshop-default.svg" width="30" />
+                  <img *ngIf="waypoint?.StorageId" src="/assets/images/insight-icons/storage-default.svg" width="30" />
+                </div>
+                <div *ngIf="waypoint?.CompletedDate && waypoint?.IsSkipped">
+                  <img *ngIf="waypoint?.DockingStationId" src="/assets/images/insight-icons/ds-skip.svg" width="30" />
+                  <img *ngIf="waypoint?.BikeId" src="/assets/images/insight-icons/bike-skip.svg" width="30" />
+                  <img *ngIf="waypoint?.WorkshopId" src="/assets/images/insight-icons/workshop-skip.svg" width="30" />
+                  <img *ngIf="waypoint?.StorageId" src="/assets/images/insight-icons/storage-skip.svg" width="30" />
+                </div>
+                <div *ngIf="waypoint?.CompletedDate && !waypoint?.IsSkipped">
+                  <img *ngIf="waypoint?.DockingStationId" src="/assets/images/insight-icons/ds-completed.svg" width="30" />
+                  <img *ngIf="waypoint?.BikeId" src="/assets/images/insight-icons/bike-completed.svg" width="30" />
+                  <img *ngIf="waypoint?.WorkshopId" src="/assets/images/insight-icons/workshop-completed.svg" width="30" />
+                  <img *ngIf="waypoint?.StorageId" src="/assets/images/insight-icons/storage-completed.svg" width="30" />
+                </div>
+                
+              </div>
+              <div class="drag-content">
+                <p>{{waypoint.Name}}</p>
+              </div>
+              <div class="status-content">
+                <span class="status-chip completed-wp" *ngIf="!waypoint.IsSkipped && waypoint.CompletedDate">Completed</span>
+                <span class="status-chip skipped-wp" *ngIf="waypoint.IsSkipped && waypoint.CompletedDate">Skipped</span>
+              </div>
+              <div class="delete-icon" *ngIf="!waypoint.CompletedDate">
+                <button mat-icon-button>
+                  <i class="material-icons" (click)="deleteWaypoint(i)">delete_outline</i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <button *ngIf="waypoints.length > 0 && !routeId" mat-raised-button color="primary" class="mt-40"
+            (click)="showConfirmationPopup()">
+            {{'ROUTES.CREATE_ROUTE' | translate}}
+          </button>
+          <button *ngIf="waypoints.length > 0 && routeId" mat-raised-button color="primary" class="mt-40"
+            (click)="showConfirmationPopup()">
+            {{'ROUTES.UPDATE_ROUTE' | translate}}
+          </button>
+        </div>
+        <div fxFlex="50%" style="height: 50%;">
+          <app-shared-route-map [dockingStations]="allDockingStations" [workshops]="allWorkshops" [storages]="allStorages" [bikes]="allBikes" [waypoints]="waypoints"></app-shared-route-map>
+        </div>
+      </div>
+      <ngx-spinner bdOpacity=1 bdColor="rgba(255,255,255,0.5)" size="default" color="#04A3E3" type="ball-clip-rotate"
+        [fullScreen]="true">
+      </ngx-spinner>
+    </mat-card-content>
+  </mat-card>
+</div>

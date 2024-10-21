@@ -1,0 +1,496 @@
+<div id="dashboard" class="result-container">
+  <mat-card>
+    <!-- <mat-card-title fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="space-between center">
+      <span class="card-title text-center">{{ 'COMMON.DASHBOARD' | translate }}</span>
+    </mat-card-title> -->
+    <div class="dashboard-loader" fxLayout="row" fxLayoutAlign="center center" *ngIf="isLoading">
+      <img class="tire-pressure-loader" src="assets/images/preloader.svg" width="100" />
+    </div>
+
+    <mat-card-content fxLayout="column" fxLayout.gt-md="row">
+      <div class="bike-cards" fxFlex="100" fxFlex.gt-md="75">
+
+        <div class="title-filter-wrapper">
+          <h2> {{ 'COMMON.BIKES' | translate }}<span>{{ desiredBikeCount }}  {{ 'COMMON.DESIRED_BIKES_TOTAL' | translate }}</span></h2>
+
+          <div class="dashboard-filter">
+            <mat-form-field>
+              <mat-select [formControl]="areaMultiCtrl" placeholder="{{'DOCKING_STATION.AREA' | translate}}"
+                #multiSelect [multiple]="true" (openedChange)="filterByAreas($event)">
+                <mat-option>
+                  <ngx-mat-select-search [showToggleAllCheckbox]="true" [toggleAllCheckboxChecked]="checkAll"
+                    (toggleAll)="toggleSelectAll($event)" [formControl]="areaMultiFilterCtrl"
+                    placeholderLabel="{{'DOCKING_STATION.AREA_SEARCH' | translate}}"
+                    noEntriesFoundLabel="{{'DOCKING_STATION.NOT_FOUND_AREA' | translate}}">
+                  </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let area of filteredAreaMulti | async" [value]="area">
+                  {{area.Name}} <span class="min-amount">{{area.MinimumBikes}}</span>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="dashboard-card" fxLayout="row wrap">
+
+          <a class="dashboard-card__item" routerLink="/dashboard/{{bikes?.AllId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{ 'DASHBOARD.TOTAL_BIKES' | translate }} </span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/bike.svg">
+                <span class="dashboard-card__item-value">{{ bikes?.All }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.AllStatistics" [data]="bikes?.AllStatistics"></app-dashboard-graph>
+          </a>
+
+          <a class="dashboard-card__item" routerLink="/dashboard/{{bikes?.AllInUseId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{ 'DASHBOARD.SUM_IN_USE' | translate }} </span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/bike.svg">
+                <span class="dashboard-card__item-value">{{ bikes?.AllInUse }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.AllOperationalStatistics" [data]="bikes?.AllOperationalStatistics">
+            </app-dashboard-graph>
+          </a>
+
+          <a class="dashboard-card__item" routerLink="/dashboard/{{bikes?.AllAvailableId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{ 'DASHBOARD.SUM_AVILABLE' | translate }} </span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/bike.svg">
+                <span class="dashboard-card__item-value">{{ bikes?.AllAvailable }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.AllAvailableStatistics" [data]="bikes?.AllAvailableStatistics">
+            </app-dashboard-graph>
+          </a>
+
+          <a *ngIf="!isStreetTeam" class="dashboard-card__item"
+            routerLink="/dashboard/{{bikes?.AvailableDockedId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{ 'DASHBOARD.AVILABLE_DOCKED' | translate }} </span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/docked-free.svg" width="73">
+                <span class="dashboard-card__item-value">{{ bikes?.AvailableDocked }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.AvailableDockedStatistics" [data]="bikes?.AvailableDockedStatistics">
+            </app-dashboard-graph>
+          </a>
+
+          <a class="dashboard-card__item" routerLink="/dashboard/{{bikes?.AvailableFreeId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{ 'DASHBOARD.AVILABLE_FREE' | translate }} </span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/bike.svg">
+                <span class="dashboard-card__item-value">{{ bikes?.AvailableFree }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.AvailableFreeStatistics" [data]="bikes?.AvailableFreeStatistics">
+            </app-dashboard-graph>
+          </a>
+
+          <a class="dashboard-card__item" routerLink="/dashboard/{{bikes?.InUseInSessionId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{ 'DASHBOARD.INUSE_SESSION' | translate }} </span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img class="in-session-size" src="/assets/images/dashboard/bike-normal-insession.svg" width="76">
+                <span class="dashboard-card__item-value">{{ bikes?.InUseInSession }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.InUseInSessionStatistics" [data]="bikes?.InUseInSessionStatistics">
+            </app-dashboard-graph>
+          </a>
+
+          <a class="dashboard-card__item" routerLink="/dashboard/{{bikes?.DisabledCheckRequiredId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{ 'DASHBOARD.MUST_BE_CHECKED' | translate }} </span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/must-check.svg" width="56">
+                <span class="dashboard-card__item-value">{{ bikes?.DisabledCheckRequired }}</span>
+              </div>
+              <div class="dashboard-card__item-timer" fxLayout="row" fxLayoutAlign="end center" fxLayout="row"
+                fxLayoutAlign="end center">
+                <div *ngIf="hoursText" class="dashboard-card__item-timer-icon red"></div>
+                <span class="dashboard-card__item-timer-label">{{bikes?.DisabledCheckRequiredMean}}{{hoursText |
+                  translate}}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.DisabledCheckRequiredStatistics"
+              [data]="bikes?.DisabledCheckRequiredStatistics"></app-dashboard-graph>
+          </a>
+
+          <a class="dashboard-card__item" routerLink="/dashboard/{{bikes?.ShouldBeCheckedId }}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.SHOULD_BE_CHECKED' | translate}} </span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/should-check.svg" width="56">
+                <span class="dashboard-card__item-value">{{ bikes?.ShouldBeChecked }}</span>
+              </div>
+              <div class="dashboard-card__item-timer" fxLayout="row" fxLayoutAlign="end center" fxLayout="row"
+                fxLayoutAlign="end center">
+                <div *ngIf="hoursText" class="dashboard-card__item-timer-icon yellow"></div>
+                <span class="dashboard-card__item-timer-label">{{bikes?.ShouldBeCheckedMean}}{{hoursText |
+                  translate}}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.ShouldBeCheckedStatistics" [data]="bikes?.ShouldBeCheckedStatistics">
+            </app-dashboard-graph>
+          </a>
+
+          <!-- <a class="dashboard-card__item" routerLink="/dashboard/{{bikes?.PriorityBikesId }}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.PRIORITY_LIST' | translate}} </span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/bike.svg">
+                <span class="dashboard-card__item-value">{{ bikes?.PriorityBikes }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.PriorityBikesStatistics" [data]="bikes?.PriorityBikesStatistics">
+            </app-dashboard-graph>
+          </a> -->
+
+          <a class="dashboard-card__item" routerLink="/dashboard/{{bikes?.DisabledCheckedNeedRepairId }}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label" style="white-space: nowrap">{{'DASHBOARD.CHECKED_NEED_REPAIR' |
+                translate}} </span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/checked-need-repair.svg" width="60">
+                <span class="dashboard-card__item-value">{{ bikes?.DisabledCheckedNeedRepair }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.DisabledCheckedNeedRepairStatistics"
+              [data]="bikes?.DisabledCheckedNeedRepairStatistics">
+            </app-dashboard-graph>
+          </a>
+
+          <!-- <a *ngIf="!isStreetTeam" class="dashboard-card__item" routerLink="/dashboard/{{bikes?.WithUs}}/filter"> -->
+          <!-- <a *ngIf="!isStreetTeam" class="dashboard-card__item" style=" cursor:default; pointer-events: none;">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.WITH_US' | translate}}</span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/with-us.svg" width="56">
+                <span class="dashboard-card__item-value">{{ bikes?.WithUs }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.WithUsStatistics" [data]="bikes?.WithUsStatistics"></app-dashboard-graph>
+          </a> -->
+
+          <a class="dashboard-card__item" routerLink="/dashboard/{{bikes?.DisabledMissingId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.MISSING' | translate}}</span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/missing.svg" width="40">
+                <span class="dashboard-card__item-value">{{ bikes?.DisabledMissing }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.DisabledMissingStatistics" [data]="bikes?.DisabledMissingStatistics">
+            </app-dashboard-graph>
+          </a>
+
+          <a *ngIf="!isStreetTeam" class="dashboard-card__item"
+            routerLink="/dashboard/{{bikes?.DisabledToWorkshopId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.MOVING' | translate}}</span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/way-to-ws.svg" width="130">
+                <span class="dashboard-card__item-value">{{ bikes?.DisabledToWorkshop }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.DisabledToWorkshopStatistics"
+              [data]="bikes?.DisabledToWorkshopStatistics"></app-dashboard-graph>
+          </a>
+
+          <a *ngIf="!isStreetTeam" class="dashboard-card__item"
+            routerLink="/dashboard/{{bikes?.DisabledInWorkshopId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.IN_WORKSHOP' | translate}}<i>{{'DASHBOARD.NOT_FIXED'
+                  | translate}}</i></span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/in-ws.svg">
+                <span class="dashboard-card__item-value">{{ bikes?.DisabledInWorkshop }}</span>
+              </div>
+              <div class="dashboard-card__item-timer" fxLayout="row" fxLayoutAlign="end center" fxLayout="row"
+                fxLayoutAlign="end center">
+                <div *ngIf="hoursText" class="dashboard-card__item-timer-icon"></div>
+                <span class="dashboard-card__item-timer-label">{{bikes?.DisabledInWorkshopMean}}{{hoursText |
+                  translate}}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.DisabledInWorkshopStatistics"
+              [data]="bikes?.DisabledInWorkshopStatistics"></app-dashboard-graph>
+          </a>
+
+          <a class="dashboard-card__item" routerLink="/dashboard/{{bikes?.DisabledRepairFinishedId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.FINISHED_FIX' |
+                translate}}<i>{{'DASHBOARD.READY_FOR_PICKUP_AT_WORKSHOP' | translate}}</i></span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/fix-ready.svg">
+                <span class="dashboard-card__item-value">{{ bikes?.DisabledRepairFinished }}</span>
+              </div>
+              <div class="dashboard-card__item-timer" fxLayout="row" fxLayoutAlign="end center" fxLayout="row"
+                fxLayoutAlign="end center">
+                <div *ngIf="hoursText" class="dashboard-card__item-timer-icon green"></div>
+                <span class="dashboard-card__item-timer-label">{{bikes?.DisabledRepairFinishedMean}}{{hoursText |
+                  translate}}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.DisabledRepairFinishedStatistics"
+              [data]="bikes?.DisabledRepairFinishedStatistics"></app-dashboard-graph>
+          </a>
+
+          <a class="dashboard-card__item" routerLink="/dashboard/{{bikes?.DisabledInStorageId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.IN_STORAGE' | translate}}</span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/in-stock.svg" width="56">
+                <span class="dashboard-card__item-value">{{ bikes?.DisabledInStorage }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.DisabledInStorageStatistics" [data]="bikes?.DisabledInStorageStatistics">
+            </app-dashboard-graph>
+          </a>
+
+          <a class="dashboard-card__item" routerLink="/dashboard/{{bikes?.InUsePassiveSessionId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.IN_TEST_SESSION' | translate}}</span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/testing.svg" width="60">
+                <span class="dashboard-card__item-value">{{ bikes?.InUsePassiveSession }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.InUsePassiveSessionStatistics"
+              [data]="bikes?.InUsePassiveSessionStatistics"></app-dashboard-graph>
+          </a>
+
+          <a *ngIf="!isStreetTeam" class="dashboard-card__item"
+            routerLink="/dashboard/{{bikes?.DisabledMovingId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.MOVING_NOW' | translate}}</span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/moving.svg" width="90">
+                <span class="dashboard-card__item-value">{{ bikes?.DisabledMoving }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.DisabledMovingStatistics" [data]="bikes?.DisabledMovingStatistics">
+            </app-dashboard-graph>
+          </a>
+
+          <a *ngIf="!isStreetTeam" class="dashboard-card__item"
+            routerLink="/dashboard/{{bikes?.DisabledOfflineId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.OFFLINE' | translate}}</span>
+              <!-- <span class="dashboard-card__item-label">Offline > 1 time</span> -->
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/offline.svg" width="75">
+                <span class="dashboard-card__item-value">{{ bikes?.DisabledOffline }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.DisabledOfflineStatistics" [data]="bikes?.DisabledOfflineStatistics">
+            </app-dashboard-graph>
+          </a>
+
+          <a class="dashboard-card__item"
+            routerLink="/dashboard/{{bikes?.DisabledWithStreetTeamId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.WITH_STREET_TEAM' | translate}}</span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/map-icons/bike-with-street-team.svg" width="60">
+                <span class="dashboard-card__item-value">{{ bikes?.DisabledWithStreetTeam }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.DisabledWithStreetTeamStatistics" [data]="bikes?.DisabledWithStreetTeamStatistics">
+            </app-dashboard-graph>
+          </a>
+
+          <a class="dashboard-card__item" routerLink="/dashboard/{{bikes?.DisabledOnLoanId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{ 'DASHBOARD.ON_LOAN' | translate }} </span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/map-icons/bike-on-loan-large.svg" width="75">
+                <span class="dashboard-card__item-value">{{ bikes?.DisabledOnLoan }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.DisabledOnLoanStatistics" [data]="bikes?.DisabledOnLoanStatistics">
+            </app-dashboard-graph>
+          </a>
+
+          <!-- <a *ngIf="!isStreetTeam" class="dashboard-card__item"
+            routerLink="/dashboard/{{bikes?.AllDisabledFailureId}}/filter">
+            <span class="dashboard-card__item-label">{{'DASHBOARD.SUSPICIOUS_BIKES' | translate}}</span>
+            <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+              <img src="/assets/images/dashboard/suspicious.svg">
+              <span class="dashboard-card__item-value">{{ bikes?.AllDisabledFailure }}</span>
+            </div>
+          </a> -->
+
+          <a *ngIf="isStreetTeam" class="dashboard-card__item" routerLink="/dashboard/{{bikes?.BikeInCarId}}/filter">
+            <div class="dashboard-card__top">
+              <span class="dashboard-card__item-label">{{'LIVE_MAP.IN_THIS_CAR' | translate}}
+                ({{loggedInUser.FirstName}})</span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/map-icons/car-header.svg">
+                <span class="dashboard-card__item-value">{{ bikes?.BikeInCar }}</span>
+              </div>
+            </div>
+            <app-dashboard-graph *ngIf="bikes?.BikeInCarStatistics" [data]="bikes?.BikeInCarStatistics">
+            </app-dashboard-graph>
+          </a>
+
+
+
+          <!-- <div class="detail-field pb-2 yellow">
+          <span class="detail-field-label-md">{{ 'DASHBOARD.INUSE_PASSIVESESSION' | translate }} </span>
+          <span class="detail-field-value">{{  bikes?.InUsePassiveSession}}</span>
+        </div>
+
+        <div class="detail-field red">
+          <span class="detail-field-label-md">{{ 'DASHBOARD.SUM_DISABLE' | translate }} </span>
+          <span class="detail-field-value">{{bikes?.AllDisabled }}</span>
+        </div>
+
+        <div class="detail-field red">
+          <span class="detail-field-label-md">{{ 'DASHBOARD.DISABLED_INSTORAGE' | translate }} </span>
+          <span class="detail-field-value">{{bikes?.DisabledInStorage }}</span>
+        </div>
+
+        <div class="detail-field pb-2 red">
+          <span class="detail-field-label-md">{{ 'DASHBOARD.DISABLED_MISSING' | translate }} </span>
+          <span class="detail-field-value">{{bikes?.DisabledLost }}</span>
+        </div>
+
+        <div class="detail-field red">
+          <span class="detail-field-label-md">{{ 'DASHBOARD.SUM_DISABLED_REPAIR' | translate }} </span>
+          <span class="detail-field-value">{{  bikes?.AllDisabledRepair}}</span>
+        </div>
+
+        <div class="detail-field red">
+          <span class="detail-field-label-md">{{ 'DASHBOARD.DISABLED_CHECK_REQUIRED' | translate }} </span>
+          <span class="detail-field-value">{{bikes?.DisabledCheckRequired }}</span>
+        </div>
+
+        <div class="detail-field red">
+          <span class="detail-field-label-md">{{ 'DASHBOARD.DISABLED_TO_WORKSHOP' | translate }} </span>
+          <span class="detail-field-value">{{bikes?.DisabledToWorkshop }}</span>
+        </div>
+
+        <div class="detail-field red">
+          <span class="detail-field-label-md">{{ 'DASHBOARD.DISABLED_IN_WORKSHOP' | translate }} </span>
+          <span class="detail-field-value">{{  bikes?.DisabledInWorkshop}}</span>
+        </div>
+
+        <div class="detail-field red">
+          <span class="detail-field-label-md">{{ 'DASHBOARD.DISABLED_REPAIR_FINISHED' | translate }} </span>
+          <span class="detail-field-value">{{bikes?.DisabledRepairFinished }}</span>
+        </div>
+
+        <div class="detail-field red">
+          <span class="detail-field-label-md">{{ 'DASHBOARD.DISABLED_MOVING' | translate }} </span>
+          <span class="detail-field-value">{{bikes?.DisabledMoving }}</span>
+        </div>
+
+        <div class="detail-field pb-2 red">
+          <span class="detail-field-label-md">{{ 'DASHBOARD.DISABLED_TESTING' | translate }} </span>
+          <span class="detail-field-value">{{bikes?.DisabledTesting }}</span>
+        </div>
+
+        <div class="detail-field red">
+          <span class="detail-field-label-md">{{ 'DASHBOARD.SUM_DISABLED_FAILURE' | translate }} </span>
+          <span class="detail-field-value">{{  bikes?.AllDisabledFailure}}</span>
+        </div>
+
+        <div class="detail-field red">
+          <span class="detail-field-label-md">{{ 'DASHBOARD.DISABLED_OFFLINE' | translate }} </span>
+          <span class="detail-field-value">{{  bikes?.DisabledOffline}}</span>
+        </div>
+
+        <div class="detail-field red">
+          <span class="detail-field-label-md">{{ 'DASHBOARD.DISABLED_LOST_POSITION' | translate }} </span>
+          <span class="detail-field-value">{{  bikes?.DisabledLostPosition}}</span>
+        </div>
+
+        <div class="detail-field red">
+          <span class="detail-field-label-md">{{ 'DASHBOARD.DISABLED_LOW_BATTERY' | translate }} </span>
+          <span class="detail-field-value">{{  bikes?.DisabledLowBattery}}</span>
+        </div> -->
+        </div>
+      </div>
+
+      <div class="docking-points-cards" fxFlex="100" fxFlex.gt-md="25">
+        <h2>{{'DASHBOARD.CHARGING_POINTS'|translate}}<span>{{ dockingStationStats?.TotalDockingPoints }} Total</span>
+        </h2>
+        <div class="dashboard-cards" fxLayout="row wrap">
+          <a class="dashboard-card__item" routerLink="/dashboard/{{dockingStationStats?.AllDockingStationsId}}/dsfilter"
+            style="cursor:default; pointer-events: none;">
+            <div class="dashboard-card__top dashboard-card__top--dp">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.DP_ALL_STATIONS'|translate}}</span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/docking-point.svg">
+                <span class="dashboard-card__item-value">{{ dockingStationStats?.AllDockingStations }}</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- <a class="dashboard-card__item" routerLink="/dashboard/{{dockingStationStats?.AllAboveDPCapacityId}}/dsfilter"
+            style="cursor:default; pointer-events: none;">
+            <div class="dashboard-card__top dashboard-card__top--dp">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.OCCUPIED'|translate}}</span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/bikes-left-over.svg">
+                <span class="dashboard-card__item-value">{{ dockingStationStats?.AllAboveDPCapacity }}</span>
+              </div>
+            </div>
+          </a> -->
+
+          <!-- <a class="dashboard-card__item" routerLink="/dashboard/{{dockingStationStats?.AllBelowDPCapacityId}}/dsfilter"
+            style="cursor:default; pointer-events: none;">
+            <div class="dashboard-card__top dashboard-card__top--dp">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.TOO_FEW'|translate}}</span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/occupied.svg">
+                <span class="dashboard-card__item-value">{{ dockingStationStats?.AllBelowDPCapacity }}</span>
+              </div>
+            </div>
+          </a> -->
+
+          <a class="dashboard-card__item" routerLink="/dashboard/{{dockingStationStats?.TotalDockingPointsId}}/dsfilter"
+            style="cursor:default; pointer-events: none;">
+            <div class="dashboard-card__top dashboard-card__top--dp">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.ALL_POINTS'|translate}}</span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/all-points.svg">
+                <span class="dashboard-card__item-value">{{ dockingStationStats?.TotalDockingPoints }}</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="dashboard-card__item"
+            routerLink="/dashboard/{{dockingStationStats?.AllUnderCheckOrRepairId}}/dsfilter">
+            <div class="dashboard-card__top dashboard-card__top--dp">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.NEED_CHECK_REPAIR'|translate}}</span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/needs-check-repair.svg">
+                <span class="dashboard-card__item-value">{{ dockingStationStats?.AllUnderCheckOrRepair }}</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="dashboard-card__item" routerLink="/dashboard/{{dockingStationStats?.AllDisablePointsId}}/dsfilter">
+            <div class="dashboard-card__top dashboard-card__top--dp">
+              <span class="dashboard-card__item-label">{{'DASHBOARD.POINTS_DISABLED'|translate}}</span>
+              <div class="dashboard-card__item-bottom" fxLayout="row" fxLayoutAlign="space-between start">
+                <img src="/assets/images/dashboard/points-are-disabled.svg">
+                <span class="dashboard-card__item-value">{{ dockingStationStats?.AllDisablePoints }}</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

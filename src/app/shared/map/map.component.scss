@@ -1,0 +1,90 @@
+.map {
+  width: 100%;
+  height: calc(100vh - 56px);
+  min-height: 200px;
+
+  @media (min-width: 768px) {
+    height: calc(100vh - 64px);
+  }
+}
+
+.popup {
+  background: #ff2c00;
+  padding: 3px;
+  color: white;
+  opacity: 0.8;
+  position: relative;
+  white-space: nowrap;
+  font-size: 0.9em;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.map-legend {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.legend-item {
+  line-height: 30px; //padding: 0 10px;
+  font-size: 0.9em;
+}
+
+.quarts {
+  float: left;
+  width: 100px;
+  margin-left: 20px;
+  font-size: 13px;
+  height: 40px;
+  color: black;
+}
+
+.circle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  float: left;
+  margin: 5px;
+  border: 2px solid;
+}
+
+.custom-controls {
+  top: 140px;
+  left: 2px;
+  position: absolute;
+  z-index: 1000;
+  font-size: 0.9em;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+  @media (min-width: 768px) {
+    left: unset;
+    right: 10px;
+    top: 115px;
+  }
+
+  @media (min-width: 1280px) {
+    top: 75px;
+  }
+}
+
+.toggle-wrapper {
+  align-items: center;
+  display: flex;
+  flex-direction: row-reverse;
+  overflow: hidden;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+
+  .satelite-mode {
+    font-weight: bold;
+    margin-left: 5px;
+
+    @media (min-width: 768px) {
+      margin-left: 0;
+      margin-right: 5px;
+    }
+  }
+}

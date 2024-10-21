@@ -1,0 +1,73 @@
+<h1 mat-dialog-title>{{title}}</h1>
+<div mat-dialog-content>
+  <div class="part-fields-wrapper" *ngIf="isAdminOrMaintenance">
+    <div fxLayout="column" fxLayoutAlign="start start" fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between center">
+      <div fxLayout="row" fxLayoutAlign="start center" class="part-fields-wrapper__item">
+        <label>{{ 'INVENTORY.DETAILS.QUANTITY' | translate }} </label>
+        <input autocomplete="off" [(ngModel)]="moveQty" type="number" matInput>
+      </div>
+  
+      <div fxLayout="row" fxLayoutAlign="start center" class="part-fields-wrapper__item">
+        <label>{{ 'INVENTORY.DETAILS.FROM' | translate }} </label>
+        <mat-select [(ngModel)]="fromWorkshop">
+          <mat-option *ngFor="let workshop of fromWorkshops" [value]="workshop.Id">{{workshop.Name}}</mat-option>
+        </mat-select> 
+      </div>
+  
+      <div fxLayout="row" fxLayoutAlign="start center" class="part-fields-wrapper__item">
+        <label>{{ 'INVENTORY.DETAILS.TO' | translate }} </label>
+        <mat-select [(ngModel)]="toWorkshop">
+          <mat-option *ngFor="let workshop of allWorkshops" [value]="workshop.Id">{{workshop.Name}}</mat-option>
+        </mat-select> 
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start center" class="part-fields-wrapper__item">
+        <button mat-raised-button style="scroll-padding-left: -100px"
+          (click)="moveParts()">
+          <small class="font"> {{ 'INVENTORY.DETAILS.MOVE' | translate }}</small>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="item-table" fxLayout="column" fxLayoutAlign="start start">
+    <div class="item-table__row" fxLayout="row" fxLayoutAlign="start center" *ngFor="let partDetail of partDetails">
+      <div class="item-table__item-name" fxFlex="50">
+        {{partDetail?.WorkshopName}}
+      </div>
+      <div *ngIf="!partDetail.isEditMode" class="item-table__item-qty" fxFlex="30">
+        {{partDetail?.Quantity}}
+      </div>
+      <div *ngIf="partDetail.isEditMode" class="quantity-edit" fxFlex="30">
+        <input autocomplete="off" [(ngModel)]="partDetail.Quantity" type="number" matInput>
+      </div>
+      <div class="item-table__item-detail" fxFlex="20" *ngIf="isAdminOrMaintenance">
+         <a *ngIf="!partDetail.isEditMode" class="material-icons" matTooltip="{{ 'INVENTORY.DETAILS.EDIT_QTY' | translate }}" mat-icon-button
+            (click)="editPartVariant(partDetail)">
+            <mat-icon>create</mat-icon>
+          </a>
+          <a *ngIf="partDetail.isEditMode" class="material-icons" matTooltip="{{ 'INVENTORY.DETAILS.UPDATE_VARIANT' | translate }}" mat-icon-button
+            (click)="updateVariantQuantity(partDetail)">
+            <mat-icon>done</mat-icon>
+          </a>
+          <a *ngIf="partDetail.isEditMode" class="material-icons" matTooltip="{{ 'INVENTORY.DETAILS.CANCEL_EDIT' | translate }}" mat-icon-button
+            (click)="closeEdit(partDetail)">
+            <mat-icon>close</mat-icon>
+          </a>
+      </div>
+    </div>
+
+    <div class="item-table__row item-table__row--total" fxLayout="row" fxLayoutAlign="start center">
+      <div class="item-table__item-name" fxFlex="50">
+        {{ 'INVENTORY.DETAILS.TOTAL' | translate }}
+      </div>
+      <div class="item-table__item-qty" fxFlex="30">
+        {{totalQuantity}}
+      </div>
+    </div>
+
+    <div class="loader-wrapper" *ngIf="isLoading">
+      <img class="move-loader" src="assets/images/preloader-gray.svg" width="70"/>
+    </div>
+
+  </div>
+</div>

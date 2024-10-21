@@ -1,0 +1,20 @@
+<div class="custom-controls">
+  <div class="toggle-wrapper">
+     <mat-label class="satelite-mode">{{'LIVE_MAP.SATELITE_MODE' | translate}}</mat-label>
+     <mat-slide-toggle  [(ngModel)]="isSateliteMode" (change)="showSateliteMode()"></mat-slide-toggle>
+  </div>
+</div>
+<div #map class="map">
+    <div #popup class="popup"></div>
+</div>
+
+<!-- <div class="map-legend" style="background-color: rgba(193, 191, 191, 0.5)" fxLayout="row" fxLayoutWrap="wrap">
+    <div class="legend-item quarts" *ngFor="let color of colors" fxFlex.gt-lg="14.285%" fxFlex.gt-md="16.6%" fxFlex.gt-sm="25%" fxFlex.gt-xs="33%" fxFlex="100%">
+  
+      <div style="display: block; padding-top: 5px;">
+        <div [style.border-color]='color.color' class="circle"> </div>
+        <span> {{color.description|translateManual:color.languageKey }}</span>
+      </div>
+  
+    </div>
+  </div> -->

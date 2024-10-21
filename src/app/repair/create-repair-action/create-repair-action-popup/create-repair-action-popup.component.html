@@ -1,0 +1,84 @@
+<div id="repair-action" class="result-container">
+  <mat-card>
+    <mat-card-title>
+      <div>
+        <a [routerLink]="['/repair/orders']" class="bc-link">{{ 'COMMON.REPAIR' | translate }}</a>
+        <span class="bc-separator"> / </span>
+        <span class="bc-current">{{ 'REPAIR_ACTION.CREATE_ACTION' | translate }}</span>
+      </div>
+      <br>
+    </mat-card-title>
+
+    <mat-card-content>
+      <div fxLayout="row wrap" fxLayout.xs="column">
+        <div fxFlex="50%">
+          <form class="example-form" [formGroup]="repairActionPopUpForm" style="font-size: 15px;">
+            <mat-form-field class="example-full-width">
+              <mat-select placeholder="{{ 'REPAIR_ACTION.BIKES' | translate }} *"
+                [formControl]="repairActionPopUpForm.controls['BikeId']" (selectionChange)="onBikeChange($event)">
+                <mat-option *ngFor="let bike of bikeList" [value]="bike.BikeId">{{bike.VisualId}}</mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="repairActionPopUpForm.controls['BikeId'].hasError('required') && repairActionPopUpForm.controls['BikeId'].touched"
+                class="md-text-warn">{{ 'REPAIR_ACTION.BIKE_REQ_ERROR' | translate }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+              <mat-select placeholder="{{ 'REPAIR_ACTION.REASON' | translate }} *"
+                [formControl]="repairActionPopUpForm.controls['ReasonId']" (selectionChange)="onReasonChange($event)">
+                <mat-option *ngFor="let reason of reasons" [value]="reason.Id">{{reason.Description}}</mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="repairActionPopUpForm.controls['ReasonId'].hasError('required') && repairActionPopUpForm.controls['ReasonId'].touched"
+                class="md-text-warn">{{ 'REPAIR_ACTION.REASON_REQ_ERROR' | translate }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" *ngIf="repairActionPopUpForm.value.ReasonId=='1' || repairActionPopUpForm.value.ReasonId=='2' ||
+              repairActionPopUpForm.value.ReasonId=='3' || repairActionPopUpForm.value.ReasonId=='4'">
+              <mat-select placeholder="{{ 'REPAIR_ACTION.PART' | translate }}"
+                [formControl]="repairActionPopUpForm.controls['PartId']" (selectionChange)="onPartChange($event)">
+                <mat-option *ngFor="let part of parts" [value]="part.PartId">{{part.Name}}</mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="repairActionPopUpForm.controls['PartId'].hasError('required') && repairActionPopUpForm.controls['PartId'].touched"
+                class="md-text-warn">{{ 'REPAIR_ACTION.PART_REQ_ERROR' | translate }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width" *ngIf="repairActionPopUpForm.value.ReasonId=='1' || repairActionPopUpForm.value.ReasonId=='2' ||
+              repairActionPopUpForm.value.ReasonId=='3' || repairActionPopUpForm.value.ReasonId=='4'">
+              <mat-select placeholder="{{ 'REPAIR_ACTION.VARIANT' | translate }}"
+                [formControl]="repairActionPopUpForm.controls['VariantId']" (selectionChange)="onVariantChange($event)">
+                <mat-option *ngFor="let variant of variants" [value]="variant.VariantId">{{variant.Name}} -
+                  ({{variant.Quantity}})</mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="repairActionPopUpForm.controls['VariantId'].hasError('required') && repairActionPopUpForm.controls['VariantId'].touched"
+                class="md-text-warn">{{ 'REPAIR_ACTION.VARIANT_REQ_ERROR' | translate }}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+              <input matInput placeholder="{{'REPAIR_ACTION.COMMENT' | translate }} " type="text"
+                [formControl]="repairActionPopUpForm.controls['Comments']">
+            </mat-form-field>
+
+            <mat-error *ngIf="noVariants" class="md-text-warn"
+              style="font-size:12px;padding-bottom:5px; margin-top:-10px;">
+              {{'REPAIR_ACTION.NO_VARIANTS_FOUND' | translate }}</mat-error>
+
+            <button mat-raised-button type="button" [disabled]="isDisabled" (click)="logRepairAction()"
+              style="margin-top: 10px">{{ 'REPAIR_ACTION.ADD' | translate }}</button>
+            <button mat-raised-button type="button" (click)="resolveIssue()"
+              style="margin-top: 10px">{{ 'REPAIR_ACTION.RESOLVE' | translate }}</button>
+            <button mat-raised-button type="button" (click)="this.dialogRef.close();"
+              style="margin-top: 10px">{{ 'REPAIR_ACTION.CANCEL' | translate }}</button>
+          </form>
+        </div>
+
+        <div fxFlex="50%">
+          <img *ngIf="variantImageUrl" src="{{variantImageUrl}}" class="">
+        </div>
+      </div>
+    </mat-card-content>
+
+  </mat-card>
+</div>

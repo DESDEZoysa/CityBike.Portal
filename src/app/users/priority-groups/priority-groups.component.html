@@ -1,0 +1,94 @@
+<div id="priority-groups" class="result-container" (window:resize)="onResize()">
+  <mat-card>
+    <mat-card-title>
+      {{ 'PRIORITY_GROUP.TITLE' | translate }}
+      <div fxFlex="1 1 auto" class="fill-remaining-space"></div>
+
+      <div>
+        <button mat-raised-button style="scroll-padding-left: -100px"
+          (click)="openCreatePriorityGroup(types.Create, null)">
+          <i class="material-icons" matTooltip="{{ 'PRIORITY_GROUP.ADD_PRIORITY_GROUP_BTN' | translate }}">add</i>
+          <small class="font"> {{ 'PRIORITY_GROUP.ADD_PRIORITY_GROUP_BTN' | translate }}</small>
+        </button>
+      </div>
+    </mat-card-title>
+
+    <mat-card-content>
+      <ngx-spinner bdOpacity=1 bdColor="rgba(255,255,255,0)" size="default" color="#1172c3" type="ball-clip-rotate"
+        [fullScreen]="false">
+      </ngx-spinner>
+      <ngx-datatable class="material expandable fixed-height-table" [loadingIndicator]="loadingIndicator"
+        [rows]="prioritygroups" [columnMode]="'force'" [headerHeight]="50" #priorityGroupsTable [footerHeight]="50"
+        [rowHeight]="50" [scrollbarH]="true" [scrollbarV]="true">
+
+        <!-- Row Detail Template -->
+        <ngx-datatable-row-detail [rowHeight]="100" #priorityGroupsTable *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+            <div style="padding-left:15px;font-size: 13px;">
+              <div style="padding-top:10px;">
+                <strong>{{ 'PRIORITY_GROUP.CREATED_DATE' | translate }} :
+                  {{row.CreatedDate}}
+                </strong>
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{ 'PRIORITY_GROUP.MODIFIED_DATE' | translate }} :</strong> {{row.LastUpdatedDate}}
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-row-detail>
+
+        <!-- Column Templates -->
+        <ngx-datatable-column [width]="10" [resizeable]="false" [sortable]="false" [draggable]="false"
+          [canAutoResize]="false" *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+            <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+              title="Expand/Collapse Row" (click)="toggleExpandRow(row)">
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="PriorityGroupId" name="{{ 'PRIORITY_GROUP.PRIORITY_GROUP_ID' | translate }}" [flexGrow]="0.25"
+          [width]="50">
+          <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+            <span class="column-value">{{ value }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="PriorityGroupName" name="{{ 'PRIORITY_GROUP.PRIORITY_GROUP_NAME' | translate }}"
+          [flexGrow]="1" [minWidth]="50" [width]="100">
+          <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+            <span class="column-value">{{ value }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="CreatedDate" name="{{ 'PRIORITY_GROUP.CREATED_DATE' | translate }}" [flexGrow]="0.5"
+          [minWidth]="40" [width]="50" *ngIf="!isMobile">
+          <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+            <span class="column-value">{{ value }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="LastUpdatedDate" name="{{ 'PRIORITY_GROUP.MODIFIED_DATE' | translate }}"
+          [flexGrow]="0.5" [minWidth]="40" [width]="50" *ngIf="!isMobile">
+          <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+            <span class="column-value">{{ value }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="Id" name="" [flexGrow]="0.2" [minWidth]="30" [width]="40" [flexGrow]="0.5">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <a class="list-icon" matTooltip="{{ 'PRIORITY_GROUP.EDIT' | translate }}" mat-icon-button
+              (click)="openCreatePriorityGroup(types.Update,row)">
+              <mat-icon>create</mat-icon>
+            </a>
+            <a class="list-icon" matTooltip="{{ 'PRIORITY_GROUP.DELETE' | translate }}" mat-icon-button
+              (click)="deletePriorityGroup(row)">
+              <mat-icon class="edit">delete</mat-icon>
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+      </ngx-datatable>
+    </mat-card-content>
+  </mat-card>
+</div>

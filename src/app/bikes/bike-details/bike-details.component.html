@@ -1,0 +1,186 @@
+<div id="bikeDetails" class="result-container">
+  <mat-card>
+    <mat-card-title style="position: relative;" fxLayout="row wrap" fxLayoutAlign="space-between start">
+      <!-- bread crumb -->
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <div>
+          <a [routerLink]="['/bikes']" class="bc-link">{{ 'COMMON.BIKES' | translate }}</a>
+          <span class="bc-separator"> / </span>
+          <span class="bc-current">{{bike?.VisualId}}</span>
+          <span class="bc-separator"> / </span>
+          <span class="bc-current"> {{ 'COMMON.DETAILS_HINT' | translate }}</span>
+        </div>
+
+        <a mat-raised-button (click)="reloadComponent()" color="accent"
+          style="color: darkslategrey;; margin-left: 15px;">
+          <mat-icon>refresh</mat-icon>
+          <small class="font"> {{ 'BIKE.RELOAD' | translate }}</small>
+        </a>
+      </div>
+
+      <div class="bikes-support-button-wrapper">
+        <a [disabled]="!isStreetTeam && (!bike?.WorkshopId || (bike?.WorkshopId && isActiveRepairExist))"
+          [ngClass]="!isStreetTeam && (!bike?.WorkshopId || (bike?.WorkshopId && isActiveRepairExist)) ? 'disable' : ''"
+          mat-raised-button (click)="openRepairRegisterForm()">
+          <img width="18" style="margin: 0 5px 1px 0;" src="/assets/images/dashboard/in-ws.svg">
+          <small class="font">{{'BIKE.REPAIR_REGISTRATION'| translate}}</small>
+        </a>
+        <a mat-raised-button (click)="navigateToBikeSupportPage(bike.VisualId)">
+          <mat-icon>info</mat-icon>
+          <small class="font"> {{ 'BIKE.SUPPORT' | translate }}</small>
+        </a>
+        <a mat-raised-button routerLink="/bikes/{{bikeId}}/track">
+          <i class="material-icons" matTooltip="Track">place</i>
+          <small class="font"> {{ 'BIKE.BIKE_TRACK' | translate }}</small>
+        </a>
+        <a mat-raised-button routerLink="/bikes/{{bikeId}}/signal">
+          <i class="material-icons" matTooltip="Track">podcasts</i>
+          <small class="font"> {{ 'BIKE.BIKE_SIGNAL' | translate }}</small>
+        </a>
+      </div>
+    </mat-card-title>
+
+    <mat-card-content class="bike-detail-top">
+      <div fxLayout="column" fxLayout.gt-xs="row">
+        <div fxFlex="100%" fxFlex.gt-xs="55%">
+          <div class="detail-field" fxLayout="row">
+            <span class="detail-field-label">{{ 'BIKE.VISUAL_ID' | translate }} :</span>
+            <span class="detail-field-value">{{ bike?.VisualId }}</span>
+          </div>
+
+          <div class="detail-field" fxLayout="row">
+            <span class="detail-field-label">{{ 'BIKE.MODE' | translate }} :</span>
+            <span class="detail-field-value">{{ bike?.BikeModeExtended }}</span>
+          </div>
+
+          <div class="detail-field" fxLayout="row">
+            <span class="detail-field-label">{{ 'BIKE.LOCATION' | translate }} :</span>
+            <span class="bike-dp-state" *ngIf="bike?.DockingPointId">{{'BIKE_DETAILS.DATA.DOCKED' | translate}} -
+            </span>
+            <span class="bike-dp-state" *ngIf="!bike?.DockingPointId">{{'BIKE_DETAILS.DATA.FREE' | translate}} - </span>
+            <app-bike-address [bike]="bike" (onAddressReceived)="updateAddress($event)"
+              style="padding-right: 10px; word-break: break-all;"></app-bike-address>
+          </div>
+          <div class="detail-field" fxLayout="row">
+            <span class="detail-field-label">{{ 'BIKE.SESSION' | translate }} :</span>
+            <div *ngIf="bike?.SessionId">
+              <a style="color:#007dbd;min-width: 270px;" routerLink="/sessions/{{bike.SessionId}}">
+                Started {{bike?.SessionStartTime | convertTime}}</a>
+            </div>
+            <span *ngIf="!bike?.SessionId && bike?.InSession"
+              class="detail-field-value">{{'BIKE_DETAILS.DATA.PASSIVE_SESSION' | translate}}</span>
+            <span *ngIf="!bike?.SessionId && !bike?.InSession"
+              class="detail-field-value">{{'BIKE_DETAILS.DATA.NOT_IN_SESSION' | translate}}</span>
+          </div>
+          <div class="detail-field" fxLayout="row">
+            <span class="detail-field-label">{{ 'BIKE.GRACE_PERIOD' | translate }} :</span>
+            <div>
+              <span class="bike-gp-pad-right bike-gp-bold" *ngIf="bike?.isGracePeriodExpired">{{ 'BIKE.START' |
+                translate }}</span><span class="bike-gp-pad-right"> {{bike?.GracePeriodStart | convertTime:'HH:mm DD/MM'
+                : subtractDurationInSec}}</span>
+              <span class="bike-gp-pad-right bike-gp-bold" *ngIf="bike?.isGracePeriodExpired">{{ 'BIKE.END' | translate
+                }} </span> <span>{{bike?.GracePeriodEnd | convertTime:'HH:mm DD/MM'}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div fxFlex="100%" fxFlex.gt-xs="30%">
+          <div class="detail-field" fxLayout="row">
+            <span class="detail-field-label">{{ 'BIKE.SERIAL' | translate }} :</span>
+            <span class="detail-field-value">{{ bike?.Serial }}</span>
+          </div>
+
+          <div class="detail-field" fxLayout="row">
+            <span class="detail-field-label">{{ 'BIKE.CHARGE_LEVEL' | translate }} :</span>
+            <span class="detail-field-value">{{ (bike?.ChargeLevel / 100) | percent:'1.0-1' | replace:'.0%':'%' }}
+              ({{formatTimeDuration(bike?.ChargeLevelUpdatedTime)}})</span>
+          </div>
+
+          <div class="detail-field" fxLayout="row">
+            <span class="detail-field-label">{{ 'BIKE.LATEST_PULSE' | translate }} :</span>
+            <span class="detail-field-value">{{ formatTimeDuration(bike?.LatestPulse) }}</span>
+          </div>
+
+          <div class="detail-field" fxLayout="row">
+            <span class="detail-field-label">{{ 'BIKE.UNSUCCESSFUL_SESSION_COUNT' | translate }} :</span>
+            <span class="detail-field-value">&nbsp;{{ bike?.UndockFailureCount }}</span>
+          </div>
+
+          <div class="detail-field" fxLayout="row">
+            <span class="detail-field-label">{{ 'BIKE.ODOMETER' | translate }} :</span>
+            <span class="detail-field-value">&nbsp;{{
+              (bike?.AccumulateTotalDistance>0)?bike?.AccumulateTotalDistance.toFixed(2):0}} km</span>
+          </div>
+        </div>
+
+        <div fxFlex="100%" fxFlex.gt-xs="15%" class="detail-select-wrapper">
+          <div class="detail-field" fxLayout="row">
+            <mat-slide-toggle #toggleElement [disabled]="bike?.SessionId" [checked]="isDisabled"
+              (change)="onActiveStateChange($event)">
+              <p *ngIf="isDisabled == true">{{ 'DISABLED_REASONS.ENABLED' | translate}}</p>
+              <p *ngIf="isDisabled != true">{{ 'DISABLED_REASONS.DISABLED' | translate}}</p>
+            </mat-slide-toggle>
+          </div>
+
+          <div class="detail-field" fxLayout="row">
+            <mat-form-field *ngIf="!isDisabled">
+              <mat-select [(value)]="selected" (selectionChange)="onDisableStateChange($event)">
+                <mat-option value="-1">-- {{'DISABLED_REASONS.SELECT' | translate}} --</mat-option>
+                <mat-option value="22">{{'DISABLED_REASONS.CHECK_REQUIRED' | translate}}</mat-option>
+                <mat-option value="23">{{'DISABLED_REASONS.TESTING' | translate}}</mat-option>
+                <mat-option value="21">{{'DISABLED_REASONS.MOVING' | translate}}</mat-option>
+                <mat-option value="1" disabled>{{'DISABLED_REASONS.TO_WORKSHOP' | translate}}</mat-option>
+                <mat-option value="2">{{'DISABLED_REASONS.IN_WORKSHOP' | translate}}</mat-option>
+                <mat-option value="3">{{'DISABLED_REASONS.REPAIR_FINISHED' | translate}}</mat-option>
+                <mat-option value="4">{{'DISABLED_REASONS.IN_STORAGE' | translate}}</mat-option>
+                <mat-option value="24">{{'DISABLED_REASONS.MISSING' | translate}}</mat-option>
+                <mat-option value="25">{{'DISABLED_REASONS.CHECKED_NEED_REPAIR' | translate}}</mat-option>
+                <mat-option value="26" [disabled]="!isAdmin">{{'DISABLED_REASONS.WITH_STREET_TEAM' | translate}}</mat-option>
+                <mat-option value="27">{{'DISABLED_REASONS.ON_LOAN' | translate}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <ngx-spinner bdOpacity=1 bdColor="rgba(255,255,255,0)" size="default" color="#1172c3" type="ball-clip-rotate"
+            [fullScreen]="false">
+          </ngx-spinner>
+        </div>
+      </div>
+      <div class="bike-detail-top-loader" *ngIf="!isLoaded">
+        <img src="/assets/images/pulse-loader.svg" alt="loader" width="50">
+      </div>
+    </mat-card-content>
+
+    <mat-tab-group>
+      <mat-tab label="{{ 'BIKE.ISSUES' | translate }}">
+        <app-bike-issues *ngIf="bike" (bikeReload)="ReloadBikeDetails($event)" [bike]="bike"></app-bike-issues>
+      </mat-tab>
+      <mat-tab label="{{ 'BIKE.PCB' | translate }}">
+        <app-bike-pcb *ngIf="bike" [bike]="bike" (passBikeValues)="getBikeValues($event)"></app-bike-pcb>
+      </mat-tab>
+      <mat-tab label="{{ 'BIKE.PARTS_NOTES' | translate }}">
+        <app-bike-parts *ngIf="bike" [bike]="bike"></app-bike-parts>
+      </mat-tab>
+      <mat-tab label="{{ 'BIKE.REMOTE_CONTROL' | translate }}">
+        <app-bike-maintenance *ngIf="bike" [bike]="bike"></app-bike-maintenance>
+      </mat-tab>
+      <mat-tab label="{{ 'COMMON.SESSIONS' | translate }}">
+        <app-bike-sessions *ngIf="bike" (bikeReload)="ReloadBikeDetails($event)" [bike]="bike"
+          [onGoingSessions]="onGoingSessions"></app-bike-sessions>
+      </mat-tab>
+      <mat-tab label="{{ 'BIKE.EVENTS' | translate }}">
+        <app-bike-events *ngIf="bike" (bikeReload)="ReloadBikeDetails($event)" [bike]="bike"></app-bike-events>
+      </mat-tab>
+      <mat-tab label="{{ 'BIKE.REPAIR_HISTORY' | translate }}">
+        <!-- <app-bike-repair-history *ngIf="bike" [bike]="bike"></app-bike-repair-history> -->
+        <app-bike-work-history *ngIf="bike" [bike]="bike"></app-bike-work-history>
+      </mat-tab>
+      <mat-tab label="{{ 'BIKE.COMMENT' | translate }}">
+        <app-bike-comment *ngIf="bike" [bike]="bike"></app-bike-comment>
+      </mat-tab>
+      <mat-tab label="{{ 'BIKE.DOCKING_HISTORY' | translate }}">
+        <app-bike-docking-history *ngIf="bike" [bike]="bike"></app-bike-docking-history>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</div>

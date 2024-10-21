@@ -1,0 +1,68 @@
+.dropdown-placeholder {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 12px;
+}
+
+.dropdown-menu {
+  font-size: 14px;
+}
+
+.block {
+  height: -webkit-calc(56vh);
+  height: -moz-calc(56vh);
+  height: calc(56vh);
+}
+
+.btn-style {
+  background-color: #04A3E3;
+  border-radius: 35px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  width: 135px;
+  margin: 1px;
+  margin-top: 10px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.19);
+}
+
+.btn-style:hover {
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.24), 0 3px 4px 0 rgba(0, 0, 0, 0.19);
+}
+
+.fixed-height-table {
+  height: calc(100vh - 250px);
+  min-height: 200px;
+
+  @media (min-width: 560px) {
+    height: 100vh;
+  }
+
+  @media (min-width: 666px) {
+    height: calc(100vh - 100px);
+  }
+
+  @media (min-width: 768px) {
+    height: calc(100vh - 520px);
+  }
+
+  @media (min-width: 800px) and (max-width: 812px) {
+    height: 100vh;
+  }
+
+  @media (min-width: 900px) {
+    height: calc(100vh - 440px);
+  }
+}
+
+.rs-custom-search {
+  .mat-form-field {
+    font-size: 14px;
+  }
+
+  button {
+    margin-bottom: 18px;
+    margin-left: 10px;
+  }
+}

@@ -1,0 +1,39 @@
+<div class="problem-modal">
+  <div class="problem-header" fxLayout="column" fxLayout.gt-xs="row" fxLayoutAlign="start start">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <img src="/assets/images/map-icons/bike-problem.svg" width="50">
+      <p class="problem-vid">{{dpVisualId}}</p>
+    </div>
+    <p class="problem-title">{{ 'LIVE_MAP.DOCKING_POINT_ERROR_REPORT.PROBLEM_TITLE' | translate}}</p>
+  </div>
+  <div mat-dialog-content>
+    <div class="report-error-popup-wrapper">
+      <div fxLayout="column" fxLayoutAlign.gt-xs="space-between ">
+        <div class="problem-checkbox-wrapper">
+          <div fxLayout="column" fxLayoutAlign="space-around none">
+            <mat-checkbox [(ngModel)]="errorCategory.Result"
+              *ngFor="let errorCategory of dpErrorCategories" class="problem-checkbox">{{errorCategory.Name | translate}}
+            </mat-checkbox>
+          </div>
+        </div>
+        <div fxLayout="column" fxLayoutAlign.gt-sm="space-between ">
+          <div>
+            <div>Comments</div>
+            <br>
+            <div>
+              <textarea [(ngModel)]="comments" class="problem-textarea"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div fxLayout="row" fxLayoutAlign="none" class="problem-button-wrapper">
+      <div fxFlex="100%">
+        <div fxLayout="row" fxLayoutAlign="space-between start">
+          <button mat-button (click)="this.dialogRef.close();">{{ 'LIVE_MAP.DOCKING_POINT_ERROR_REPORT.BACK' | translate}}</button>
+          <button mat-button [disabled]="isEmpty" [ngClass]="isEmpty ? 'button-wrapper-diable' : ''" (click)="createDPIssue()" >{{ 'LIVE_MAP.DOCKING_POINT_ERROR_REPORT.COMPLETE' | translate}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

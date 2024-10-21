@@ -1,0 +1,18 @@
+<div #trackmap class="map">
+    <div #popup class="popup"></div>
+</div>
+
+<ngx-spinner bdOpacity=1 bdColor="rgba(255,255,255,0)" size="default" color="#1172c3" type="ball-clip-rotate"
+    [fullScreen]="false">
+  </ngx-spinner>
+
+<div class="map-legend" style="background-color: rgba(193, 191, 191, 0.5)" fxLayout="row" fxLayoutWrap="wrap" *ngIf="showlegend">
+    <div class="legend-item quarts" *ngFor="let color of colors" fxFlex.gt-lg="20%" fxFlex.gt-sm="50%" fxFlex="100%">
+  
+      <div style="display: block; padding-top: 5px;">
+        <div [style.background-color]='color.color' class="circle"> </div>
+        <span> {{color.description|translateManual:color.languageKey }}</span>
+      </div>
+  
+    </div>
+  </div>

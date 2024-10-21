@@ -1,0 +1,110 @@
+<div id="system-users" class="result-container" (window:resize)="onResize()">
+  <mat-card>
+    <mat-card-title fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="space-between center">
+      <!-- System users -->
+      <span class="card-title"> {{ 'COMMON.USERS' | translate }} </span>
+      <!-- <div fxFlex="1 1 auto" class="fill-remaining-space"></div> -->
+
+      <div class="search-bar" fxFlex style="">
+        <form class="search-form" fxShow="true" fxShow.gt-xs>
+          <i class="material-icons"> search </i>
+          <input #search autofocus type="text" [(ngModel)]="searchItem" placeholder="{{'COMMON.SEARCH' | translate}}"
+            autofocus="true" (ngModelChange)="searchUser($event)" id="search" name="search" />
+        </form>
+      </div>
+      <div>
+        <a mat-raised-button routerLink="/users/create" style="margin-left: 5px;height: fit-content;">
+            <i class="material-icons">add</i>
+            <!-- Web view -->
+            <small class="font" fxShow="false" fxShow.gt-sm>{{ 'USERS.INVITE_USER' | translate }}</small>
+            <!-- Mobile View -->
+            <small class="font" fxHide="false" fxHide.gt-sm>Add</small>
+          </a>
+      </div>
+
+    </mat-card-title>
+    <mat-card-content>
+
+      <ngx-datatable class="material fixed-height-table" [rows]="users" [loadingIndicator]="loadingIndicator"
+        [columnMode]="'force'" [headerHeight]="50" #userTable [scrollbarV]="true" [footerHeight]="50" [rowHeight]="50"
+        [scrollbarH]="false" [sorts]="[{prop: 'FirstName'}]">
+
+        <!-- Row Detail Template -->
+        <ngx-datatable-row-detail [rowHeight]="140" #userDetailRow *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+            <div style="padding-left:15px;">
+              <div>
+                <strong>{{'USERS.EMAIL'|translate}} :</strong> {{row.Email}}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'USERS.MOBILE_NUMBER'|translate}} :</strong> {{row.MobileNumber}}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'USERS.ROLE'|translate}} :</strong> {{row.Roles[0]?.Name}}
+              </div>
+              <div style="padding-top:10px;pointer-events: none;">
+                <strong>{{'USERS.ACTIVE'|translate}} :</strong>
+                <span [ngClass]="{'chip': true, 'user-active': row.Active, 'user-inactive': !row.Active}">
+                  {{row.Active }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-row-detail>
+
+        <!-- Column Templates -->
+        <ngx-datatable-column [width]="20" [resizeable]="false" [sortable]="false" [draggable]="false"
+          [canAutoResize]="false" *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+            <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+              title="Expand/Collapse Row" (click)="toggleExpandRow(row)">
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="{{'USERS.NAME'|translate}}" [flexGrow]="2" [minWidth]="200" [width]="100">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.FirstName ? row.FirstName : "" }} {{ row.LastName ? " "+row.LastName : "" }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="{{'USERS.EMAIL'|translate}}" prop="Email" [flexGrow]="1" [minWidth]="200"
+          [width]="150" *ngIf="!isMobile && layout > LAYOUT.SM">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="MobileNumber" name="{{'USERS.MOBILE_NUMBER'|translate}}" [flexGrow]="1"
+          [minWidth]="150" [width]="100" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column prop="Roles" name="{{'USERS.ROLE'|translate}}" [flexGrow]="1" [minWidth]="130"
+          *ngIf="!isMobile" [width]="100">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value[0]?.Name }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="Active" name="{{'USERS.ACTIVE'|translate}}" [flexGrow]="1" [minWidth]="50"
+          *ngIf="!isMobile && layout > LAYOUT.SM" [width]="50">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <span [ngClass]="{'chip': true, 'user-active': value, 'user-inactive': !value}"
+              style="pointer-events: none;">{{ value }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="UserId" name="" [flexGrow]="1" [minWidth]="30" [width]="30">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <a class="list-icon" matTooltip="{{ 'REGISTER.EDIT_USER_DETAILS' | translate }}" mat-icon-button
+              routerLink="/users/{{value}}/edit">
+              <mat-icon>edit</mat-icon>
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+      </ngx-datatable>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,52 @@
+<h1 mat-dialog-title>{{data.type}} {{ 'INVENTORY.PART_VARIANT' | translate}}</h1>
+<div mat-dialog-content>
+  <div class="container" fxLayout="row wrap" fxLayout.xs="column">
+    <div>
+      <form class="example-form" [formGroup]="partVariantForm">
+
+        <mat-form-field class="full-width">
+          <mat-select placeholder="{{ 'INVENTORY.PART_NAME' | translate }} *" [(ngModel)]="partVariant.partId" formControlName="PartId"
+            >
+            <mat-option *ngIf="data.type==types.Update" value="data.variant.PartId">{{data.variant.PartName}}</mat-option>
+            <mat-option *ngFor="let part of parts" [value]="part.PartId">{{part.Name}}</mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="partVariantForm.controls['PartId'].hasError('required') && partVariantForm.controls['PartId'].touched"
+            class="md-text-warn">{{ 'INVENTORY.PART_NAME' | translate }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <!-- <input [ngModel]="partVariant.variantName" type="text" matInput placeholder="{{ 'INVENTORY.VARIANT_NAME' | translate }} *" formControlName="VariantName"> -->
+          <mat-select placeholder="{{ 'INVENTORY.VARIANT_NAME' | translate }} *" [(ngModel)]="partVariant.variantId" formControlName="VariantId"
+            (selectionChange)="onVariantChange($event)">
+            <mat-option *ngFor="let variant of variants" [value]="variant.VariantId">{{variant.Name}}</mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="partVariantForm.controls['VariantId'].hasError('required') && partVariantForm.controls['VariantId'].touched"
+            class="md-text-warn">{{ 'INVENTORY.VARIANT_NAME' | translate }}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <input [ngModel]="partVariant.quantity" type="number" matInput placeholder="{{ 'INVENTORY.QUANTITY' | translate }} *" formControlName="Quantity">
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <mat-select placeholder="Workshop *" [(ngModel)]="partVariant.workshopId" formControlName="WorkshopId">
+            <mat-option *ngFor="let workshop of filteredWorkshops" [value]="workshop.Id">{{workshop.Name}}</mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="partVariantForm.controls['WorkshopId'].hasError('required') && partVariantForm.controls['WorkshopId'].touched"
+            class="md-text-warn">Workshop is required</mat-error>
+        </mat-form-field>
+        <br>
+        <mat-checkbox [ngModel]="partVariant.active" formControlName="Active">{{ 'INVENTORY.IS_DEFAULT' | translate }}</mat-checkbox>
+        <br>
+        <br>
+      </form>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between center">
+  <button mat-button cdkFocusInitial [disabled]="isDisabled" (click)="createUpdatePartVariant(data.type)">{{data.type}}</button>
+  <button mat-button (click)="this.dialogRef.close();">{{ 'CONFIRM_DIALOG.CANCEL' | translate}}</button>
+</div>

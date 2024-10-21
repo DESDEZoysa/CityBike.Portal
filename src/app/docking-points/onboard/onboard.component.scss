@@ -1,0 +1,209 @@
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.example-form,
+.firmware-details {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+
+  @media (min-width: 1280px) {
+    max-width: unset;
+  }
+}
+
+.example-full-width {
+  width: 100%;
+}
+
+.example-full-width-touched-visual {
+  width: 100%;
+  background-color: yellow;
+}
+
+.example-full-width-untouched-visual {
+  width: 100%;
+  background-color: white;
+}
+
+.example-full-width-filled-serial {
+  width: 100%;
+  background-color: skyblue;
+}
+
+.example-full-width-empty-serial {
+  width: 100%;
+  background-color: white;
+}
+
+.example-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.tire-pressure-table {
+  background: #a4d3e6;
+  padding: 3px;
+  opacity: 0.8;
+  position: relative;
+  white-space: nowrap;
+  font-size: 0.9em;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-weight: bold;
+  width: 300px;
+}
+
+.find-sensor {
+  background-color: #04a3e3;
+  border-radius: 0;
+  box-shadow: 0 0 0;
+  color: white;
+  display: block;
+  max-width: 500px;
+  transition: 0.3s;
+  width: 100%;
+
+  @media (min-width: 1280px) {
+    max-width: unset;
+  }
+
+  // &:hover {
+  //   background-color: #3cb2d8;
+  //   box-shadow: 0 4px 7px 1px rgba(0, 0, 0, 0.2);
+  // }
+}
+
+.tire-pressure-loader {
+  display: block;
+  margin: 0 auto;
+
+  @media (max-width: 600px) {
+    width: 150px;
+  }
+}
+
+.material-icons {
+  font-weight: bold;
+  margin-right: 5px;
+  position: relative;
+  top: 6px;
+
+  &.green {
+    color: green;
+  }
+
+  &.red {
+    color: red;
+  }
+
+  &.yellow {
+    color: yellow;
+  }
+}
+
+button {
+  &.button-grey {
+    background-color: #ececec;
+  }
+
+  &.button-red {
+    background-color: #c92d39;
+    color: #fff;
+  }
+
+  &.button-green {
+    background-color: #93c46b;
+    border: 1px solid rgba(#000, 0.5);
+    color: #fff;
+  }
+}
+
+.onboarding-form-row {
+  margin-bottom: 30px;
+
+  label {
+    margin-bottom: 15px;
+    display: none;
+
+    @media (min-width: 960px) {
+      display: block;
+    }
+
+    &.visual {
+      margin-bottom: 18px;
+
+      @media (min-width: 960px) {
+        margin-bottom: 15px;
+      }
+    }
+  }
+
+  .input-wrapper {
+    margin-bottom: 15px;
+  }
+
+  button {
+    margin: 0 20px 0 0;
+
+    &.button-green {
+      margin-top: 10px;
+    }
+
+    @media (min-width: 960px) {
+      margin-left: 20px;
+
+      &.button-green {
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+.form-wrapper {
+  padding-bottom: 80px;
+
+  @media (min-width: 1024px) {
+    padding-bottom: 0;
+  }
+}
+
+.mobile-log-button {
+  background-color: #fff;
+  bottom: 0;
+  left: 0;
+  padding: 20px 15px;
+  position: fixed;
+  width: 100%;
+
+  @media (min-width: 1024px) {
+    display: none;
+  }
+}
+
+.dt-screen {
+  @media (max-width: 1023px) {
+    display: none;
+  }
+}
+
+.pcb-btn-wrapper {
+  align-items: flex-start;
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 50px;
+
+  @media (min-width: 1280px) {
+    justify-content: end;
+    margin-top: 0;
+  }
+}
+.clear-pcb {
+  margin-left: 10px;
+}

@@ -1,0 +1,161 @@
+<div id="repair_history" class="result-container" (window:resize)="onResize()">
+  <mat-card style="padding-top: 10px;">
+    <mat-card-title style="margin-bottom: 0px;">
+      <div fxLayout="row" fxLayoutAlign="space-between start">
+        <span class="bc-current" style="font-size: 21px;">{{ 'ONBOARD_DETAILS.VIEW_ALL_ONBOARD_LOGS' | translate }}</span>
+        <img (click)="this.dialogRef.close();" class="closebtn" src="/assets/images/close.svg" width="20">
+      </div>
+      <br>
+    </mat-card-title>
+
+    <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutAlign="end start" fxLayoutAlign.gt-xs="end ">
+      <mat-checkbox  [(ngModel)]="isCurrentStation" (change)="changeState()" class="near-docking-stations">
+      {{ 'ONBOARD_DETAILS.CURRENT_STATION' | translate }} </mat-checkbox>
+
+      <mat-button-toggle-group #group="matButtonToggleGroup" value="prepared" class="onboarding-btn-group">
+        <mat-button-toggle value="prepared" (change)="listPreparedBikes()">
+          <small class="font"> {{ 'ONBOARD_DETAILS.CANDIDATES' | translate }}</small>
+        </mat-button-toggle>
+        <mat-button-toggle value="completed" (change)="listCompletedBikes()">
+          <small class="font"> {{ 'ONBOARD_DETAILS.ONBOARDED' | translate }}</small>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+
+    <mat-card-content>
+      <ngx-datatable class="material expandable fixed-height-table" [rows]="onboardBikes" [columnMode]="'force'"
+        [headerHeight]="50" #onboardTable [footerHeight]="50" [rowHeight]="50" [scrollbarV]="true"
+        [scrollbarH]="true" [loadingIndicator]="loadingIndicator">
+
+        <!-- Row Detail Template -->
+        <ngx-datatable-row-detail [rowHeight]="200" #bikeDetailRow *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+            <div style="font-size: 13px;">
+              <div style="padding-top:10px;">
+                <strong>{{'ONBOARD_DETAILS.PULSE_TIME_SMALL'|translate}} :</strong> {{row.PulseTimestamp | convertTime}}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'ONBOARD_DETAILS.POSITION_TIME_SMALL'|translate}} :</strong> {{row.LastPositionTimestamp | convertTime }}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'ONBOARD_DETAILS.FIRMWARE_TIME_SMALL'|translate}} :</strong> {{row.FirmwareUpgradedTimestamp | convertTime }}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'ONBOARD_DETAILS.FIRMWARE_VERSION'|translate}} :</strong> {{row.FWVersion}}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'ONBOARD_DETAILS.NEAR_BY_DOCKING_STATION'|translate}} :</strong> {{row.NearByDockingStationName}}
+              </div>
+              <div *ngIf="row.OnboardUser" style="padding-top:10px;" class="wordwrap">
+                <strong>{{'ONBOARD_DETAILS.ONBOARD_USER'|translate}} :</strong> {{row.OnboardUser.FirstName}} {{row.OnboardUser.LastName}}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'ONBOARD_DETAILS.LAST_BATTERY_UPDATE_SMALL'|translate}} :</strong> {{row.LastBatteryLevelTimestamp | convertTime }}
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-row-detail>
+
+        <!-- Column Templates -->
+        <ngx-datatable-column [width]="10" [resizeable]="false" [sortable]="false" [draggable]="false"
+          [canAutoResize]="false" *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+            <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+              title="Expand/Collapse Row" (click)="toggleExpandRow(row)">
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="Serial" name="{{'ONBOARD_DETAILS.SERIAL'|translate}}" [flexGrow]="1" [minWidth]="90"
+          [width]="50">
+          <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+            {{ value}}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="BikeId" name="{{'ONBOARD_DETAILS.BIKE_ID'|translate}}" [flexGrow]="2.5"
+          [minWidth]="40" [width]="40" *ngIf="layout > LAYOUT.XS">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="PulseTimestamp" name="{{'ONBOARD_DETAILS.PULSE_TIME'|translate}}" [flexGrow]="1"
+          [minWidth]="50" [width]="115" *ngIf="!isMobile && layout > LAYOUT.SM">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value | convertTime  }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="LastPositionTimestamp" name="{{'ONBOARD_DETAILS.POSITION_TIME'|translate}}" [flexGrow]="1"
+          [minWidth]="50" [width]="115" *ngIf="!isMobile && layout > LAYOUT.SM">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value | convertTime  }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="FirmwareUpgradedTimestamp" name="{{'ONBOARD_DETAILS.FIRMWARE_TIME'|translate}}" [flexGrow]="1"
+          [minWidth]="50" [width]="125" *ngIf="!isMobile && layout > LAYOUT.SM">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value | convertTime  }}
+          </ng-template>
+        </ngx-datatable-column>
+        
+        <ngx-datatable-column prop="FWVersion" name="{{'ONBOARD_DETAILS.FIRMWARE_VERSION'|translate}}" [flexGrow]="1.5"
+          [minWidth]="50" [width]="95" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <span class="text-center">{{ value }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+        
+        <ngx-datatable-column prop="NearByDockingStationName" name="{{'ONBOARD_DETAILS.NEAR_BY_DOCKING_STATION'|translate}}" [flexGrow]="1.5"
+          [minWidth]="125" [width]="130" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="OnboardUser" name="{{'ONBOARD_DETAILS.ONBOARD_USER'|translate}}" [flexGrow]="1.25"
+          [minWidth]="50" [width]="150" *ngIf="!isMobile && layout > LAYOUT.SM">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value.FirstName }} {{ value.LastName }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="BatteryLevel" name="{{'ONBOARD_DETAILS.CHARGE_LEVEL'|translate}}" [flexGrow]="1"
+          [minWidth]="80" [width]="80">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <span class="text-center">{{ value }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="LastBatteryLevelTimestamp" name="{{'ONBOARD_DETAILS.LAST_BATTERY_UPDATE'|translate}}" [flexGrow]="1"
+          [minWidth]="50" [width]="135" *ngIf="!isMobile && layout > LAYOUT.SM">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value | convertTime  }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="InSession" name="" [flexGrow]="0.3" [minWidth]="50" [width]="80">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <span *ngIf="!row.InSession" class="list-icon btn-style" fxHide fxShow.gt-sm (click)="startPassiveSessionBikeCommand(row)">
+              {{'ONBOARD_DETAILS.LIGHT_ON'|translate}}
+            </span>
+             <span *ngIf="row.InSession" class="list-icon btn-style" fxHide fxShow.gt-sm (click)="stopPassiveSessionBikeCommand(row)">
+              {{'ONBOARD_DETAILS.LIGHT_OFF'|translate}}
+            </span>
+
+            <a *ngIf="!row.InSession" class="list-icon onboarding-icon" fxHide.gt-sm matTooltip="{{'ONBOARD_DETAILS.LIGHT_ON'|translate}}" mat-icon-button
+              (click)="startPassiveSessionBikeCommand(row)">
+              <mat-icon>power</mat-icon>
+            </a>
+            <a *ngIf="row.InSession" class="list-icon onboarding-icon" fxHide.gt-sm matTooltip="{{'ONBOARD_DETAILS.LIGHT_OFF'|translate}}" mat-icon-button
+              (click)="stopPassiveSessionBikeCommand(row)">
+              <mat-icon>power_off</mat-icon>
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </mat-card-content>
+  </mat-card>
+</div>

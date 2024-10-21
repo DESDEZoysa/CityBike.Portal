@@ -1,0 +1,82 @@
+.chip {
+  width: 90px;
+  background-color: transparent;
+  text-align: center;
+  padding: 0 5px;
+  border-radius: 10px;
+}
+
+.status-Sent {
+  color: #fff;
+  background-color: orange;
+}
+
+.status-Executed {
+  color: #fff;
+  background-color: green;
+}
+
+.status-Expired,
+.status-Rejected {
+  color: #fff;
+  background-color: red;
+}
+
+.status-Failed {
+  color: #fff;
+  background-color: black;
+}
+
+.disable {
+  color: gainsboro !important;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+// .fixed-height-table {
+//   height: calc(100vh - 100px);
+
+//   @media (min-width: 768px) {
+//     height: calc(100vh - 355px);
+//   }
+// }
+
+.admin-settings {
+  &-title {
+    margin-bottom: 25px;
+    margin-top: 30px !important;
+  }
+
+  &-button {
+    height: 32px;
+    line-height: 32px;
+    margin-left: 10px;
+    position: relative;
+    top: -1px;
+  }
+}
+
+.mun-select {
+  margin-top: 0px;
+}
+
+/* Remove drop down margin-top when an item is selected */
+.mun-deselect {
+  margin-top: 4px;
+}
+
+.mun-btn-select {
+  margin-top: -4px;
+}
+
+/* Remove button margin-top when an item is selected */
+.mun-btn-deselect {
+  margin-top: 0px;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 2px 2px 5px 2px rgba(0, 0, 0, 0.3);
+  padding: 16px;
+}

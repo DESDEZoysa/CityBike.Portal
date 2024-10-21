@@ -1,0 +1,84 @@
+.dropdown-placeholder {
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 12px;
+  }
+  
+  .dropdown-menu {
+    font-size: 14px;
+  }
+  
+  .btn-style {
+    background-color: #04A3E3;
+    border-radius: 35px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    width: 135px;
+    margin: 1px;
+    margin-top: 10px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.19);
+  }
+  
+  .btn-style:hover {
+    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.24), 0 3px 4px 0 rgba(0, 0, 0, 0.19);
+  }
+  
+  .dp-repair-table {
+    min-height: 650px;
+  }
+
+  .result-container {
+    position: relative;
+  }
+
+  .go-back {
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1;
+
+    img {
+      width: 20px;
+    }
+  }
+
+  .popup-title {
+    margin: 0 0 10px 0;
+  }
+
+  .popup-subtitle {
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 16px;
+    margin: 0 0 15px 0;
+  }
+
+  .date-filter-wrapper {
+    font-size: 13px;
+    margin-top: 20px;
+    width: 100%;
+
+    > div:last-child {
+      @media (min-width: 600px) {
+        margin-left: 5px;
+      }
+    }
+  }
+
+  .dp-repair-date-filter {
+    margin-top: 10px;
+
+    @media (min-width: 600px) {
+      padding-left: 15px;
+      margin-top: 0;
+    }
+  }
+
+.filters-wrapper {
+  @media (min-width: 1280px) {
+    flex: 40% !important;
+    max-width: 40% !important;
+  }
+}

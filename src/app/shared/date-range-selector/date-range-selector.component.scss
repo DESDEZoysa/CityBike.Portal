@@ -1,0 +1,36 @@
+.date-picker-row {
+    width: 100%;
+    text-align: center;
+}
+
+.date-picker-column {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    font-size: 14px;
+}
+
+.date-picker-row md-form-field,
+.date-picker-row button {
+    // margin: 0 20px;
+}
+
+@media screen and (max-width: 400px) {
+    .date-picker-column {
+        // width: 80%;
+        margin: auto;
+        text-align: center;
+        font-size: 12px;
+        margin-top: 10px;
+    }
+    .mobile {
+        width: 100px;
+    }
+    .mobile-btn {
+        width: 65px;
+    }    
+}
+
+.date-pickers-wrapper {
+    margin-right: 15px;
+}

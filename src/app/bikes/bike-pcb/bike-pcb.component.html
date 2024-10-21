@@ -1,0 +1,90 @@
+<div id="parts" class="result-container" (window:resize)="onResize()">
+
+  <div style="position: relative; padding-right: 5px;padding-bottom: 5px;">
+    <div fxFlex="1 1 auto" class="fill-remaining-space"></div>
+  </div>
+  <ngx-datatable #bikeObservationsTable class="material striped expandable fixed-height-table" [rows]="bikeObservations"
+    [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="45"
+    [scrollbarV]="true" [scrollbarH]="true" [loadingIndicator]="loadingIndicator">
+
+    <ngx-datatable-row-detail [rowHeight]="65" #bikeDetailRow *ngIf="isMobile">
+      <ng-template let-row="row" ngx-datatable-row-detail-template>
+        <div style="padding-left:15px;font-size: 13px;">
+          <div>
+            {{ 'PCB.VALUE' | translate}}: {{row.Value}}
+          </div>
+          <div style="padding-top:10px;">
+            {{ 'PCB.TIMESTAMP' | translate}}: {{row.Timestamp}}
+          </div>
+        </div>
+      </ng-template>
+    </ngx-datatable-row-detail>
+
+    <!-- Column Templates -->
+    <ngx-datatable-column [width]="10" [resizeable]="false" [sortable]="false" [draggable]="false"
+      [canAutoResize]="false" *ngIf="isMobile">
+      <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+        <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+          title="Expand/Collapse Row" (click)="toggleExpandRow(row)">
+        </a>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column prop="Name" [flexGrow]="0.50" [minWidth]="220">
+
+      <ng-template ngx-datatable-header-template let-column="column" let-sort="sortFn">
+        <span class="datatable-header-cell-wrapper">
+          <span class="datatable-header-cell-label draggable" (click)="sort()">{{'PCB.NAME'|translate}}</span>
+          <span style="float: right;margin-top: -10px;margin-right: 10px">
+            <button mat-icon-button (click)="getLiveData()" class="btn-refresh" *ngIf="isMobile">
+              <mat-icon>refresh</mat-icon>
+            </button></span>
+        </span>
+      </ng-template>
+
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{value}}
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column prop="Value" [flexGrow]="0.50" [sortable]="true" *ngIf="!isMobile">
+      <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+        <span *ngIf="value.length > 20  && row.Id == 455 "> {{value.substring(0,10)}}...
+        </span>
+
+        <a *ngIf="value.length > 20  && row.Id == 455" md-icon class="material-icons"
+          style="display: inline-block;vertical-align: middle; margin-bottom: 2px;margin-left: 5px;"
+          (click)="open(row)"> open_in_new </a>
+        <span *ngIf="! (value.length > 20   && row.Id == 455)">{{value}} </span>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column prop="Timestamp" [flexGrow]="0.50" *ngIf="!isMobile">
+      <ng-template ngx-datatable-header-template let-column="column" let-sort="sortFn">
+        <span class="datatable-header-cell-wrapper">
+          <span class="datatable-header-cell-label draggable" (click)="sort()">{{'PCB.TIMESTAMP'|translate}}</span> <!--*ngIf="!isConnected"-->
+          <span style="float: right;margin-top: -10px;margin-right: 10px"><button   mat-icon-button (click)="getLiveData()" class="btn-refresh">
+              <mat-icon>refresh</mat-icon>
+            </button></span>
+        </span>
+      </ng-template>
+
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{ value}}
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-footer *ngIf="isMobile">
+      <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize" let-curPage="curPage"
+        let-offset="offset">
+        <div style="padding: 5px 10px">
+          <hr style="width:100%" />
+          <div> Total: {{rowCount}} | {{curPage}} of {{(rowCount/pageSize).toFixed(0)}} </div>
+        </div>
+      </ng-template>
+    </ngx-datatable-footer>
+
+  </ngx-datatable>
+
+
+
+</div>

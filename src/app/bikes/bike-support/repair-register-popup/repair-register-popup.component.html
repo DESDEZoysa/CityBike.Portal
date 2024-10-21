@@ -1,0 +1,78 @@
+<div class="faliure-type-model">
+  <h1 mat-dialog-title>
+    <img *ngIf="isBikeOkay" src="/assets/images/map-icons/register-bike.svg">
+    <img *ngIf="!isBikeOkay" src="/assets/images/map-icons/to-ws.svg">
+    <span>{{bike?.VisualId}}</span>
+    <div>{{'REPAIR_REPORT.TITLE' | translate }}</div>
+  </h1>
+  <div mat-dialog-content style="max-height: none;">
+    <div class="report-error-popup-wrapper">
+      <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between ">
+        <div fxLayout="column">
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)"
+                *ngFor="let repCat of group1">{{repCat.DisplayName}}
+              </mat-checkbox>
+              <br>
+              <br>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column">
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)"
+                *ngFor="let repCat of group2">{{repCat.DisplayName}}
+              </mat-checkbox>
+              <br>
+              <br>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column">
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)"
+                *ngFor="let repCat of group3">{{repCat.DisplayName}}
+              </mat-checkbox>
+              <br>
+              <br>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div fxLayout="column" fxLayout.gt-md="row">
+        <div fxFlex="25%">
+          <mat-checkbox (change)="onRepairFix()" [(ngModel)]="otherFix">
+            {{'REPAIR_REPORT.OTHER_FIX' | translate }}
+          </mat-checkbox>
+        </div>
+      </div> -->
+      <br>
+      <br>
+      <div fxLayout="column" fxLayout.gt-sm="row wrap" fxLayoutAlign.gt-sm="space-between ">
+        <div fxFlex="50%">
+          <div>
+            <div>{{'REPAIR_REPORT.ADD_COMMENT' | translate }}</div>
+            <br>
+            <div>
+              <textarea class="background-color:white" [(ngModel)]="comments"
+                style="height: 100px; width: 100%;"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="button-wrapper" fxLayout="row" fxLayoutAlign="space-between start">
+      <button class="btn-style mat-button" (click)="GoBack()">
+        {{'REPAIR_REPORT.BACK' | translate }}</button>
+      <!-- <button [className]="disableBike && !isBikeOkay ? 'btn-style btn-disabled mat-button' : 'btn-style mat-button'"
+        [disabled]="disableBike && !isBikeOkay" mat-button cdkFocusInitial (click)="createRepairReportOrUpdate()">
+        {{'REPAIR_REPORT.REGISTER_REPAIR' | translate }}</button> -->
+      <button class="btn-style mat-button" mat-button cdkFocusInitial (click)="createRepairReportOrUpdate()">
+        {{'REPAIR_REPORT.REGISTER_REPAIR' | translate }}</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,724 @@
+<div class="bc bc-top">
+  <a [routerLink]="['/bikes']" class="bc-link">{{ 'COMMON.BIKES' | translate }}</a>
+  <span class="bc-separator">&nbsp;/&nbsp;</span>
+  <span class="bc-current">{{ 'COMMON.LIVE' | translate }}</span>
+</div>
+<mat-drawer-container class="example-container">
+  <mat-drawer-content class="content dashboard-map">
+    <div class="custom-controls">
+      <button mat-icon-button (click)="openFilterOptions()" class="filter-options">
+        <mat-icon>layers</mat-icon>
+      </button>
+      <div [ngClass]="{'show-options': showMapOptions }" style="display: none;">
+        <!-- <h6 class="map-heading menu-font">{{ 'COMMON.LIVE_MAPS' | translate }}</h6> -->
+        <div>
+          <mat-checkbox class="map-checkbox menu-font" [(ngModel)]="bikeMap" (change)="changeMap($event,'bike')">
+            {{ 'COMMON.BIKES' | translate }}
+          </mat-checkbox>
+        </div>
+        <div>
+          <mat-checkbox class="map-checkbox menu-font" [(ngModel)]="dockMap" (change)="changeMap($event,'dock')">
+            {{ 'COMMON.DOCKING_STATIONS' | translate }}
+          </mat-checkbox>
+        </div>
+      </div>
+    </div>
+    <div #trackmap class="map docking-stations-map">
+      <ngx-spinner bdOpacity=1 bdColor="rgba(51, 51, 51, 0.2)" size="default" color="#1172c3" type="ball-clip-rotate"
+        [fullScreen]="true">
+      </ngx-spinner>
+      <div #popup class="popup"></div>
+
+      <div style="display: none;">
+        <div #marker>
+          <div #markertxt id="marker-txt" class="marker-txt" style="cursor: pointer;"></div>
+          <div #markertxt2 id="marker-txt2" class="marker-txt2"></div>
+
+          <div #dockingstation id="docking-station" style="visibility: hidden;"></div>
+        </div>
+      </div>
+    </div>
+  </mat-drawer-content>
+  <mat-drawer *ngIf="!isSideNavOpened && !dsViewLoaded" #cardrawer class="example-sidenav" mode="side" position="end"
+    opened="true">
+    <mat-card class="example-card header-card">
+
+      <!-- Card Header -->
+      <mat-card-header>
+
+        <!-- Card Title and items count -->
+        <div style="width: 100%;">
+          <mat-card-title>
+            <a (click)="NavigateBackToDashboard()" class="close">
+              <img src="/assets/images/map-icons/close.svg">
+            </a>
+            <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="start center"
+              fxLayoutAlign.gt-sm="space-between end">
+              <div class="car-header">
+                <p *ngIf="isStreetTeam && bikeModeId==27">{{'LIVE_MAP.IN_THIS_CAR' | translate}}
+                  ({{loggedInUser.FirstName}})</p>
+                <p *ngIf="bikeModeId==22">{{'DASHBOARD.MUST_BE_CHECKED' | translate}}</p>
+                <p *ngIf="bikeModeId==26">{{'DASHBOARD.SHOULD_BE_CHECKED' | translate}}</p>
+                <p *ngIf="bikeModeId==25">{{'DASHBOARD.TOTAL_BIKES' | translate}}</p>
+                <p *ngIf="!isStreetTeam && bikeModeId==6">{{'DASHBOARD.SUM_AVILABLE' | translate}}</p>
+                <p *ngIf="!isStreetTeam && bikeModeId==16">{{'DASHBOARD.AVILABLE_DOCKED' | translate}}</p>
+                <p *ngIf="bikeModeId==17">{{'DASHBOARD.AVILABLE_FREE' | translate}}</p>
+                <p *ngIf="!isStreetTeam && bikeModeId==7">{{'DASHBOARD.SUM_IN_USE' | translate}}</p>
+                <p *ngIf="bikeModeId==18">{{'DASHBOARD.INUSE_SESSION' | translate}}</p>
+                <p *ngIf="!isStreetTeam && bikeModeId==28">{{'DASHBOARD.WITH_US' | translate}}</p>
+                <p *ngIf="bikeModeId==24">{{'DASHBOARD.MISSING' | translate}}</p>
+                <p *ngIf="!isStreetTeam && bikeModeId==1">{{'DASHBOARD.MOVING' | translate}}</p>
+                <p *ngIf="!isStreetTeam && bikeModeId==2">{{'DASHBOARD.IN_WORKSHOP' | translate}}</p>
+                <i *ngIf="!isStreetTeam && bikeModeId==2">{{'DASHBOARD.NOT_FIXED' | translate}}</i>
+                <p *ngIf="bikeModeId== 34">{{'DASHBOARD.PRIORITY_LIST' | translate}}</p>
+                <p *ngIf="bikeModeId==3">{{'DASHBOARD.FINISHED_FIX' | translate}}</p>
+                <p *ngIf="bikeModeId == 29">{{ "DASHBOARD.CHECKED_NEED_REPAIR" | translate }}</p>
+                <p *ngIf="bikeModeId == 35">{{ "DASHBOARD.WITH_STREET_TEAM" | translate }}</p>
+                <i *ngIf="bikeModeId==3">{{'DASHBOARD.READY_FOR_PICKUP_AT_WORKSHOP' | translate}}</i>
+                <p *ngIf="bikeModeId==4">{{'DASHBOARD.IN_STORAGE' | translate}}</p>
+                <p *ngIf="bikeModeId==19">{{'DASHBOARD.IN_TEST_SESSION' | translate}}</p>
+                <p *ngIf="bikeModeId==36">{{'DASHBOARD.ON_LOAN' | translate}}</p>
+                <p *ngIf="!isStreetTeam && bikeModeId==21">{{'DASHBOARD.MOVING_NOW' | translate}}</p>
+                <p *ngIf="!isStreetTeam && bikeModeId==10">{{'DASHBOARD.OFFLINE' | translate}}</p>
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                  <img *ngIf="isStreetTeam && bikeModeId==27" src="/assets/images/map-icons/car-header.svg">
+                  <img
+                    *ngIf="bikeModeId==34 || bikeModeId==25 || bikeModeId==17 || (!isStreetTeam && (bikeModeId==6 || bikeModeId==7))"
+                    src="/assets/images/dashboard/bike.svg">
+                  <img *ngIf="!isStreetTeam && bikeModeId==16" src="/assets/images/dashboard/docked-free.svg"
+                    width="73">
+                  <img *ngIf="bikeModeId==18" src="/assets/images/dashboard/bike-normal-insession.svg" width="76">
+                  <img *ngIf="bikeModeId==22" src="/assets/images/dashboard/must-check.svg" width="56">
+                  <img *ngIf="bikeModeId==26" src="/assets/images/dashboard/should-check.svg" width="56">
+                  <img *ngIf="!isStreetTeam && bikeModeId==28" src="/assets/images/dashboard/with-us.svg" width="56">
+                  <img *ngIf="bikeModeId==24" src="/assets/images/dashboard/missing.svg" width="40">
+                  <img *ngIf="!isStreetTeam && bikeModeId==1" src="/assets/images/dashboard/way-to-ws.svg" width="130">
+                  <img *ngIf="!isStreetTeam && bikeModeId==2" src="/assets/images/dashboard/in-ws.svg">
+                  <img *ngIf="bikeModeId==3" src="/assets/images/dashboard/fix-ready.svg">
+                  <img *ngIf="bikeModeId==4" src="/assets/images/dashboard/in-stock.svg" width="56">
+                  <img *ngIf="bikeModeId==19" src="/assets/images/dashboard/testing.svg" width="60">
+                  <img *ngIf="!isStreetTeam && bikeModeId==21" src="/assets/images/dashboard/moving.svg" width="90">
+                  <img *ngIf="!isStreetTeam && bikeModeId==10" src="/assets/images/dashboard/offline.svg" width="75">
+                  <img *ngIf="bikeModeId == 29" src="/assets/images/dashboard/checked-need-repair.svg" width="60" />
+                  <img *ngIf="bikeModeId == 35" src="/assets/images/dashboard/bike-with-street-team.svg" width="60" />
+                  <img *ngIf="bikeModeId == 36" src="/assets/images/dashboard/bike-on-loan-large.svg" width="60" />
+                  <!-- <img src="/assets/images/dashboard/suspicious.svg"> -->
+                  <span>{{filteredBikes?.length}}</span>
+                </div>
+              </div>
+              <mat-form-field class="bike-options-selector" *ngIf="bikeModeId==22 || bikeModeId==26 || bikeModeId==34">
+                <mat-label>Select an option</mat-label>
+                <mat-select [ngModel]="bikeChangeFilters[0].value" (selectionChange)="onBikeChangeFilter($event)">
+                  <mat-option *ngFor="let bikeChangeFilter of bikeChangeFilters" [value]="bikeChangeFilter.value">
+                    {{bikeChangeFilter.viewValue | translate}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <a *ngIf="bikeModeId==7 && isAdmin" (click)="openAvgSumOperationalBikes()" class="see-operational-bikes-stats-link">{{ 'DASHBOARD.SEE_OPERATIONAL_BIKES' | translate}}</a>
+            </div>
+          </mat-card-title>
+        </div>
+        <!-- / Card Title and items count -->
+        <img *ngIf="bikeModeId==3 || bikeModeId==4" (click)="onFilterMenu()" src="/assets/images/dashboard/filter.svg"
+          class="filter-icon">
+
+        <div class="filter-box" fxLayout="column" *ngIf="bikeModeId==3 && isFilterMenuOpen">
+          <mat-checkbox [(ngModel)]="workshop.Result" (change)="onChange($event,workshop)"
+            *ngFor="let workshop of allWorkshops">{{workshop.Name}}
+          </mat-checkbox>
+        </div>
+        <div class="filter-box" fxLayout="column" *ngIf="bikeModeId==4 && isFilterMenuOpen">
+          <mat-checkbox [(ngModel)]="storage.Result" (change)="onStorageChange($event,storage)"
+            *ngFor="let storage of allStorages">{{storage.Name}}
+          </mat-checkbox>
+        </div>
+      </mat-card-header>
+    </mat-card>
+    <div class="service-main--new" *ngIf="isFilterLoading" fxLayout="row" fxLayoutAlign="center center">
+      <img class="tire-pressure-loader" src="assets/images/preloader.svg" width="100" />
+    </div>
+    <!-- Detail card  -->
+    <mat-card class="example-card sub-card" *ngFor="let transportBike of filteredBikes">
+
+      <mat-card-content *ngIf="!isFilterLoading">
+        <!-- Bike item row  -->
+        <div class="bike-item-row" fxLayout="column" fxLayout.gt-xs="row" fxLayoutAlign="space-between ">
+          <!-- Bike item status  -->
+          <div class="bike-details" fxFlex="65">
+            <div class="bike-details__icon-wrapper" fxLayout="row" fxLayoutAlign=" end">
+              <!-- bike disabled moving-->
+              <img *ngIf="transportBike.BikeStatus == 9" class="bike-details__icon right"
+                src="/assets/images/map-icons/bike-moving.svg" width="78" />
+              <!-- bike disabled testing-->
+              <img *ngIf="transportBike.BikeStatus == 8 && transportBike.Resolved == 0" class="bike-details__icon right"
+                src="/assets/images/map-icons/bike-with-eye.svg" width="62" />
+              <img
+                *ngIf="transportBike.BikeStatus == 8 && transportBike.Resolved > 0 && !transportBike.HasCriticalIssue"
+                class="bike-details__icon right" src="/assets/images/map-icons/bike-with-yellow-eye.svg" width="62" />
+              <img *ngIf="transportBike.BikeStatus == 8 && transportBike.Resolved > 0 && transportBike.HasCriticalIssue"
+                class="bike-details__icon right" src="/assets/images/map-icons/bike-with-red-eye.svg" width="62" />
+              <!-- bike free standing outside ds locked/transition no issues -->
+              <img
+                *ngIf="transportBike.BikeStatus == 6 && (transportBike.LockState == 10 || transportBike.LockState == 20)"
+                class="bike-details__icon right" src="/assets/images/map-icons/locked-bike-default.svg" width="56" />
+              <!-- bike free standing outside ds unlocked no issues -->
+              <img *ngIf="transportBike.BikeStatus == 6 && transportBike.LockState == 11"
+                class="bike-details__icon right" src="/assets/images/map-icons/bike-default.svg" width="50" />
+              <!-- bike normal docked -->
+              <img *ngIf="transportBike.BikeStatus == 1" class="bike-details__icon right"
+                src="/assets/images/map-icons/bike-default-doc.svg" width="63" />
+              <!-- bike free standing inside ds locked/transition no issues -->
+              <img *ngIf="transportBike.BikeStatus == 3" class="bike-details__icon right"
+                src="/assets/images/map-icons/locked-bike-default.svg" width="56" />
+              <!-- bike disabled/ disabled in workshop locked -->
+              <img
+                *ngIf="(transportBike.BikeStatus == 5 || transportBike.BikeStatus == 17) && (transportBike.LockState == 10 || transportBike.LockState == 20)"
+                class="bike-details__icon right" src="/assets/images/map-icons/locked-bike-red-cross.svg" width="58" />
+              <!-- bike disabled/ disabled in workshop unlocked -->
+              <img
+                *ngIf="(transportBike.BikeStatus == 5 || transportBike.BikeStatus == 17) && transportBike.LockState == 11"
+                class="bike-details__icon right" src="/assets/images/map-icons/bike-red-cross.svg" width="63" />
+              <!-- bike disabled in storage -->
+              <img *ngIf="transportBike.BikeStatus == 18" class="bike-details__icon right"
+                src="/assets/images/map-icons/bike-instorage-single.svg" width="58" />
+              <!-- bike disabled to workshop -->
+              <img *ngIf="transportBike.BikeStatus == 11" class="bike-details__icon right"
+                src="/assets/images/map-icons/bike-workshop.svg" width="78" />
+              <!-- bike disabled free standing outside ds locked-->
+              <img
+                *ngIf="transportBike.BikeStatus == 10 && (transportBike.LockState == 10 || transportBike.LockState == 20)"
+                class="bike-details__icon right" src="/assets/images/map-icons/locked-bike-loose-disabled.svg"
+                width="56" />
+              <!-- bike disabled free standing outside ds unlocked-->
+              <img *ngIf="transportBike.BikeStatus == 10 && transportBike.LockState == 11"
+                class="bike-details__icon right" src="/assets/images/map-icons/bike-loose-disabled.svg" width="62" />
+              <!-- bike free standing inside ds locked with minor issues-->
+              <img *ngIf="transportBike.BikeStatus == 4" class="bike-details__icon right"
+                src="/assets/images/map-icons/locked-bike-yellow.svg" width="57" />
+              <!-- bike free standing outside ds locked with minor issues-->
+              <img
+                *ngIf="transportBike.BikeStatus == 7 && (transportBike.LockState == 10 || transportBike.LockState == 20)"
+                class="bike-details__icon right" src="/assets/images/map-icons/locked-bike-yellow.svg" width="57" />
+              <!-- bike free standing outside ds unlocked with minor issues-->
+              <img *ngIf="transportBike.BikeStatus == 7 && transportBike.LockState == 11"
+                class="bike-details__icon right" src="/assets/images/map-icons/bike-yellow.svg" width="57" />
+              <!-- bike docked with minor issues-->
+              <img *ngIf="transportBike.BikeStatus == 2" class="bike-details__icon right"
+                src="/assets/images/map-icons/bike-yellow-dock.svg" width="63" />
+              <!-- bike normal in session locked-->
+              <img
+                *ngIf="transportBike.BikeStatus == 12 && (transportBike.LockState == 10 || transportBike.LockState == 20)"
+                class="bike-details__icon right" src="/assets/images/map-icons/locked-bike-normal-insession.svg"
+                width="76" />
+              <!-- bike normal in session unlocked-->
+              <img *ngIf="transportBike.BikeStatus == 12 && transportBike.LockState == 11"
+                class="bike-details__icon right" src="/assets/images/map-icons/bike-normal-insession.svg" width="76" />
+              <!-- bike error in session locked-->
+              <img
+                *ngIf="transportBike.BikeStatus == 13 && (transportBike.LockState == 10 || transportBike.LockState == 20)"
+                class="bike-details__icon right" src="/assets/images/map-icons/locked-bike-yellow-insession.svg"
+                width="63" />
+              <!-- bike error in session unlocked-->
+              <img *ngIf="transportBike.BikeStatus == 13 && transportBike.LockState == 11"
+                class="bike-details__icon right" src="/assets/images/map-icons/bike-yellow-insession.svg" width="63" />
+              <!-- bike disabled repair finished-->
+              <img *ngIf="transportBike.BikeStatus == 14" class="bike-details__icon right"
+                src="/assets/images/map-icons/bike-repair-finished-single.svg" width="95" />
+              <!-- bike normal/error passive session-->
+              <img *ngIf="transportBike.BikeStatus == 15 || transportBike.BikeStatus == 16"
+                class="bike-details__icon right" src="/assets/images/map-icons/testing.svg" width="50" />
+              <!-- bike disabled docked checked, needs repair-->
+              <img *ngIf="transportBike.DockingPointId && transportBike.BikeStatus == 19"
+                class="bike-details__icon right" src="/assets/images/map-icons/docked-checked-repair.svg" width="63" />
+              <!-- bike disabled free standing inside ds checked, needs repair-->
+              <img *ngIf="!transportBike.DockingPointId && transportBike.BikeStatus == 19"
+                class="bike-details__icon right" src="/assets/images/map-icons/free-checked-repair.svg" width="60" />
+              <!-- bike disabled docked or free standing with street team -->
+              <img *ngIf="transportBike.BikeStatus == 20"
+              class="bike-details__icon right" src="/assets/images/map-icons/bike-with-street-team.svg" width="60" />
+              <!-- bikes on-loan -->
+              <img *ngIf="transportBike.BikeStatus == 21"
+              class="bike-details__icon right" src="/assets/images/map-icons/bike-on-loan-large.svg" width="60" />
+              <a (click)="OpenBikeDetails(transportBike)">{{transportBike.VisualId}}</a>
+
+            </div>
+            <div fxLayout="column">
+              <div fxLayout="row wrap" fxLayoutAlign=" center">
+
+                <!-- Battery status  -->
+                <div class="battery" fxLayout="row" fxLayoutAlign=" center">
+                  <img *ngIf="!transportBike.IsCharging" class="battery__icon" src="/assets/images/map-icons/battery.svg">
+                  <img *ngIf="transportBike.IsCharging && transportBike.DockingStationId" class="battery__icon"
+                    src="/assets/images/map-icons/battery-charge.svg">
+                  <span class="battery__percentage">{{transportBike.ChargeLevel| number:'1.0-0'}}%</span>
+                </div>
+                <!-- / Battery status  -->
+
+                <!-- Dager  -->
+                <div class="service-main--details__tab--item" fxLayout="row" class="bike-lock"
+                  *ngIf="transportBike.LockState == 10 || transportBike.LockState == 20">
+                  <div fxLayout="row" fxLayoutAlign="start center">
+                    <img src="/assets/images/map-icons/lock.svg" style="margin: 0 5px 0 12px;">
+                  </div>
+                </div>
+                <div class="service-main--details__tab--item" fxLayout="row"
+                  *ngIf="bikeModeId != 26 && bikeModeId != 22 && bikeModeId != 3">
+                  <div fxLayout="row" fxLayoutAlign="start center">
+                    <img src="/assets/images/map-icons/refresh.svg" style="margin: 0 5px 0 12px;">
+                  </div>
+                  <span>{{ formatServiceTimeDuration(transportBike?.LatestPulse) }}</span>
+                </div>
+                <div *ngIf="bikeModeId== 3" class="dager" fxLayout="row" fxLayoutAlign=" center">
+                  <img class="dager__icon" src="/assets/images/map-icons/eye-sm.svg">
+                  <span class="dager-count">
+                    {{ formatServiceTimeDuration(transportBike?.ServiceCheckDate) }}</span>
+                </div>
+                <!-- / Dager  -->
+                <div fxLayout="row" fxLayoutAlign="center center" *ngIf="transportBike.SessionId">
+                  <img class="insession" src="/assets/images/map-icons/bike-insession-face.svg" width="18"
+                    style="margin: 0 5px 0 12px;">
+                  <p>{{ calculateTripDuration(transportBike?.SessionStartTime) }}</p>
+                </div>
+
+                <div fxLayout="row" fxLayoutAlign="center center" *ngIf="bikeModeId ==22" class="bike-date">
+                  <span class="bike-details__red_dot bike-details__red_dot--left-margin"></span>
+                  <p class="dot">{{ formatReportErrorTimeDuration(transportBike?.LastDisabledDate) }}</p>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="center center" *ngIf="bikeModeId ==26" class="bike-date">
+                  <span class="bike-details__yellow_dot bike-details__yellow_dot--left-margin"></span>
+                  <p class="dot">{{ formatReportErrorTimeDuration(transportBike?.ReportedDate) }}
+                  </p>
+                </div>
+              </div>
+              <div class="">
+                <div fxLayout="row" fxLayoutAlign="start center" *ngIf="transportBike.BikeStatus == 14">
+                  <img src="/assets/images/dashboard/in-ws.svg" width="18" style="margin: 0 5px 1px 0;">
+                  <span>{{transportBike.WorkshopName}}</span>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="start center" *ngIf="transportBike.BikeStatus == 18">
+                  <img src="/assets/images/map-icons/send-in-stock.svg" width="18" style="margin: 0 5px 1px 0;">
+                  <span>{{transportBike.StorageName}}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="service-main--details__tab--item" fxLayout="row" *ngIf="transportBike.activeBikeIssues &&
+            (bikeModeId == 26 || bikeModeId == 22 || bikeModeId == 34 || bikeModeId == 29)">
+              <div fxLayout="row" fxLayoutAlign="start center">
+                <ul class="issues-list">
+                  <li *ngFor="let issue of transportBike.activeBikeIssues">{{issue.ErrorCategoryName}}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- Bike item options -->
+          <div class="bike-options" fxLayout="row" fxLayoutAlign="flex-end center" fxFlex="35">
+            <!-- Bike option  -->
+            <div class="bike-options__item" *ngIf="transportBike.BikeStatus == 11">
+              <div fxLayout="column" fxLayoutAlign=" center" (click)="HandToWorkShop(transportBike)">
+                <img src="/assets/images/map-icons/settings-green.svg">
+                <span>{{'LIVE_MAP.HANDOVER_WORKSHOP' | translate}}</span>
+              </div>
+            </div>
+            <!-- / Bike option  -->
+
+             <!-- Bike option  -->
+             <div class="bike-options__item" *ngIf="transportBike.BikeStatus == 14 || transportBike.BikeStatus == 18">
+              <div fxLayout="column" fxLayoutAlign=" center" (click)="handleTransportBike(transportBike)">
+                <img src="/assets/images/map-icons/transport.svg">
+                <span>{{'LIVE_MAP.TRANSPORTATION' | translate}}</span>
+              </div>
+            </div>
+            <!-- / Bike option  -->
+
+
+            <!-- Bike option  -->
+            <div class="bike-options__item" *ngIf="transportBike.BikeStatus == 9">
+              <div class="cursor-default" fxLayout="column" fxLayoutAlign=" center">
+                <p class="grey-text">{{'LIVE_MAP.COMPLETE_MOVE' | translate}}</p>
+              </div>
+            </div>
+            <!-- / Bike option  -->
+          </div>
+          <!-- / Bike item options -->
+        </div>
+        <!-- / Bike item row  -->
+      </mat-card-content>
+    </mat-card>
+
+  </mat-drawer>
+
+  <mat-drawer *ngIf="!isSideNavOpened && dsViewLoaded" class="ds-side-panel" #sidenav mode="side" position="end"
+    opened="true" fxLayout="column" fxLayoutAlign="start ">
+
+    <!-- docking point side panel header  -->
+    <a (click)="NavigateBackToDashboard()" class="close">
+      <img src="/assets/images/map-icons/close.svg">
+    </a>
+    <div class="ds-side-panel__header">
+      <p *ngIf="dsModeId == 5" class="ds-side-panel__header-title">{{ 'DASHBOARD.DP_NEEDS_CHECK_REPAIR' | translate }}
+      </p>
+      <p *ngIf="dsModeId == 6" class="ds-side-panel__header-title">{{ 'DASHBOARD.DP_DISABLED' | translate }}</p>
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <img *ngIf="dsModeId == 5" src="/assets/images/dashboard/needs-check-repair.svg" width="88">
+        <img *ngIf="dsModeId == 6" src="/assets/images/dashboard/points-are-disabled.svg" width="88">
+        <p class="ds-side-panel__header-count">{{ statsCount }}</p>
+      </div>
+    </div>
+    <!-- /docking point side panel header  -->
+
+    <!-- docking point side panel body  -->
+    <div class="service-main--new" fxLayout="row" fxLayoutAlign="center center" *ngIf="isFilterLoading">
+      <img class="tire-pressure-loader" src="assets/images/preloader.svg" width="100" />
+    </div>
+    <div class="ds-side-panel__body">
+      <div class="ds-side-panel__body-item ds-side-panel__body-item--no-border" fxLayout="row"
+        fxLayoutAlign="end center">
+        <mat-form-field *ngIf="dsModeId==5">
+          <mat-label>{{"DASHBOARD.SELECT_OPTION" | translate }}</mat-label>
+          <mat-select [ngModel]="dockFilterOptions[0].value" (selectionChange)="onDockingStationFilter($event)">
+            <mat-option *ngFor="let dockFilter of dockFilterOptions" [value]="dockFilter.value">
+              {{dockFilter.viewValue | translate}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- body item  -->
+      <div class="ds-side-panel__body-item" *ngFor="let dockingStationStat of dockingStationStats">
+        <a class="ds-side-panel__body-item-title"
+          (click)="openDockingStationDetails(dockingStationStat.DockingStationId)">
+          {{dockingStationStat.DockingStationName}}
+        </a>
+        <p class="ds-side-panel__body-item-subtitle">{{dockingStationStat.dockingStationAddress}}</p>
+
+        <div class="ds-side-panel__body-sub-items-wrapper"
+          *ngFor="let dockingPoint of dockingStationStat.DockingPoints">
+          <div>
+            <!-- body sub item -->
+            <div class="ds-side-panel__body-sub-item" fxLayout="row" fxLayoutAlign="start center">
+              <img *ngIf="dockingPoint.DPDisabledReason == 2" src="/assets/images/dashboard/Should-be-checked-small.svg"
+                width="23">
+              <img *ngIf="dockingPoint.DPDisabledReason == 3" src="/assets/images/dashboard/must-be-checked-small.svg"
+                width="23">
+              <img *ngIf="dockingPoint.DPDisabledReason == 1" src="/assets/images/dashboard/points-are-disabled.svg"
+                width="23">
+              <a class="ds-side-panel__body-sub-item-error-count"
+                (click)="openDockingPointDetails(dockingPoint,dockingStationStat.DockingStationName)">{{dockingPoint.VisualId}}</a>
+              <span class="ds-side-panel__body-sub-item-title">{{dockingPoint.DisplayText}}</span>
+            </div>
+            <!-- /body sub item -->
+            <div>
+              <ul *ngIf="dockingPoint.errorReport?.ErrorCategories">
+                <li *ngFor="let errorCategory of dockingPoint.errorReport?.ErrorCategories">
+                  {{errorCategory.Name}}
+                </li>
+              </ul>
+              <div class="ds-comment" fxLayout="row" fxLayoutAlign="start center"
+                *ngIf="dockingPoint.errorReport?.Comments"><img
+                  src="/assets/images/sms_24px.svg">{{dockingPoint.errorReport?.Comments}}</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <!-- /body item  -->
+    </div>
+    <!-- /docking point side panel body  -->
+  </mat-drawer>
+
+  <mat-drawer *ngIf="isSideNavOpened && isDockViewOpened" #drawer class="example-sidenav" mode="side" opened="true">
+    <mat-card class="example-card header-card-bikes">
+
+      <!-- Card Header -->
+      <mat-card-header>
+
+        <span class="material-icons dock-close" (click)="closeDockView()">close</span>
+
+        <!-- Marker -->
+        <div #marker class="card-marker" (click)="GoToDockingStationDet()">
+          <div #markertxtsingle id="marker-txt-single" class="card-marker__cycle" fxLayout="row"
+            fxLayoutAlign="center center">
+            5
+          </div>
+          <div #markertxt2single id="marker-txt2-single" class="card-marker__cycle--count" fxLayout="row"
+            fxLayoutAlign="center center">2+</div>
+          <!-- </div> -->
+        </div>
+        <!-- / Marker -->
+
+        <!-- Card Title and items count -->
+        <div>
+          <mat-card-title>{{dockingStationName}}</mat-card-title>
+
+          <!-- Items count -->
+          <div fxLayout="column">
+            <span class="skyler">{{'LIVE_MAP.NO_OF_BIKES' | translate }}: {{numberOfAvailableBikes}}</span>
+            <span class="antall">{{'LIVE_MAP.IDEAL_NUMBER' | translate}}: {{idealBikes}}</span>
+            <!-- <span class="antall">{{'LIVE_MAP.PROMISED_NUMBER' | translate}}: {{promisedBikes}}</span> -->
+          </div>
+          <!-- / Items count -->
+
+        </div>
+        <!-- / Card Title and items count -->
+
+      </mat-card-header>
+    </mat-card>
+    <div class="service-main--new" *ngIf="isDockLoading" fxLayout="row" fxLayoutAlign="center center">
+      <img class="tire-pressure-loader" src="assets/images/preloader.svg" width="100" />
+    </div>
+    <!-- Detail card  -->
+    <mat-card class="example-card sub-card" *ngFor="let dockingStationBike of dockingStationBikes">
+      <mat-card-content *ngIf="!isDockLoading">
+
+        <!-- Bike item row  -->
+        <div class="bike-item-row" fxLayout="column" fxLayout.gt-xs="row" fxLayoutAlign="space-between ">
+
+          <!-- Bike item status  -->
+          <div class="bike-details">
+            <div class="bike-details__icon-wrapper" fxLayout="row" fxLayoutAlign=" end">
+              <!-- bike disabled moving -->
+              <img *ngIf="dockingStationBike.BikeStatus == 9" class="bike-details__icon"
+                src="/assets/images/map-icons/bike-moving.svg" width="78" />
+              <!-- bike disabled testing -->
+              <img *ngIf="dockingStationBike.BikeStatus == 8 && dockingStationBike.Resolved == 0"
+                class="bike-details__icon" src="/assets/images/map-icons/bike-with-eye.svg" width="62" />
+              <img
+                *ngIf="dockingStationBike.BikeStatus == 8 && dockingStationBike.Resolved > 0 && !dockingStationBike.HasCriticalIssue"
+                class="bike-details__icon" src="/assets/images/map-icons/bike-with-yellow-eye.svg" width="62" />
+              <img
+                *ngIf="dockingStationBike.BikeStatus == 8 && dockingStationBike.Resolved > 0 && dockingStationBike.HasCriticalIssue"
+                class="bike-details__icon" src="/assets/images/map-icons/bike-with-red-eye.svg" width="62" />
+              <!-- bike free standing outside ds locked/transition no issues -->
+              <img
+                *ngIf="dockingStationBike.BikeStatus == 6 && (dockingStationBike.LockState == 10 || dockingStationBike.LockState == 20)"
+                class="bike-details__icon" src="/assets/images/map-icons/locked-bike-default.svg" width="56" />
+              <!-- bike free standing outside ds unlocked no issues-->
+              <img *ngIf="dockingStationBike.BikeStatus == 6 && dockingStationBike.LockState == 11"
+                class="bike-details__icon" src="/assets/images/map-icons/bike-default.svg" width="50" />
+              <!-- normal bike docked-->
+              <img *ngIf="dockingStationBike.BikeStatus == 1" class="bike-details__icon"
+                src="/assets/images/map-icons/bike-default-doc.svg" width="63" />
+              <!-- bike free standing inside ds locked no issues-->
+              <img *ngIf="dockingStationBike.BikeStatus == 3" class="bike-details__icon"
+                src="/assets/images/map-icons/locked-bike-default.svg" width="56" />
+              <!-- bike disabled locked -->
+              <img
+                *ngIf="dockingStationBike.BikeStatus == 5 && (dockingStationBike.LockState == 10 || dockingStationBike.LockState == 20)"
+                class="bike-details__icon" src="/assets/images/map-icons/locked-bike-red-cross.svg" width="58" />
+              <!-- bike disabled unlocked -->
+              <img *ngIf="dockingStationBike.BikeStatus == 5 && dockingStationBike.LockState == 11"
+                class="bike-details__icon" src="/assets/images/map-icons/bike-red-cross.svg" width="63" />
+              <!-- bike disabled to workshop -->
+              <img *ngIf="dockingStationBike.BikeStatus == 11" class="bike-details__icon"
+                src="/assets/images/map-icons/bike-workshop.svg" width="78" />
+              <!-- bike disabled free standing outside ds locked-->
+              <img
+                *ngIf="dockingStationBike.BikeStatus == 10 && (dockingStationBike.LockState == 10 || dockingStationBike.LockState == 20)"
+                class="bike-details__icon" src="/assets/images/map-icons/locked-bike-loose-disabled.svg" width="56" />
+              <!-- bike disabled free standing outside ds unlocked-->
+              <img *ngIf="dockingStationBike.BikeStatus == 10 && dockingStationBike.LockState == 11"
+                class="bike-details__icon" src="/assets/images/map-icons/bike-loose-disabled.svg" width="62" />
+              <!-- bike free standing inside ds locked with minor issues-->
+              <img *ngIf="dockingStationBike.BikeStatus == 4" class="bike-details__icon"
+                src="/assets/images/map-icons/locked-bike-yellow.svg" width="57" />
+              <!-- bike free standing outside ds locked with minor issues-->
+              <img
+                *ngIf="dockingStationBike.BikeStatus == 7 && (dockingStationBike.LockState == 10 || dockingStationBike.LockState == 20)"
+                class="bike-details__icon" src="/assets/images/map-icons/locked-bike-yellow.svg" width="57" />
+              <!-- bike free standing outside ds unlocked with minor issues-->
+              <img *ngIf="dockingStationBike.BikeStatus == 7 && dockingStationBike.LockState == 11"
+                class="bike-details__icon" src="/assets/images/map-icons/bike-yellow.svg" width="57" />
+              <!-- bike docked with minor issues-->
+              <img *ngIf="dockingStationBike.BikeStatus == 2" class="bike-details__icon"
+                src="/assets/images/map-icons/bike-yellow-dock.svg" width="63" />
+              <!-- bike disabled free standing inside ds checked,needs repair-->
+              <img *ngIf="dockingStationBike.BikeStatus == 19 && !dockingStationBike.DockingPointId"
+                class="bike-details__icon" src="/assets/images/map-icons/free-checked-repair.svg" width="60" />
+              <!-- bike disabled docked checked,needs repair-->
+              <img *ngIf="dockingStationBike.BikeStatus == 19 && dockingStationBike.DockingPointId"
+                class="bike-details__icon" src="/assets/images/map-icons/docked-checked-repair.svg" width="63" />
+              <!-- bike disabled docked or free standing with street team -->
+              <img *ngIf="dockingStationBike.BikeStatus == 20"
+              class="bike-details__icon right" src="/assets/images/map-icons/bike-with-street-team.svg" width="60" />
+              <a (click)="OpenBikeDetails(dockingStationBike)">{{dockingStationBike.VisualId}}</a>
+              <!-- bikes on-loan -->
+              <img *ngIf="dockingStationBike.BikeStatus == 21"
+              class="bike-details__icon right" src="/assets/images/map-icons/bike-on-loan-large.svg" width="60" />
+              <a (click)="OpenBikeDetails(dockingStationBike)">{{dockingStationBike.VisualId}}</a>
+            </div>
+
+            <div fxLayout="row wrap" fxLayoutAlign=" center">
+
+              <!-- Battery status  -->
+              <div class="battery" fxLayout="row" fxLayoutAlign=" center">
+                <img *ngIf="!dockingStationBike.IsCharging" class="battery__icon"
+                  src="/assets/images/map-icons/battery.svg">
+                <img *ngIf="dockingStationBike.IsCharging && dockingStationBike.DockingStationId" class="battery__icon"
+                  src="/assets/images/map-icons/battery-charge.svg">
+                <span class="battery__percentage">{{dockingStationBike.ChargeLevel| number:'1.0-0'}}%</span>
+              </div>
+              <!-- / Battery status  -->
+
+              <!-- Dager  -->
+              <div class="dager" fxLayout="row" fxLayoutAlign=" center">
+                <img class="dager__icon" src="/assets/images/map-icons/eye-sm.svg">
+                <span class="dager-count">
+                  {{ formatServiceTimeDuration(dockingStationBike?.CheckDate) }}</span>
+              </div>
+              <!-- / Dager  -->
+
+            </div>
+
+            <p class="bike-details__dock-bike"
+              *ngIf="dockingStationBike.isCheckCompleted && dockingStationBike.Disabled">
+              {{'LIVE_MAP.DOCK_BIKE' | translate}}</p>
+            <div fxLayout="row" fxLayoutAlign="start center"
+              *ngIf="!dockingStationBike.isCheckCompleted && dockingStationBike.Disabled">
+              <span class="bike-details__red_dot"></span>
+              <p class="dot">{{ formatReportErrorTimeDuration(dockingStationBike?.LastModifiedDate) }}</p>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start center"
+              *ngIf="!dockingStationBike.isCheckCompleted && !dockingStationBike.Disabled && formatReportErrorTimeDurationCount(dockingStationBike?.ReportedDate) > 0">
+              <span class="bike-details__yellow_dot"></span>
+              <p class="dot">{{ formatReportErrorTimeDuration(dockingStationBike?.ReportedDate) }}
+              </p>
+            </div>
+
+            <div fxLayout="column" *ngIf="dockingStationBike.isCheckCompleted && !dockingStationBike.Disabled">
+              <p class="item-title">{{'LIVE_MAP.CHECK_IN_PROCESS' | translate}}</p>
+              <span class="item-subtitle">{{'LIVE_MAP.NO_FAULT' | translate}}</span>
+            </div>
+          </div>
+          <!-- Bike item status  -->
+        </div>
+        <!-- / Bike item row  -->
+
+      </mat-card-content>
+    </mat-card>
+    <!-- / Detail card  -->
+
+  </mat-drawer>
+
+  <mat-drawer *ngIf="isSideNavOpened && !isDockViewOpened" #servicedrawer class="service-sidenav" mode="side"
+    opened="true">
+    <div class="service-main" fxLayout="column" fxLayout.gt-xs="row">
+      <div class="service-main--loader" *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center center">
+        <img class="tire-pressure-loader" src="assets/images/preloader.svg" *ngIf="isLoading" />
+      </div>
+      <!-- Service sidebar left -->
+      <div class="service-main--left" fxFlex="100%" fxLayout="column" fxLayoutAlign="space-between none">
+        <div class="service-main--details">
+
+          <!-- Service details header  -->
+          <div class="service-main--details__header" fxLayout="row" fxLayoutAlign=" end">
+
+            <!-- Go back -->
+            <a (click)="CancelCheck()" class="go-back">
+              <img src="/assets/images/map-icons/go-back.svg">
+            </a>
+
+            <img *ngIf="bike.BikeStatus == 8 && bike.Resolved == 0" class="bike-details__icon"
+              src="/assets/images/map-icons/bike-with-eye.svg" width="62" />
+            <img *ngIf="bike.BikeStatus == 8 && bike.Resolved > 0 && !bike.HasCriticalIssue" class="bike-details__icon"
+              src="/assets/images/map-icons/bike-with-yellow-eye.svg" width="62" />
+            <img *ngIf="bike.BikeStatus == 8 && bike.Resolved > 0 && bike.HasCriticalIssue" class="bike-details__icon"
+              src="/assets/images/map-icons/bike-with-red-eye.svg" width="62" />
+            <a [routerLink]="['/bikes',this.bikeId,'details']"
+              class="service-main--details__bikeid">{{bike?.VisualId}}</a>
+
+            <div *ngIf="!isLockState" class="lock-status" fxLayout="column" fxLayoutAlign="space-between center"
+              (click)="LockBike()">
+              <img src="/assets/images/map-icons/lock-btn.svg">
+              {{'LIVE_MAP.LOCK' | translate}}
+            </div>
+            <div *ngIf="isLockState" class="lock-status" fxLayout="column" fxLayoutAlign="space-between center"
+              (click)="UnLockBike()">
+              <img src="/assets/images/map-icons/unlock-btn.svg">
+              {{'LIVE_MAP.UNLOCK' | translate}}
+            </div>
+          </div>
+          <!-- / Service details header  -->
+
+          <!-- Service details tab  -->
+          <div class="service-main--details__tab">
+
+            <div class="service-main--details__tab--item" fxLayout="row" fxLayoutAlign="start center">
+              <div fxLayout="row" fxLayoutAlign="start center">
+                <img *ngIf="!bike?.IsCharging" src="/assets/images/map-icons/battery.svg">
+                <img *ngIf="bike?.IsCharging && bike?.DockingStationId"
+                  src="/assets/images/map-icons/battery-charge.svg">
+              </div>
+              <p>{{bike?.ChargeLevel| number:'1.0-0'}}%</p>
+            </div>
+
+            <div class="service-main--details__tab--item" fxLayout="row">
+              <div fxLayout="row" fxLayoutAlign="start center">
+                <img src="/assets/images/map-icons/visibility.svg">
+              </div>
+              <p>{{'LIVE_MAP.CHECKED_FOR' | translate}} {{ formatServiceTimeDuration(bike?.ServiceCheckDate) }}</p>
+            </div>
+
+            <div class="service-main--details__tab--item" fxLayout="row">
+              <div fxLayout="row" fxLayoutAlign="start center">
+                <img src="/assets/images/map-icons/refresh.svg">
+              </div>
+              <span>{{ formatServiceTimeDuration(bike?.LatestPulse) }}</span>
+            </div>
+
+
+          </div>
+
+          <div class="service-main--details__tab" fxLayout="column">
+            <h3 class="service-main--details__title">{{'LIVE_MAP.FAIL_REPORTED_VIA_CUSTOMER' | translate}}</h3>
+            <div class="service-main--details__tab--scroller">
+              <div class="service-main--details__issue" *ngFor="let bikeIssue of bikeIssues">
+                <span class="service-main--details__date">
+                  {{bikeIssue?.ReportedDateFormatted}} - <strong>{{bikeIssue?.ReportedUser}}</strong>
+                </span>
+                <p class="service-main--details__text-with-icon">{{bikeIssue?.ErrorCategoriesText}}</p>
+                <p *ngIf="bikeIssue.Comments"
+                  class="service-main--details__text-with-icon service-main--details__text-with-icon--sms">
+                  {{bikeIssue?.Comments}}</p>
+              </div>
+              <div>
+                <p class="service-main--details__text-with-no-data" *ngIf="!isLoading && bikeIssues.length == 0">
+                  {{'LIVE_MAP.NO_DATA_TO_DISPLAY' | translate}}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- / Service details tab  -->
+
+        </div>
+        <div class="service-main--footer" fxLayout="column" fxLayoutAlign="center center">
+          <div fxLayout="row" fxLayoutAlign="space-around start">
+            <div fxLayout="column" fxLayoutAlign="center center" (click)="CancelCheck()">
+              <a><img src="/assets/images/map-icons/close-btn.svg" width="24"></a>
+              <p>{{'LIVE_MAP.CANCEL_CHECK' | translate}}</p>
+            </div>
+
+            <div fxLayout="column" fxLayoutAlign="center center" (click)="SetBikeToAvailableFree()">
+              <a class="bike-ok"><img src="/assets/images/map-icons/thumbs-up.svg" width="24"></a>
+              <p>{{'LIVE_MAP.BIKE_OK' | translate}}</p>
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-around start">
+            <div fxLayout="column" fxLayoutAlign="center center" (click)="RepairRequiredForBike()">
+              <a><img src="/assets/images/map-icons/repair-1.svg" width="24"></a>
+              <p>{{'LIVE_MAP.MUST_BE_FIXED' | translate}}</p>
+            </div>
+
+            <div fxLayout="column" fxLayoutAlign="center center" (click)="openRepairRegistrationPopup()">
+              <a><img src="/assets/images/map-icons/repair-register.svg" width="60"></a>
+              <p>{{'LIVE_MAP.HAVE_FIXED' | translate}} {{'LIVE_MAP.REGISTER_REPAIR_TEXT' | translate}}</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <!-- / Service sidebar left -->
+    </div>
+  </mat-drawer>
+
+</mat-drawer-container>

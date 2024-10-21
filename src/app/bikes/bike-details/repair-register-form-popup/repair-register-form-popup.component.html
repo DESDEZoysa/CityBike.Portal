@@ -1,0 +1,563 @@
+<div class="faliure-type-model">
+  <h2 fxLayout="row" fxLayoutAlign="start center" class="modal-title">
+    <img src="/assets/images/map-icons/bike-default.svg">
+    <span>{{bike?.VisualId}}</span>
+    <div>{{'WORKSHOP_FORM.REGISTER_REPAIR'| translate}}</div>
+  </h2>
+  <h2>
+    <div>{{'WORKSHOP_FORM.PARTS_REPLACED'| translate}}</div>
+  </h2>
+  <div mat-dialog-content style="max-height: none;">
+    <div class="report-error-popup-wrapper">
+      <div fxLayout="column" fxLayout.gt-xs="row wrap" fxLayoutAlign.gt-xs="space-between ">
+        <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+          <div class="register-item-title"><img
+              src="/assets/images/repair-register/drive-train.svg">{{'WORKSHOP_FORM.DRIVE_TRAIN'| translate}}</div>
+          <br>
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <div *ngFor="let repCat of driveTrainPart" class="repair-register-item">
+                <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName |
+                  translate}}
+                </mat-checkbox>
+                <!-- <div> -->
+                <mat-radio-group *ngIf="repCat.Result" [(ngModel)]="repCat.IsNewPart" fxLayout="row"
+                  fxLayoutAlign="start center" class="sub-categories">
+                  <mat-radio-button [value]="true">{{'WORKSHOP_FORM.NEW'| translate}}</mat-radio-button>
+                  <mat-radio-button [value]="false">{{'WORKSHOP_FORM.PRE_USED'| translate}}</mat-radio-button>
+                </mat-radio-group>
+                <mat-select [(ngModel)]="repCat.selectedVariant"
+                  *ngIf="repCat.Result && repCat.IsNewPart && repCat.PartId && repCat.PartVariants && repCat.PartVariants.length > 1"
+                  placeholder="Select Variants" class="sub-categories">
+                  <mat-option *ngFor="let part of repCat.PartVariants"
+                    [value]="part.VariantId">{{part.VariantName}}</mat-option>
+                </mat-select>
+                <mat-checkbox [(ngModel)]="repCat.HasWarranty" *ngIf="repCat.Result"
+                  class="sub-categories">{{'WORKSHOP_FORM.WARRANTY'| translate}}
+                </mat-checkbox>
+                <!-- </div> -->
+                <br>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+          <div class="register-item-title"><img src="/assets/images/repair-register/light.svg">{{'WORKSHOP_FORM.LIGHT'|
+            translate}}</div>
+          <br>
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <div *ngFor="let repCat of lightPart" class="repair-register-item">
+                <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                </mat-checkbox>
+                <mat-radio-group *ngIf="repCat.Result" [(ngModel)]="repCat.IsNewPart" fxLayout="row"
+                  fxLayoutAlign="start center" class="sub-categories">
+                  <mat-radio-button [value]="true">{{'WORKSHOP_FORM.NEW'| translate}}</mat-radio-button>
+                  <mat-radio-button [value]="false">{{'WORKSHOP_FORM.PRE_USED'| translate}}</mat-radio-button>
+                </mat-radio-group>
+                <mat-select [(ngModel)]="repCat.selectedVariant"
+                  *ngIf="repCat.Result && repCat.IsNewPart && repCat.PartId && repCat.PartVariants && repCat.PartVariants.length > 1"
+                  placeholder="Select Variants" class="sub-categories">
+                  <mat-option *ngFor="let part of repCat.PartVariants"
+                    [value]="part.VariantId">{{part.VariantName}}</mat-option>
+                </mat-select>
+                <mat-checkbox [(ngModel)]="repCat.HasWarranty" *ngIf="repCat.Result"
+                  class="sub-categories">{{'WORKSHOP_FORM.WARRANTY'| translate}}
+                </mat-checkbox>
+                <br>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+          <div class="register-item-title"><img
+              src="/assets/images/repair-register/docking-componant.svg">{{'WORKSHOP_FORM.DOCKING_COMPONENTS'|
+            translate}}</div>
+          <br>
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <div *ngFor="let repCat of dockingComponentsPart" class="repair-register-item">
+                <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                </mat-checkbox>
+                <mat-radio-group *ngIf="repCat.Result" [(ngModel)]="repCat.IsNewPart" fxLayout="row"
+                  fxLayoutAlign="start center" class="sub-categories">
+                  <mat-radio-button [value]="true">{{'WORKSHOP_FORM.NEW'| translate}}</mat-radio-button>
+                  <mat-radio-button [value]="false">{{'WORKSHOP_FORM.PRE_USED'| translate}}</mat-radio-button>
+                </mat-radio-group>
+                <mat-select [(ngModel)]="repCat.selectedVariant"
+                  *ngIf="repCat.Result && repCat.IsNewPart && repCat.PartId && repCat.PartVariants && repCat.PartVariants.length > 1"
+                  placeholder="Select Variants" class="sub-categories">
+                  <mat-option *ngFor="let part of repCat.PartVariants"
+                    [value]="part.VariantId">{{part.VariantName}}</mat-option>
+                </mat-select>
+                <mat-checkbox [(ngModel)]="repCat.HasWarranty" *ngIf="repCat.Result"
+                  class="sub-categories">{{'WORKSHOP_FORM.WARRANTY'| translate}}
+                </mat-checkbox>
+                <br>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+          <div class="register-item-title"><img
+              src="/assets/images/repair-register/pedal.svg">{{'WORKSHOP_FORM.PEDAL_ARM'| translate}}</div>
+          <br>
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <div *ngFor="let repCat of pedalArm" class="repair-register-item">
+                <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                </mat-checkbox>
+                <mat-radio-group *ngIf="repCat.Result" [(ngModel)]="repCat.IsNewPart" fxLayout="row"
+                  fxLayoutAlign="start center" class="sub-categories">
+                  <mat-radio-button [value]="true">{{'WORKSHOP_FORM.NEW'| translate}}</mat-radio-button>
+                  <mat-radio-button [value]="false">{{'WORKSHOP_FORM.PRE_USED'| translate}}</mat-radio-button>
+                </mat-radio-group>
+                <mat-select [(ngModel)]="repCat.selectedVariant"
+                  *ngIf="repCat.Result && repCat.IsNewPart && repCat.PartId && repCat.PartVariants && repCat.PartVariants.length > 1"
+                  placeholder="Select Variants" class="sub-categories">
+                  <mat-option *ngFor="let part of repCat.PartVariants"
+                    [value]="part.VariantId">{{part.VariantName}}</mat-option>
+                </mat-select>
+                <mat-checkbox [(ngModel)]="repCat.HasWarranty" *ngIf="repCat.Result"
+                  class="sub-categories">{{'WORKSHOP_FORM.WARRANTY'| translate}}
+                </mat-checkbox>
+                <br>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+          <div class="register-item-title"><img src="/assets/images/repair-register/seat.svg">{{'WORKSHOP_FORM.SEAT'|
+            translate}}</div>
+          <br>
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <div *ngFor="let repCat of seat" class="repair-register-item">
+                <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                </mat-checkbox>
+                <mat-radio-group *ngIf="repCat.Result" [(ngModel)]="repCat.IsNewPart" fxLayout="row"
+                  fxLayoutAlign="start center" class="sub-categories">
+                  <mat-radio-button [value]="true">{{'WORKSHOP_FORM.NEW'| translate}}</mat-radio-button>
+                  <mat-radio-button [value]="false">{{'WORKSHOP_FORM.PRE_USED'| translate}}</mat-radio-button>
+                </mat-radio-group>
+                <mat-select [(ngModel)]="repCat.selectedVariant"
+                  *ngIf="repCat.Result && repCat.IsNewPart && repCat.PartId && repCat.PartVariants && repCat.PartVariants.length > 1"
+                  placeholder="Select Variants" class="sub-categories">
+                  <mat-option *ngFor="let part of repCat.PartVariants"
+                    [value]="part.VariantId">{{part.VariantName}}</mat-option>
+                </mat-select>
+                <mat-checkbox [(ngModel)]="repCat.HasWarranty" *ngIf="repCat.Result"
+                  class="sub-categories">{{'WORKSHOP_FORM.WARRANTY'| translate}}
+                </mat-checkbox>
+                <br>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+          <div class="register-item-title"><img src="/assets/images/repair-register/cable.svg">{{'WORKSHOP_FORM.CABLES'|
+            translate}}</div>
+          <br>
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <div *ngFor="let repCat of cables" class="repair-register-item">
+                <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                </mat-checkbox>
+                <mat-radio-group *ngIf="repCat.Result" [(ngModel)]="repCat.IsNewPart" fxLayout="row"
+                  fxLayoutAlign="start center" class="sub-categories">
+                  <mat-radio-button [value]="true">{{'WORKSHOP_FORM.NEW'| translate}}</mat-radio-button>
+                  <mat-radio-button [value]="false">{{'WORKSHOP_FORM.PRE_USED'| translate}}</mat-radio-button>
+                </mat-radio-group>
+                <mat-select [(ngModel)]="repCat.selectedVariant"
+                  *ngIf="repCat.Result && repCat.IsNewPart && repCat.PartId && repCat.PartVariants && repCat.PartVariants.length > 1"
+                  placeholder="Select Variants" class="sub-categories">
+                  <mat-option *ngFor="let part of repCat.PartVariants"
+                    [value]="part.VariantId">{{part.VariantName}}</mat-option>
+                </mat-select>
+                <mat-checkbox [(ngModel)]="repCat.HasWarranty" *ngIf="repCat.Result"
+                  class="sub-categories">{{'WORKSHOP_FORM.WARRANTY'| translate}}
+                </mat-checkbox>
+                <br>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+          <div class="register-item-title"><img
+              src="/assets/images/repair-register/mud-guard.svg">{{'WORKSHOP_FORM.MUDGUARDS'| translate}}</div>
+          <br>
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <div *ngFor="let repCat of mudguardsPart" class="repair-register-item">
+                <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                </mat-checkbox>
+                <mat-radio-group *ngIf="repCat.Result" [(ngModel)]="repCat.IsNewPart" fxLayout="row"
+                  fxLayoutAlign="start center" class="sub-categories">
+                  <mat-radio-button [value]="true">{{'WORKSHOP_FORM.NEW'| translate}}</mat-radio-button>
+                  <mat-radio-button [value]="false">{{'WORKSHOP_FORM.PRE_USED'| translate}}</mat-radio-button>
+                </mat-radio-group>
+                <mat-select [(ngModel)]="repCat.selectedVariant"
+                  *ngIf="repCat.Result && repCat.IsNewPart && repCat.PartId && repCat.PartVariants && repCat.PartVariants.length > 1"
+                  placeholder="Select Variants" class="sub-categories">
+                  <mat-option *ngFor="let part of repCat.PartVariants"
+                    [value]="part.VariantId">{{part.VariantName}}</mat-option>
+                </mat-select>
+                <mat-checkbox [(ngModel)]="repCat.HasWarranty" *ngIf="repCat.Result"
+                  class="sub-categories">{{'WORKSHOP_FORM.WARRANTY'| translate}}
+                </mat-checkbox>
+                <br>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+          <div class="register-item-title"><img
+              src="/assets/images/repair-register/handle.svg">{{'WORKSHOP_FORM.HANDLEBAR_COMPONENTS'| translate}}</div>
+          <br>
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <div *ngFor="let repCat of handlebarComponentsPart" class="repair-register-item">
+                <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                </mat-checkbox>
+                <mat-radio-group *ngIf="repCat.Result" [(ngModel)]="repCat.IsNewPart" fxLayout="row"
+                  fxLayoutAlign="start center" class="sub-categories">
+                  <mat-radio-button [value]="true">{{'WORKSHOP_FORM.NEW'| translate}}</mat-radio-button>
+                  <mat-radio-button [value]="false">{{'WORKSHOP_FORM.PRE_USED'| translate}}</mat-radio-button>
+                </mat-radio-group>
+                <mat-select [(ngModel)]="repCat.selectedVariant"
+                  *ngIf="repCat.Result && repCat.IsNewPart && repCat.PartId && repCat.PartVariants && repCat.PartVariants.length > 1"
+                  placeholder="Select Variants" class="sub-categories">
+                  <mat-option *ngFor="let part of repCat.PartVariants"
+                    [value]="part.VariantId">{{part.VariantName}}</mat-option>
+                </mat-select>
+                <mat-checkbox [(ngModel)]="repCat.HasWarranty" *ngIf="repCat.Result"
+                  class="sub-categories">{{'WORKSHOP_FORM.WARRANTY'| translate}}
+                </mat-checkbox>
+                <br>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+          <div class="register-item-title"><img src="/assets/images/repair-register/pcb.svg">{{'WORKSHOP_FORM.PCB'|
+            translate}}</div>
+          <br>
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <div *ngFor="let repCat of pcb" class="repair-register-item">
+                <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                </mat-checkbox>
+                <mat-radio-group *ngIf="repCat.Result" [(ngModel)]="repCat.IsNewPart" fxLayout="row"
+                  fxLayoutAlign="start center" class="sub-categories">
+                  <mat-radio-button [value]="true">{{'WORKSHOP_FORM.NEW'| translate}}</mat-radio-button>
+                  <mat-radio-button [value]="false">{{'WORKSHOP_FORM.PRE_USED'| translate}}</mat-radio-button>
+                </mat-radio-group>
+                <mat-select [(ngModel)]="repCat.selectedVariant"
+                  *ngIf="repCat.Result && repCat.IsNewPart && repCat.PartId && repCat.PartVariants && repCat.PartVariants.length > 1"
+                  placeholder="Select Variants" class="sub-categories">
+                  <mat-option *ngFor="let part of repCat.PartVariants"
+                    [value]="part.VariantId">{{part.VariantName}}</mat-option>
+                </mat-select>
+                <mat-checkbox [(ngModel)]="repCat.HasWarranty" *ngIf="repCat.Result"
+                  class="sub-categories">{{'WORKSHOP_FORM.WARRANTY'| translate}}
+                </mat-checkbox>
+                <br>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+          <div class="register-item-title"><img
+              src="/assets/images/repair-register/break.svg">{{'WORKSHOP_FORM.BRAKE_SYSTEM'| translate}}</div>
+          <br>
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <div *ngFor="let repCat of brakeSystemPart" class="repair-register-item">
+                <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                </mat-checkbox>
+                <mat-radio-group *ngIf="repCat.Result" [(ngModel)]="repCat.IsNewPart" fxLayout="row"
+                  fxLayoutAlign="start center" class="sub-categories">
+                  <mat-radio-button [value]="true">{{'WORKSHOP_FORM.NEW'| translate}}</mat-radio-button>
+                  <mat-radio-button [value]="false">{{'WORKSHOP_FORM.PRE_USED'| translate}}</mat-radio-button>
+                </mat-radio-group>
+                <mat-select [(ngModel)]="repCat.selectedVariant"
+                  *ngIf="repCat.Result && repCat.IsNewPart && repCat.PartId && repCat.PartVariants && repCat.PartVariants.length > 1"
+                  placeholder="Select Variants" class="sub-categories">
+                  <mat-option *ngFor="let part of repCat.PartVariants"
+                    [value]="part.VariantId">{{part.VariantName}}</mat-option>
+                </mat-select>
+                <mat-checkbox [(ngModel)]="repCat.HasWarranty" *ngIf="repCat.Result"
+                  class="sub-categories">{{'WORKSHOP_FORM.WARRANTY'| translate}}
+                </mat-checkbox>
+                <br>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+          <div class="register-item-title"><img
+              src="/assets/images/repair-register/wheels.svg">{{'WORKSHOP_FORM.WHEELS'| translate}}</div>
+          <br>
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <div *ngFor="let repCat of wheelsPart" class="repair-register-item">
+                <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                </mat-checkbox>
+                <mat-radio-group *ngIf="repCat.Result" [(ngModel)]="repCat.IsNewPart" fxLayout="row"
+                  fxLayoutAlign="start center" class="sub-categories">
+                  <mat-radio-button [value]="true">{{'WORKSHOP_FORM.NEW'| translate}}</mat-radio-button>
+                  <mat-radio-button [value]="false">{{'WORKSHOP_FORM.PRE_USED'| translate}}</mat-radio-button>
+                </mat-radio-group>
+                <mat-select [(ngModel)]="repCat.selectedVariant"
+                  *ngIf="repCat.Result && repCat.IsNewPart && repCat.PartId && repCat.PartVariants && repCat.PartVariants.length > 1"
+                  placeholder="Select Variants" class="sub-categories">
+                  <mat-option *ngFor="let part of repCat.PartVariants"
+                    [value]="part.VariantId">{{part.VariantName}}</mat-option>
+                </mat-select>
+                <mat-checkbox [(ngModel)]="repCat.HasWarranty" *ngIf="repCat.Result"
+                  class="sub-categories">{{'WORKSHOP_FORM.WARRANTY'| translate}}
+                </mat-checkbox>
+                <br>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+          <div class="register-item-title"><img
+              src="/assets/images/repair-register/others.svg">{{'WORKSHOP_FORM.OTHER_COMPONENTS'| translate}}</div>
+          <br>
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <div *ngFor="let repCat of otherComponentsPart" class="repair-register-item">
+                <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                </mat-checkbox>
+                <mat-radio-group *ngIf="repCat.Result" [(ngModel)]="repCat.IsNewPart" fxLayout="row"
+                  fxLayoutAlign="start center" class="sub-categories">
+                  <mat-radio-button [value]="true">{{'WORKSHOP_FORM.NEW'| translate}}</mat-radio-button>
+                  <mat-radio-button [value]="false">{{'WORKSHOP_FORM.PRE_USED'| translate}}</mat-radio-button>
+                </mat-radio-group>
+                <mat-select [(ngModel)]="repCat.selectedVariant"
+                  *ngIf="repCat.Result && repCat.IsNewPart && repCat.PartId && repCat.PartVariants && repCat.PartVariants.length > 1"
+                  placeholder="Select Variants" class="sub-categories">
+                  <mat-option *ngFor="let part of repCat.PartVariants"
+                    [value]="part.VariantId">{{part.VariantName}}</mat-option>
+                </mat-select>
+                <mat-checkbox [(ngModel)]="repCat.HasWarranty" *ngIf="repCat.Result"
+                  class="sub-categories">{{'WORKSHOP_FORM.WARRANTY'| translate}}
+                </mat-checkbox>
+                <br>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div fxLayout="column" fxLayout.gt-xs="row wrap" fxLayoutAlign.gt-xs="space-between " class="other-work">
+        <div fxLayout="column" fxLayout.gt-xs="row wrap" fxLayoutAlign.gt-xs="space-between " style="width: 100%;">
+          <h4>{{'WORKSHOP_FORM.OTHER_WORK_DONE'| translate}}</h4>
+          <!-- <mat-checkbox (change)="onRepairFix()" [(ngModel)]="otherFix">
+            {{'WORKSHOP_FORM.GENERAL_CHECK' | translate }}
+          </mat-checkbox> -->
+          <div fxLayout="column" fxLayout.gt-xs="row wrap" fxLayoutAlign.gt-xs="space-between " style="width: 100%;">
+            <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+              <div class="register-item-title"><img
+                  src="/assets/images/repair-register/drive-train-brown.svg">{{'WORKSHOP_FORM.DRIVE_TRAIN'| translate}}
+              </div>
+              <br>
+              <div>
+                <div fxLayout="column" fxLayoutAlign="space-around none">
+                  <div *ngFor="let repCat of driveTrainNonPart" class="repair-register-item">
+                    <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                    </mat-checkbox>
+                    <br>
+                    <br>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+              <div class="register-item-title"><img
+                  src="/assets/images/repair-register/light-brown.svg">{{'WORKSHOP_FORM.LIGHT'| translate}}</div>
+              <br>
+              <div>
+                <div fxLayout="column" fxLayoutAlign="space-around none">
+                  <div *ngFor="let repCat of lightNonPart" class="repair-register-item">
+                    <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                    </mat-checkbox>
+                    <br>
+                    <br>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+              <div class="register-item-title"><img
+                  src="/assets/images/repair-register/handle-brown.svg">{{'WORKSHOP_FORM.HANDLEBAR_NONPART_COMPONENTS'|
+                translate}}</div>
+              <br>
+              <div>
+                <div fxLayout="column" fxLayoutAlign="space-around none">
+                  <div *ngFor="let repCat of handlebarComponentsNonPart" class="repair-register-item">
+                    <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                    </mat-checkbox>
+                    <br>
+                    <br>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+              <div class="register-item-title"><img
+                  src="/assets/images/repair-register/mud-guard-brown.svg">{{'WORKSHOP_FORM.MUDGUARDS'| translate}}
+              </div>
+              <br>
+              <div>
+                <div fxLayout="column" fxLayoutAlign="space-around none">
+                  <div *ngFor="let repCat of mudguardsNonPart" class="repair-register-item">
+                    <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                    </mat-checkbox>
+                    <br>
+                    <br>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+              <div class="register-item-title"><img
+                  src="/assets/images/repair-register/docking-componant-brown.svg">{{'WORKSHOP_FORM.DOCKING_NONPART_COMPONENTS'|
+                translate}}</div>
+              <br>
+              <div>
+                <div fxLayout="column" fxLayoutAlign="space-around none">
+                  <div *ngFor="let repCat of dockingComponentsNonPart" class="repair-register-item">
+                    <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                    </mat-checkbox>
+                    <br>
+                    <br>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+              <div class="register-item-title"><img
+                  src="/assets/images/repair-register/break-brown.svg">{{'WORKSHOP_FORM.BRAKE_SYSTEM'| translate}}</div>
+              <br>
+              <div>
+                <div fxLayout="column" fxLayoutAlign="space-around none">
+                  <div *ngFor="let repCat of brakeSystemNonPart" class="repair-register-item">
+                    <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                    </mat-checkbox>
+                    <br>
+                    <br>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="start " class="other-work">
+        <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+          <div class="register-item-title"><img
+              src="/assets/images/repair-register/wheels-brown.svg">{{'WORKSHOP_FORM.WHEELS'| translate}}</div>
+          <br>
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <div *ngFor="let repCat of wheelsNonPart" class="repair-register-item">
+                <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                </mat-checkbox>
+                <br>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column" fxflex="100" fxflex.gt-xs="50" fxflex.gt-sm="33" class="repair-column">
+          <div class="register-item-title"><img
+              src="/assets/images/repair-register/others-brown.svg">{{'WORKSHOP_FORM.OTHER_NONPART_COMPONENTS'|
+            translate}}</div>
+          <br>
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <div *ngFor="let repCat of otherComponentsNonPart" class="repair-register-item">
+                <mat-checkbox [(ngModel)]="repCat.Result" (change)="OnChange($event,repCat)">{{repCat.DisplayName}}
+                </mat-checkbox>
+                <br>
+                <br>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <br>
+      <div fxLayout="column" fxLayout.gt-sm="row wrap" fxLayoutAlign.gt-sm="space-between ">
+        <div fxFlex="50%">
+          <div>
+            <label class="custom-label">{{'WORKSHOP_FORM.ADD_COMMENT' | translate }}</label>
+            <div>
+              <textarea class="background-color:white" [(ngModel)]="comments"
+                style="height: 100px; width: 100%;"></textarea>
+              <span style="color:red" *ngIf="selectedAllCategories.length == 0 && isCommentsEmpty">
+                {{ 'WORKSHOP_FORM.COMMENTS_REQUIRED' | translate }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div fxLayout="column" fxLayout.gt-sm="row wrap" fxLayoutAlign.gt-sm="space-between " class="hours-count">
+        <div fxFlex="50%">
+          <div fxLayout="column" fxLayoutAlign="start start">
+            <label class="custom-label">{{'WORKSHOP_FORM.HOURS_SPENT'| translate}}</label>
+            <span>
+              <input type="number" [(ngModel)]="hoursSpent" placeholder="Hours"> :
+              <input type="number" [(ngModel)]="minutesSpent" placeholder="Minutes" min="0" max="59" name="minutesInput"
+                [formControl]="minutesInput">
+              <div [hidden]="minutesInput.valid" class="error-text"> Minutes should be less than 60 </div>
+            </span>
+            <span style="color:red" *ngIf="isTimeSpentEmpty">
+              {{ 'WORKSHOP_FORM.HOURS_REQUIRED' | translate }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="button-wrapper" fxLayout="row" fxLayoutAlign="space-between start">
+      <button class="btn-style mat-button back-btn" (click)="GoBack()">
+        {{'WORKSHOP_FORM.CANCEL' | translate }}</button>
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <img *ngIf="isSaveOrUpdateInProgress" src="assets/images/preloader-gray.svg" width="30" />
+        <button [disabled]="isSaveOrUpdateInProgress" *ngIf="!isUpdate && !isStreetTeamMap" class="btn-style mat-button back-btn"
+          [ngClass]="isSaveOrUpdateInProgress ? 'disable' : ''" mat-button (click)="amendOrCreateRepairReport()">
+          {{'WORKSHOP_FORM.SAVE' | translate }}</button>
+        <button [disabled]="isSaveOrUpdateInProgress" *ngIf="!isUpdate" class="btn-style mat-button finish-btn"
+          [ngClass]="isSaveOrUpdateInProgress ? 'disable' : ''" mat-button cdkFocusInitial
+          (click)="showConfirmationPopup()">
+          {{'WORKSHOP_FORM.SUBMIT' | translate }}</button>
+        <button [disabled]="isSaveOrUpdateInProgress" *ngIf="isUpdate" class="btn-style mat-button finish-btn"
+          [ngClass]="isSaveOrUpdateInProgress ? 'disable' : ''" mat-button cdkFocusInitial
+          (click)="updateRepairReport()">
+          {{'WORKSHOP_FORM.UPDATE' | translate }}</button>
+      </div>
+    </div>
+  </div>
+</div>

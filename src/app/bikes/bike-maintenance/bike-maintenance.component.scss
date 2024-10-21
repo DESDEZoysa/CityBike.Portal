@@ -1,0 +1,42 @@
+.chip {
+  width: 90px;
+  background-color: transparent;
+  text-align: center;
+  padding: 0 5px;
+  border-radius: 10px;
+}
+
+.status-Sent {
+  color: #FFF;
+  background-color: orange;
+}
+
+.status-Executed {
+  color: #FFF;
+  background-color: green;
+}
+
+.status-Expired,
+.status-Rejected {
+  color: #FFF;
+  background-color: red;
+}
+
+.status-Failed {
+  color: #FFF;
+  background-color: black;
+}
+
+.disable {
+  color: gainsboro !important;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+// .fixed-height-table {
+//   height: calc(100vh - 100px);
+
+//   @media (min-width: 768px) {
+//     height: calc(100vh - 355px);
+//   }
+// }

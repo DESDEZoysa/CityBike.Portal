@@ -1,0 +1,93 @@
+.block-custom {
+    height: -webkit-calc(100vh - 285px);
+    height: -moz-calc(100vh - 285px);
+    height: calc(100vh - 285px); 
+    font-size: 14px;
+} 
+
+.example-tree-progress-bar {
+  margin-left: 30px;
+}
+
+.example-tree-nested-node {
+  padding-left: 30px;
+}
+
+mat-tree {
+  margin-top: 20px;
+  
+  @media (min-width: 960px) {
+    margin-left: 40px;
+  }
+}
+
+.mat-tree-node {
+  background-color: white;
+  overflow: visible;
+  padding: 0;
+}
+
+.mat-nested-tree-node {
+  top: -24px;
+}
+
+ul, li { 
+  list-style: none; 
+  margin: 0; 
+  padding: 0;  
+}
+
+li.example-tree-container {
+  border-bottom: 0;
+}
+
+ul { 
+  padding-left: 40px; 
+}
+
+li { 
+  padding-left: 40px;
+  border: 1px dotted grey;
+  border-width: 0 0 1px 1px; 
+  position: relative;
+  top: -10px;
+}
+
+li.mat-tree-node,
+li div { 
+  margin: 0;
+  position: relative;
+  top: 24px; 
+}
+
+li ul {
+  border-top: 1px dotted grey;
+  margin-left: -40px;
+  padding-left: 60px;
+}
+
+.mat-nested-tree-node:last-child ul {
+  border-left: 1px solid white;
+  margin-left: -41px;
+}
+
+.mat-icon-button {
+  z-index: 100;
+}
+
+.part-tree-text-space {
+  padding-left: 8px;
+  pointer-events: none;
+}
+
+.fixed-height-table {
+  min-height: 200px;
+  
+  @media (min-width: 768px) {
+    height: calc(100vh - 445px);
+  }
+
+  @media (min-width: 800px) and (max-width: 812px) {
+    height: 100vh;
+  }
+}

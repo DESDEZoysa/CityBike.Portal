@@ -1,0 +1,110 @@
+<div class="faliure-type-model">
+  <div mat-dialog-title>
+    <h3 class="text-center">{{'REPORT_ERROR.ISSUE_INDIVIDUAL' | translate }}</h3>
+    <img (click)="this.dialogRef.close();" class="closebtn" src="/assets/images/close.svg" width="20">
+  </div>
+  <div mat-dialog-content style="max-height: none;">
+    <div class="report-error-popup-wrapper">
+      <div class="table-content-wrapper">
+        <div>
+          <div fxLayout="row" fxLayoutAlign="space-around start" class="py-1">
+            <div fxFlex="30" class="pr-1">
+              <b>{{'REPORT_ERROR.REPORTED_BY' | translate}}</b>
+            </div>
+            <div fxFlex="70">
+              : {{endUser}}
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-around start" class="py-1">
+            <div fxFlex="30" class="pr-1">
+              <b>{{'REPORT_ERROR.BIKE_VISUAL_ID' | translate}}</b>
+            </div>
+            <div fxFlex="70">
+              : {{visualId}}
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-around start" class="py-1">
+            <div fxFlex="30" class="pr-1">
+              <b>{{'REPORT_ERROR.CREATED_DATE' | translate}}</b>
+            </div>
+            <div fxFlex="70">
+              : {{createdDate | convertTime}}
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-around start" class="py-1">
+            <div fxFlex="30" class="pr-1">
+              <b>{{'REPORT_ERROR.CATEGORY' | translate}}</b>
+            </div>
+            <div fxFlex="70">
+              : {{categories}}
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-around start" class="py-1">
+            <div fxFlex="30" class="pr-1">
+              <b>{{'REPORT_ERROR.SEVERITY' | translate}}</b>
+            </div>
+            <div fxFlex="70">
+              : {{this.severity}}
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-around start" class="py-1">
+            <div fxFlex="30" class="pr-1">
+              <b>{{'SESSION_SUMMARY.DOCKING_STATION_NAME' | translate}}</b>
+            </div>
+            <div fxFlex="70">
+              : {{this.dockingstationname}}
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-around start" class="py-1">
+            <div fxFlex="30" class="pr-1">
+              <b>{{'EVENTS.DP_HARDWARE_ID' | translate}}</b>
+            </div>
+            <div fxFlex="70">
+              : {{this.dphwid}}
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-around start" class="py-1">
+            <div fxFlex="30" class="pr-1">
+              <b>{{'REPORT_ERROR.DPVISUAL_ID' | translate}}</b>
+            </div>
+            <div fxFlex="70">
+              : {{this.dpVisualId}}
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-around start" class="py-1">
+            <div fxFlex="30" class="pr-1">
+              <b>{{'REPORT_ERROR.RESOLVED_DATE' | translate}}</b>
+            </div>
+            <div fxFlex="70">
+              : {{resolvedDate | convertTime}}
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-around start" class="py-1">
+            <div fxFlex="30" class="pr-1">
+              <b>{{'REPORT_ERROR.RESOLVED_BY' | translate}}</b>
+            </div>
+            <div fxFlex="70">
+              : {{resolvedBy}}
+            </div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="space-around start" class="py-1">
+            <div fxFlex="30" class="pr-1">
+              <b>{{'REPORT_ERROR.COMMENT' | translate}}</b>
+            </div>
+            <div fxFlex="70">
+              : {{comment}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div fxLayout="row" fxLayoutAlign="end start" *ngIf="!resolvedDate">
+        <button class="btn-style" mat-button
+          (click)="CreateRepairAction(bikeId)">{{'REPORT_ERROR.CREATE_REPAIR_ACTION' | translate}}</button>
+      </div> -->
+      <div fxLayout="row" fxLayoutAlign="end start" *ngIf="!resolvedDate">
+        <button class="btn-style" mat-button
+          (click)="resolveIssue(bikeId)">{{'REPORT_ERROR.RESOLVE' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<a class="search-link" *ngIf="bike && !bike.Address" (click)="findAddress($event)"> 
+    {{ 'BIKES_LIST.FIND' | translate }}  
+</a>
+
+<!-- show/hide navigation to docking station details  -->
+<a class="search-link" *ngIf="bike && bike.DockingStationId && !static" [routerLink]="['/dockingStations', bike.DockingStationId, 'dockingpoints']">
+  {{ bike?.DockingStationName ? bike.DockingStationName + "," : "" }}{{ bike?.Address | bikeAddress }}
+</a>
+<span *ngIf="bike && bike.DockingStationId && static">
+  {{ bike?.DockingStationName ? bike.DockingStationName + "," : "" }}{{ bike?.Address | bikeAddress }}
+</span>
+
+<span class="address-text" *ngIf="bike && !bike.DockingStationId && 
+      (bike.DisabledReason == 1 || bike.DisabledReason == 2 || bike.DisabledReason == 21 || bike.DisabledReason == 4)" 
+      title="{{ bike?.LocationName ? bike.LocationName + ',' : '' }}{{ bike?.Address | bikeAddress }}">
+  {{ bike?.LocationName ? bike.LocationName + "," : "" }}{{ bike?.Address | bikeAddress }}
+</span>
+
+<span class="address-text" *ngIf="bike && !bike.DockingStationId && bike.Address &&
+      (bike.DisabledReason != 1 && bike.DisabledReason != 2 && bike.DisabledReason != 21 && bike.DisabledReason != 4)"
+      title="{{ bike?.Address | bikeAddress }}">
+  {{ bike?.Address | bikeAddress }}
+</span>

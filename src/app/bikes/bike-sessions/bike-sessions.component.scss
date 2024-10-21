@@ -1,0 +1,228 @@
+.font {
+    font-size: 12px;
+}
+
+.font-mobile {
+    font-size: 12px;
+    margin-left: -2px;
+    margin-right: -2px;
+}
+
+.btn-tc {
+    background: transparent;
+    border: 0px;
+    box-sizing: border-box; //position: relative;
+    cursor: pointer;
+    outline: 0;
+    -webkit-tap-highlight-color: transparent;
+    display: inline-block;
+    white-space: nowrap;
+    text-decoration: none;
+    vertical-align: baseline;
+    text-align: center;
+    margin: 0;
+    padding: 0 16px;
+    vertical-align: -webkit-baseline-middle;
+}
+
+.dropbtn {
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9; //box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content button {
+    background: transparent;
+    border: 0px;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+    min-width: 75px;    
+}
+
+.dropdown-content button:hover {
+    background-color: #f1f1f1
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.circle {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-top: 2px;
+}
+
+.btn-style {
+    background-color: #FF0000;
+    border-radius: 35px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    width: 125px;
+    margin: 10px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.19);
+}
+.search-bar {
+    @media (min-width: 768px) {
+        width: 50%;
+    }
+
+    .search-form {
+        background: rgba(255, 255, 255, 1);
+        position: relative;
+        border-radius: 1px;
+        margin-right: 1px;
+        display: block;
+        width: 100%;
+        min-width: 250px;
+        outline: 1px solid #04a3e3;
+
+        input {
+            font-family: "Muli", "Helvetica Neue", Helvetica, sans-serif;
+            font-size: 1rem;
+            padding: .50rem .75rem;
+            z-index: 2;
+            cursor: text;
+            text-indent: 30px;
+            border: none;
+            background: transparent;
+            width: calc(100% - 1.5rem);
+            outline: 0;
+        }
+
+        .material-icons {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            margin-top: -12px;
+            // color: rgba(md-color($foreground, base), 0.87);
+        }
+    }
+}
+
+.mat-card-title {
+    .card-title {
+        margin-bottom: 10px;
+        margin-right: 15px;
+
+        @media (min-width: 960px) {
+            margin-bottom: 0;
+            min-width: 230px;
+        }
+    }
+
+    .search-bar {
+        margin-bottom: 10px;
+        padding-left: 0;
+
+        @media (min-width: 600px) {
+            margin-bottom: 0;
+            margin-right: 10px;
+        }
+
+        .search-form {
+            @media (min-width: 600px) {
+                top: 1px;
+            }
+
+            @media (min-width: 960px) {
+                max-width: 450px;
+            }
+        }
+    }
+}
+
+.custom-date-fields {
+    width: 100%;
+
+}
+
+.filters-wrapper {
+    padding-bottom: 15px;
+    padding-top: 15px;
+
+    @media (min-width: 768px) {
+        padding: 0;
+    }
+
+    @media (min-width: 960px) {
+        width: auto;
+    }
+}
+
+.events-filters {
+    @media (min-width: 768px) {
+        margin: 0;
+        width: 150px;
+    }
+}
+
+.filter-wrapper-mobile {
+    font-size: 15px;
+    margin-top: 15px;
+
+    .mat-form-field {
+        font-size: 14px;
+    }
+}
+
+.fixed-height-table {
+    height: calc(100vh - 250px);
+    min-height: 200px;
+  
+    @media (min-width: 560px) {
+      height: 100vh;
+    }
+  
+    @media (min-width: 666px) {
+        height: calc(100vh - 100px);
+    }
+
+    @media (min-width: 768px) {
+      height: calc(100vh - 465px);
+    }
+  
+    @media (min-width: 900px) {
+        height: calc(100vh - 440px);
+    }
+}
+
+.custom-date-search-btn {
+    margin-left: 10px;
+  
+    @media (min-width: 960px) and (max-width: 1919px) {
+      margin-bottom: 1.25em;
+    }
+}
+
+.from-to-date-wrapper {
+    @media (min-width: 1920px) {
+      margin-left: 15px;
+    }
+}
+  
+.mobile-filter-search {
+    margin-bottom: 27px;
+    margin-left: 10px;
+    min-width: 75px;
+}

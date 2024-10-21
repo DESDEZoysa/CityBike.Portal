@@ -1,0 +1,24 @@
+<div class="service-main">
+    <div class="bike-storage-status" fxLayout="column" fxLayoutAlign="center center">
+        <a (click)="this.dialogRef.close()" class="go-back">
+            <img src="/assets/images/map-icons/close.svg">
+          </a>
+        <h3>Update Waypoint</h3>
+        <div class="workshop-selector">
+            <div>
+                <div>{{'ROUTES.WAYPOINT.COMMENT' | translate }}</div>
+                <br>
+                <div class="comment-text-wrapper">
+                    <textarea class="background-color:white" [(ngModel)]="comment"
+                        style="height: 100px; width: 100%;"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="button-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+            <a *ngIf="!isWorkshopOrStorage" mat-raised-button (click)="submitChanges()">{{'ROUTES.WAYPOINT.UPDATE' | translate}}</a>
+            <a *ngIf="!isWorkshopOrStorage" class="close-btn" mat-raised-button (click)="this.dialogRef.close()">{{'ROUTES.WAYPOINT.CANCEL' | translate}}</a>
+            <button *ngIf="isWorkshopOrStorage" mat-raised-button (click)="skipWaypoint()" color="primary" class="skip-continue-btn">{{'ROUTES.WAYPOINT.SKIP' | translate}}</button>
+            <button *ngIf="isWorkshopOrStorage" mat-raised-button (click)="completeWaypoint()" color="primary" class="skip-continue-btn">{{'ROUTES.WAYPOINT.COMPLETE' | translate}}</button>
+        </div>
+    </div>
+</div>

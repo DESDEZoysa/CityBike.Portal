@@ -1,0 +1,70 @@
+<div id="docking-stations" class="result-container">
+  <mat-card>
+    <mat-card-title>
+      <!-- bread crumb -->
+      <div>     
+        <span class="bc-current"> {{ 'COMMON.DOCKING_STATIONS' | translate }}</span>
+      </div>
+    </mat-card-title>
+    <mat-card-content *ngIf="isPositionAvilable">
+        <mat-list class="item-list">         
+          <mat-list-item *ngFor="let dockingStation of dockingStations">
+            <!-- name -->
+            <h4 mat-line style="font-weight: bold; margin:12px 0 5px 0">{{ dockingStation.DockingStation.Name }}</h4>
+            <!-- address -->
+            <p mat-line style="margin: 2px 0">
+              {{dockingStation.DockingStation.Street? dockingStation.DockingStation.Street + "," : "" }}
+              {{dockingStation.DockingStation.ZipCode? dockingStation.DockingStation.ZipCode + "," : "" }} 
+              {{dockingStation.DockingStation.City? dockingStation.DockingStation.City + "," : "" }} 
+              {{dockingStation.DockingStation.District? dockingStation.DockingStation.District + "," : "" }}
+              {{dockingStation.DockingStation.Country? dockingStation.DockingStation.Country : "" }}
+            </p>
+            <p mat-line style="margin: 2px 0"> {{dockingStation.DistanceInMeters | number:'1.2-2' }} (m) </p>
+            <!-- statistics -->
+            <p mat-line style="margin: 2px 0 12px 0">
+              <span> Free Points : {{dockingStation.NumberOfAvailabeDockingPoints}}</span>
+              <span> Free Bikes : {{dockingStation.NumberOfBikesAvailableForRent }} </span>
+            </p>
+            <!-- navigation -->
+            <div fxLayoutAlign="center center"  style="padding-left: 15px;" *ngIf="dockingStation.NumberOfBikesAvailableForRent" >
+              <a [routerLink]="['../', dockingStation.DockingStation.DockingStationId,'bikes','list']">
+                <i class="material-icons md-36">keyboard_arrow_right</i>
+              </a>
+            </div> 
+            <!-- divider -->
+            <mat-divider></mat-divider>
+          </mat-list-item>
+        </mat-list>
+    </mat-card-content>
+
+    <mat-card-content *ngIf="!isPositionAvilable">
+      <mat-list class="item-list">         
+        <mat-list-item *ngFor="let dockingStation of dockingStations">
+          <!-- name -->
+          <h4 mat-line style="font-weight: bold; margin:12px 0 5px 0">{{ dockingStation.Name }}</h4>
+          <!-- address -->
+          <p mat-line style="margin: 2px 0">
+            {{dockingStation.Address.Street? dockingStation.Address.Street + "," : "" }}
+            {{dockingStation.Address.ZipCode? dockingStation.Address.ZipCode + "," : "" }} 
+            {{dockingStation.Address.City? dockingStation.Address.City + "," : "" }} 
+            {{dockingStation.Address.District? dockingStation.Address.District + "," : "" }}
+            {{dockingStation.Address.Country? dockingStation.Address.Country : "" }}
+          </p>         
+          <!-- statistics -->
+          <p mat-line style="margin: 2px 0 12px 0">
+            <span> Free Points : {{dockingStation.NumberOfAvailablePoints}}</span>
+            <span> Free Bikes : {{dockingStation.NumberOfAvailableBikes }} </span>
+          </p>
+          <!-- navigation -->
+          <div fxLayoutAlign="center center"  style="padding-left: 15px;" *ngIf="dockingStation.NumberOfAvailableBikes" >
+            <a [routerLink]="['../', dockingStation.DockingStationId,'bikes','list']">
+              <i class="material-icons md-36">keyboard_arrow_right</i>
+            </a>
+          </div> 
+          <!-- divider -->
+          <mat-divider></mat-divider>
+        </mat-list-item>
+      </mat-list>
+  </mat-card-content>
+  </mat-card>
+</div>

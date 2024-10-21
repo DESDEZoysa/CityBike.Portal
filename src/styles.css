@@ -1,0 +1,870 @@
+/* @import '~https://fonts.googleapis.com/icon?family=Material+Icons'; */
+@import "~@swimlane/ngx-datatable/index.css";
+@import "~@swimlane/ngx-datatable/themes/material.css";
+@import "~@swimlane/ngx-datatable/assets/icons.css";
+@import "~ol/ol.css";
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.nav-bar .mat-button {
+  margin-top: 1.8px !important;
+}
+
+.nav-bar .mat-select {
+  margin-left: 5px !important;
+}
+
+.map-options.mat-menu-panel {
+  height: 145px !important;
+}
+
+.track-map-options.mat-menu-panel {
+  height: 136px !important;
+  padding-top: 3px;
+  position: absolute;
+  top: 0;
+}
+
+.logo {
+  /* margin-top: 10px; */
+  width: 150px;
+  height: 32px;
+}
+
+.logo-service {
+  width: 40px;
+  vertical-align: middle;
+}
+
+.logo-service-mobile {
+  vertical-align: middle;
+  /* width: 100px; */
+  /* height: 60px; */
+}
+
+.logo-mobile {
+  vertical-align: middle;
+  width: 39px;
+  height: 32px;
+}
+
+.auth-logo {
+  background-color: #04a3e3;
+  padding: 15px 10px;
+}
+
+.auth-logo img {
+  width: 77px;
+  /* height: 54px; */
+}
+
+.detail-field {
+  padding-bottom: 10px;
+}
+
+.detail-field span {
+  display: inline-block;
+  /* white-space: nowrap; */
+}
+
+.detail-field-label {
+  font-weight: 600;
+  min-width: 120px;
+}
+
+.detail-field-label-lg {
+  min-width: 200px;
+}
+
+.address-wrap .address-text {
+  white-space: unset!important;
+}
+
+.datatable-body-cell-label {
+  display: flex;
+  position: relative;
+}
+
+.list-icon {
+  position: absolute;
+  top: -10px;
+}
+
+#language-list {
+  margin-top: 4px;
+  width: 90px;
+  height: 30px;
+  font-size: 14px;
+}
+
+@media (min-width: 1280px) {
+  #language-list {
+    margin-top: 3px;
+  }
+}
+
+@media (min-width: 1360px) {
+  #language-list {
+    margin-top: 4px;
+  }
+}
+
+#language-list .mat-select-value,
+#language-list .mat-select-arrow {
+  color: #fff !important;
+}
+
+/**
+Timezone list
+**/
+#time-zone-list {
+  margin-top: 4px;
+  width: 90px;
+  height: 30px;
+  font-size: 14px;
+}
+
+@media (min-width: 1280px) {
+  #time-zone-list {
+    margin-top: 3px;
+  }
+}
+
+@media (min-width: 1360px) {
+  #time-zone-list {
+    margin-top: 4px;
+  }
+}
+
+#time-zone-list .mat-select-value,
+#time-zone-list .mat-select-arrow {
+  color: #fff !important;
+}
+
+.result-container .mat-card {
+  box-shadow: none !important;
+}
+
+.datatable-scroll,
+.datatable-row-wrapper,
+.datatable-group-header {
+  width: 100% !important;
+}
+
+.datatable-group-header {
+  height: 40px;
+  line-height: 40px;
+}
+
+.bc {
+  font-size: 22px;
+  background-color: white;
+  padding: 8px;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.bc-ribbon {
+  padding-top: 14px !important;
+  padding-bottom: 10px !important;
+  padding-left: 0px !important;
+  font-size: 22px;
+}
+
+.bc-after {
+  padding-top: 10px !important;
+}
+
+.bc-top {
+  top: 65px;
+  position: absolute;
+  z-index: 1000;
+}
+
+.bc-link {
+  color: #04a3e3;
+}
+
+.bc-separator {
+  color: lightgray;
+}
+
+.bc-current {
+  color: gray;
+}
+
+.ol-zoom {
+  left: unset !important;
+  right: 0.5em !important;
+}
+
+.live-map-zoom .ol-zoom {
+  left: 0 !important;
+  right: unset !important;
+  top: 130px;
+}
+
+.docking-station-map-zoom .ol-zoom {
+  right: unset !important;
+  left: 0 !important;
+  top: 115px;
+}
+
+@media (min-width: 768px) {
+  .docking-station-map-zoom .ol-zoom {
+    left: unset !important;
+    right: 10px !important;
+    top: 85px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .docking-station-map-zoom .ol-zoom {
+    top: 45px;
+  }
+}
+
+@media (min-width: 768px) {
+  .live-map-zoom .ol-zoom {
+    left: unset !important;
+    bottom: unset !important;
+    top: 85px !important;
+    right: 0.5em !important;
+  }
+}
+
+.dashboard-map .ol-zoom {
+  bottom: unset !important;
+  left: 15px !important;
+  right: unset !important;
+  top: 50px !important;
+}
+
+@media (max-width: 767px) {
+  .dashboard-map .ol-zoom {
+    left: 5px !important;
+  }
+}
+
+.chip {
+  padding: 2px 6px;
+  color: #fff;
+}
+
+.user-active {
+  background-color: green !important;
+  border-radius: 35px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  width: 65px;
+  margin: 1px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.19);
+}
+
+.user-inactive {
+  background-color: red !important;
+  border-radius: 35px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  width: 65px;
+  margin: 1px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.19);
+}
+
+.mat-menu-item {
+  font-size: 14px !important;
+}
+
+.item-list .mat-list-item-content {
+  padding: 0 !important;
+}
+
+.ngx-datatable.material.striped .datatable-row-odd {
+  background: #f8f8f8 !important;
+}
+
+.mat-form-field-appearance-legacy .mat-form-field-infix {
+  border: 0px !important;
+}
+
+.mat-card-title .bike-selector .mat-form-field-wrapper {
+  padding: 0;
+}
+
+.mat-card-title .bike-selector .mat-form-field-underline {
+  bottom: auto;
+  top: 100%;
+}
+
+.mat-card-title .bike-selector .mat-form-field-infix {
+  min-width: 130px;
+  padding: 5px 0;
+  width: auto;
+}
+
+.mat-card-title .bike-selector-wrapper .mat-raised-button {
+  min-width: 130px;
+  margin-right: 0;
+}
+
+.mat-card-title .bike-selector--inventory .mat-select-trigger {
+  height: auto;
+}
+
+.mat-menu-content .mat-badge-accent .mat-badge-content {
+  background-color: #ffb600;
+  color: white;
+}
+
+.bike-title-card .date-picker-column {
+  align-items: flex-start;
+  display: flex;
+}
+
+.bike-title-card .date-picker-column .mat-form-field-wrapper {
+  padding-bottom: 27px;
+}
+
+.faliure-type-model .mat-checkbox-layout,
+.faliure-type-model .mat-radio-label {
+  white-space: normal;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.mat-option-text {
+  font-size: 12px;
+}
+
+a.list-icon {
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0);
+  display: inline-flex;
+  justify-content: center;
+  transition: 0.2s;
+}
+
+a.list-icon:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+a.list-icon span.mat-button-wrapper {
+  align-items: center;
+  display: flex;
+}
+
+.mat-raised-button {
+  transition: 0.2s !important;
+}
+
+.mat-raised-button:hover {
+  box-shadow: 0px 3px 7px 1px rgba(0, 0, 0, 0.2) !important;
+}
+
+.repair-history-container .mat-form-field-infix {
+  width: 100%;
+}
+
+.mat-select-value-text {
+  font-size: 12px;
+}
+
+.mat-select-placeholder {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 12px;
+}
+
+.datatable-body-row {
+  transition: 0.4s;
+}
+
+.ngx-datatable.material .datatable-header .datatable-header-cell {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.search-bar .search-form input,
+.mat-select-panel .mat-option {
+  transition: 0.3s;
+}
+
+.search-bar .search-form input:hover,
+.search-bar .search-form input:focus {
+  box-shadow: 1px 1px 10px -2px rgba(4, 163, 227, 0.5);
+}
+
+.datatable-row-odd {
+  background-color: #fafafa;
+}
+
+.cdk-global-overlay-wrapper .result-container .mat-card {
+  padding: 0 !important;
+}
+
+.areas-row .mat-form-field-label-wrapper {
+  font-size: 17px;
+}
+
+.areas-row .mat-form-field-infix {
+  height: 32px;
+  padding: 5px 0;
+}
+
+.areas-row .mat-form-field-label {
+  top: 27px;
+}
+
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
+.mat-checkbox-checked.mat-accent .mat-checkbox-background {
+  background-color: #04a3e3;
+}
+
+div.cdk-overlay-pane-select-search.cdk-overlay-pane-select-search-with-offset {
+  margin-top: 0;
+}
+
+@media (max-width: 767px) {
+  .ngx-datatable.bike-event
+    .datatable-scroll
+    .datatable-body-row
+    .datatable-body-cell
+    .datatable-body-cell-label {
+    overflow: auto;
+  }
+}
+
+@media (max-width: 735px) {
+  .areas-row,
+  .areas-row .mat-form-field {
+    width: 100%;
+  }
+}
+
+@media (max-width: 599px) {
+  .datatable-footer .datatable-footer-inner {
+    flex-direction: column;
+    height: auto !important;
+  }
+
+  .ngx-datatable.material .datatable-footer .datatable-pager .pager {
+    display: flex;
+  }
+
+  .ngx-datatable.material .datatable-footer .datatable-pager a {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .datatable-body-row,
+  .datatable-row-center,
+  .docking-points-table datatable-body,
+  .scrollable-table datatable-body,
+  .scrollable-table .datatable-body .datatable-scroll {
+    width: 100% !important;
+  }
+
+  .docking-points-table datatable-selection,
+  .docking-points-table .datatable-row-center,
+  .docking-points-table .datatable-body .datatable-scroll,
+  .scrollable-table .datatable-row-center,
+  .scrollable-table datatable-selection {
+    width: auto !important;
+  }
+
+  .mat-option-text {
+    font-size: 13px;
+  }
+}
+
+@media (min-width: 567px) and (max-width: 767px) {
+  .docking-points-table .datatable-body .datatable-scroll,
+  .docking-points-table datatable-body-row,
+  .docking-points-table .datatable-row-center {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 413px) {
+  .ngx-datatable.material .datatable-header .datatable-header-cell,
+  .ngx-datatable.material
+    .datatable-body
+    .datatable-body-row
+    .datatable-body-cell {
+    padding: 0.7rem !important;
+  }
+
+  .bike-session-toggle .mat-button-toggle-label-content {
+    padding: 0 4px;
+  }
+}
+
+@media (max-width: 374px) {
+  .scrollable-table .datatable-body .datatable-scroll .datatable-row-wrapper {
+    overflow: auto;
+  }
+}
+
+@media (max-width: 350px) {
+  .ngx-datatable.material
+    .datatable-body
+    .datatable-body-row
+    .datatable-body-cell {
+    padding: 1rem !important;
+  }
+}
+
+@media (max-width: 350px) {
+  .ngx-datatable.material
+    .datatable-body
+    .datatable-body-row
+    .datatable-body-cell {
+    padding: 0.9rem !important;
+  }
+
+  .mat-option-text {
+    font-size: 12px;
+  }
+}
+
+.image-pop-img {
+  display: block;
+  margin: 0 auto 15px;
+  max-width: 100%;
+}
+
+@media (min-width: 560px) {
+  .image-pop-img {
+    max-height: 190px;
+  }
+}
+
+@media (min-width: 768px) {
+  .image-pop-img {
+    max-height: auto;
+  }
+
+  .datatable-body-row,
+  .datatable-row-center {
+    width: 100% !important;
+  }
+}
+
+::ng-deep .custom-tooltip {
+  color: red;
+}
+
+.mat-card-title .bike-selector--inventory .mat-form-field-infix {
+  min-width: 200px;
+}
+
+@media (min-width: 768px) {
+  .mat-card-title .bike-selector--inventory .mat-form-field-infix {
+    min-width: 320px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .nav-bar .mat-select-value-text {
+    font-size: 12px;
+  }
+
+  .mat-card-title .bike-selector .mat-form-field-infix {
+    min-width: 180px;
+  }
+
+  .mat-card-title .bike-selector--inventory .mat-form-field-infix {
+    min-width: 400px;
+  }
+}
+
+@media (min-width: 1360px) {
+  .nav-bar .mat-select-value-text {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1366px) {
+  .areas-row .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
+
+  .areas-row .mat-form-field-wrapper .mat-form-field-underline {
+    bottom: 4px;
+  }
+}
+
+/* @media only screen and (min-device-width: 768px) and (max-device-width: 1366px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: landscape) {
+  .bike-map {
+    transform: rotate(-90deg);
+    transform-origin: left top;
+    height: 100vw;
+    width: 100vh;
+    position: relative;
+    top: 100%;
+    left: 0;
+  }
+} */
+
+.mat-select-content {
+  font-size: 16px;
+}
+
+.bike-selector .mat-form-field-label {
+  font-size: 16px;
+  top: 35px;
+}
+
+@media (min-width: 1920px) {
+  .from-to-date .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+
+  .from-to-date .mat-form-field-underline {
+    bottom: 0 !important;
+  }
+}
+
+.workshop-selector .mat-select-value-text {
+  font-size: 16px;
+}
+
+.events-datepicker .mat-form-field-appearance-legacy .mat-form-field-underline {
+  bottom: 12px !important;
+}
+
+.example-full-width.onboarding .mat-form-field-wrapper {
+  padding-bottom: 0;
+  position: relative;
+}
+
+.example-full-width.onboarding
+  .mat-form-field-wrapper
+  .mat-form-field-underline {
+  bottom: 0;
+}
+
+.example-full-width.onboarding
+  .mat-form-field-wrapper
+  .mat-form-field-subscript-wrapper {
+  left: 0;
+  position: absolute;
+  top: 25px;
+}
+
+.full-width-dialog {
+  max-width: 95vw !important;
+}
+
+.event-cat-select .mat-form-field-underline {
+  display: none;
+}
+
+.custom-fields-wrapper__inner .mat-form-field-infix {
+  padding: 0;
+}
+
+.custom-fields-wrapper__inner .mat-form-field-infix .mat-select {
+  height: 19px;
+}
+
+.custom-fields-wrapper__inner .mat-form-field-underline {
+  display: none;
+}
+
+.mobile-custom-fields .mat-form-field-underline {
+  display: none;
+}
+
+.mobile-custom-fields .mat-form-field-wrapper {
+  padding-bottom: 0;
+}
+
+.filter-box .mat-checkbox-inner-container {
+  height: 18px;
+  margin-right: 10px;
+  width: 18px;
+}
+
+.faliure-type-model .mat-checkbox-label {
+  font-size: 14px;
+}
+
+.faliure-type-model .custom-label {
+  font-size: 11px;
+  margin-bottom: 7px;
+  text-transform: uppercase;
+}
+
+.service-main .comment-label {
+  font-size: 11px;
+  margin-bottom: 7px;
+  text-transform: uppercase;
+}
+
+.other-work .mat-checkbox-frame {
+  border-color: #8b5c30;
+}
+
+.repair-column .mat-radio-button.mat-accent .mat-radio-inner-circle {
+  background-color: #04a3e3;
+}
+
+.repair-column
+  .mat-radio-button.mat-accent.mat-radio-checked
+  .mat-radio-outer-circle {
+  border-color: #04a3e3;
+}
+
+.bike-signal-selector .mat-select-trigger {
+  height: 30px;
+}
+
+.live-map-zoom .filter-options {
+  position: absolute;
+  top: 155px;
+  left: -3px;
+}
+
+@media (min-width: 1281px) {
+}
+
+@media (min-width: 768px) {
+  .live-map-zoom .filter-options {
+    left: unset;
+    right: -3px;
+    top: 155px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .live-map-zoom .filter-options {
+    right: -7px;
+    top: 135px;
+  }
+}
+
+.live-map-zoom .filter-options .mat-icon {
+  color: rgba(0, 60, 136, 0.5);
+  font-size: 36px;
+  height: 36px;
+  width: 36px;
+}
+
+@media (min-width: 1280px) {
+  .live-map-zoom .filter-options .mat-icon {
+    font-size: 30px;
+    height: 30px;
+    width: 30px;
+  }
+}
+
+.faliure-type-model .sub-categories .mat-checkbox-inner-container {
+  height: 17px;
+  width: 17px;
+}
+
+.faliure-type-model .sub-categories.mat-checkbox label {
+  margin-top: 10px;
+}
+
+.excel_expor_icon {
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  padding-right: 10px;
+  padding-top: 10px;
+}
+
+.mat-card-header-text {
+  margin: 0 !important;
+}
+
+.custom-tooltip {
+  background-color: #FFFFFF;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  bottom: 15px;
+  color: #000000 !important;
+  font-size: 14px;
+  line-height: 22px;
+  padding: 5px 5px 10px;
+  position: relative;
+  white-space: pre-line;
+}
+
+.session-summery {
+  width: 100%;
+}
+
+.map-filter-wrapper app-track-map .map {
+  height: 100%;
+}
+
+#range-selector mat-form-field .mat-form-field-flex {
+  background-color: #fff;
+}
+
+/* Angular version upgrade styles  */
+.bike-track-map-filter .mat-button-toggle-label-content {
+  line-height: 39px;
+}
+
+.mat-button-toggle-group .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+  line-height: 36px;
+}
+
+.bike-track-map-filter .mat-button-toggle-group .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+  line-height: 39px;
+}
+
+.mat-select-panel {
+  font-size: 16px !important;
+}
+
+.mat-slide-toggle-content {
+  font-size: 14px;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+  background-color: rgba(4, 163, 227, 0.5);
+}
+
+.mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+  background-color: #04a3e3;
+}
+
+.workshop-selector .bike-selector .mat-form-field-infix {
+  padding: 20px 0 12px;
+}
+
+.step-wrapper .search-link {
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+}
+
+.address-text-wp .address-text {
+  display: inline !important;
+}
+
+.bike-selector-wrapper .mat-form-field {
+  width: 100%;
+}

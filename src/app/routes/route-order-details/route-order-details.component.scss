@@ -1,0 +1,257 @@
+// BEGIN: Timeline styles
+// The colors and styles are copied from Clarity repo to avoid overlapping with existing styles
+$clr-green: #60b515;
+$clr-red: #c92100;
+$clr-gray: #737373;
+$clr-action-blue: #0079b8;
+$clr-color-neutral-600: #737373 !default;
+$clr-color-neutral-700: #565656 !default;
+$clr-color-neutral-1000: #000 !default;
+
+
+// colors
+$clr-timeline-line-color: #9b9b9b;
+$clr-timeline-step-header-color: $clr-color-neutral-600;
+$clr-timeline-step-title-color: $clr-color-neutral-1000;
+$clr-timeline-step-description-color: $clr-color-neutral-700;
+
+// 1rem = 24px
+$clr-timeline-icon-size: 2.25rem;
+$clr-timeline-icon-inner-padding: 0.083333rem; // 2px
+$clr-timeline-padding-width: 0.5rem;
+$clr-timeline-line-thickness: 0.083333rem; // 2px
+
+// horizontal
+$clr-timeline-horizontal-step-min-width: 4.5rem;
+$clr-timeline-horizontal-gutter-width: 0.5rem;
+
+$clr-timeline-horizontal-step-title-padding-top: 0.5rem;
+$clr-timeline-horizontal-step-title-padding-bottom: 0.75rem;
+
+$clr-timeline-vertical-min-width: 13.33333rem;
+$clr-timeline-vertical-step-min-width: 7.333333rem;
+$clr-timeline-vertical-gutter-width: 2rem;
+
+// vertical
+$clr-timeline-vertical-step-header-min-width: 4rem;
+$clr-timeline-vertical-step-header-top-padding: 0.25rem;
+$clr-timeline-vertical-step-header-right-padding: 0.5rem;
+
+$clr-timeline-step-title-line-height: 0.75rem;
+
+$clr-timeline-vertical-step-body-top-padding: 0.25rem;
+$clr-timeline-vertical-step-body-left-padding: 0.5rem;
+
+$clr-timeline-step-description-line-height: 1.5;
+
+
+
+// overall styles for timeline
+.clr-timeline {
+  display: flex;
+  padding: $clr-timeline-padding-width;
+}
+
+.clr-timeline-step {
+  display: flex;
+  position: relative;
+
+  img {
+    width: $clr-timeline-icon-size;
+    height: $clr-timeline-icon-size;
+    min-width: $clr-timeline-icon-size;
+    min-height: $clr-timeline-icon-size;
+  }
+
+  clr-icon[shape="spinner"] {
+    animation: spin 1s linear infinite;
+  }
+
+  clr-icon[shape="circle"] {
+    color: $clr-gray;
+  }
+
+  clr-icon[shape="dot-circle"] {
+    color: $clr-action-blue;
+  }
+
+  clr-icon[shape="success-standard"] {
+    color: $clr-green;
+  }
+
+  clr-icon[shape="error-standard"] {
+    color: $clr-red;
+  }
+}
+
+.clr-timeline-step-header {
+  color: $clr-timeline-step-header-color;
+  line-height: $clr-timeline-step-title-line-height;
+}
+
+.clr-timeline-step-title {
+  color: $clr-timeline-step-title-color;
+  font-weight: 600;
+  line-height: $clr-timeline-step-title-line-height;
+  margin-bottom: $clr-timeline-horizontal-step-title-padding-bottom;
+
+  &--margin {
+    margin-bottom: 0.25rem;
+  }
+}
+
+.clr-timeline-step-description {
+  color: $clr-timeline-step-description-color;
+  line-height: $clr-timeline-step-description-line-height;
+
+  button {
+    display: block;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  img {
+    width: 100%;
+  }
+}
+
+// specific styles for horizontal timeline
+.clr-timeline.clr-timeline-horizontal {
+
+  .clr-timeline-step {
+    flex-direction: column;
+    align-items: center;
+
+    width: 100%;
+    min-width: $clr-timeline-horizontal-step-min-width;
+
+    &:not(:first-of-type) {
+      margin-left: $clr-timeline-horizontal-gutter-width;
+    }
+
+    // style for the connecting line between icons
+    &:not(:first-of-type) .clr-timeline-step-body::before {
+      content: '';
+      position: absolute;
+      background: $clr-timeline-line-color;
+      height: $clr-timeline-line-thickness;
+      width: calc(100% - (#{$clr-timeline-icon-size} - 2 * #{$clr-timeline-icon-inner-padding}) + #{$clr-timeline-horizontal-gutter-width});
+      transform: translate(calc(-0.5 * (#{$clr-timeline-icon-size} - 2 * #{$clr-timeline-icon-inner-padding}) - 50%),
+        calc(-0.5 * (#{$clr-timeline-line-thickness} + #{$clr-timeline-icon-size})));
+    }
+  }
+
+  .clr-timeline-step-header {
+    white-space: nowrap;
+    margin-bottom: $clr-timeline-horizontal-step-title-padding-top;
+  }
+
+  .clr-timeline-step-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .clr-timeline-step-title {
+    text-align: center;
+    margin-top: $clr-timeline-horizontal-step-title-padding-top;
+  }
+
+  .clr-timeline-step-description {
+    text-align: center;
+  }
+}
+
+// specific styles for vertical timeline
+.clr-timeline.clr-timeline-vertical {
+  flex-direction: column;
+  min-width: $clr-timeline-vertical-min-width;
+
+  .clr-timeline-step {
+    flex-direction: row;
+
+    &:not(:last-of-type) {
+      margin-bottom: $clr-timeline-vertical-gutter-width;
+    }
+
+    // style for the connecting line between icons
+    &:not(:last-of-type) .clr-timeline-step-body::before {
+      content: '';
+      position: absolute;
+      background: $clr-timeline-line-color;
+      width: $clr-timeline-line-thickness;
+      height: calc(100% + 2 * #{$clr-timeline-icon-inner-padding});
+      transform: translate(-0.5 * ($clr-timeline-icon-size - $clr-timeline-line-thickness) - $clr-timeline-icon-inner-padding - $clr-timeline-vertical-step-body-left-padding,
+          $clr-timeline-icon-size - $clr-timeline-icon-inner-padding - $clr-timeline-vertical-step-body-top-padding )
+    }
+  }
+
+  .clr-timeline-step-header {
+    text-align: right;
+    min-width: $clr-timeline-vertical-step-header-min-width;
+    width: $clr-timeline-vertical-step-header-min-width;
+    margin-right: $clr-timeline-vertical-step-header-right-padding;
+    margin-top: $clr-timeline-vertical-step-header-top-padding;
+  }
+
+  .clr-timeline-step-body {
+    display: flex;
+    flex-direction: column;
+    min-width: $clr-timeline-vertical-step-min-width;
+    margin-left: $clr-timeline-vertical-step-body-left-padding;
+    margin-top: $clr-timeline-vertical-step-body-top-padding;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.timeline-title {
+  margin-bottom: 30px;
+  margin-top: 30px !important;
+}
+
+.skip-done-btn-wrapper {
+  margin-left: 10px;
+
+  button {
+    align-items: center;
+    box-shadow: 0px 0.5px 1px 1px rgba(#000, 0.2);
+    display: inline-flex;
+    height: 25px;
+    justify-content: center;
+    transition: 0.2s;
+    margin-top: -10px;
+    width: 25px;
+
+    &:hover {
+      box-shadow: 0px 1px 5px 1px rgba(#000, 0.2);
+    }
+
+    &:not(:last-of-type) {
+      margin-right: 10px;
+    }
+  }
+}
+
+.clr-timeline-step-title-wrapper {
+  align-items: baseline;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.actions-list {
+  margin-top: 1rem;
+}
+
+app-bike-address {
+  width: 100%;
+}

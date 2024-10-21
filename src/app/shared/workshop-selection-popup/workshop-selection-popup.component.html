@@ -1,0 +1,21 @@
+<div class="service-main">
+  <div class="service-main--loader" *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center center">
+    <img class="tire-pressure-loader" src="assets/images/preloader.svg" *ngIf="isLoading" />
+  </div>
+
+  <div class="bike-workshop-status" fxLayout="column" fxLayoutAlign="center center">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <img src="assets/images/map-icons/in-ws.svg">
+      <h3>{{'LIVE_MAP.CHOOSE_WORKSHOP' | translate}} {{bike.VisualId}}</h3>
+    </div>
+    <div class="workshop-selector">
+      <mat-select placeholder="Select Workshop" [(value)]="selectedWorkshop">
+        <mat-option *ngFor="let workshop of allNearbyWorkshops" [value]="workshop.Id">
+          {{workshop.Name}}</mat-option>
+      </mat-select>
+    </div>
+    <div class="button-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+      <a mat-raised-button (click)="SetWorkshop()">{{'LIVE_MAP.CONFIRM' | translate}}</a>
+      <a class="close-btn" mat-raised-button (click)="this.dialogRef.close()">{{'LIVE_MAP.CANCEL' | translate}}</a>
+    </div>
+  </div>

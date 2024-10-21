@@ -1,0 +1,113 @@
+<div id="report" class="result-container" (window:resize)="onResize()">
+  <mat-card>
+    <mat-card-title fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="space-between center">
+      <!-- System users -->
+      <span class="card-title"> {{ 'COMMON.WARRANTY_REPORT' | translate }} </span>
+      
+      <div fxFlex="1 1 auto" class="fill-remaining-space"></div>  
+      <img class="excel_expor_icon" src="assets/images/excel_export.svg" (click)="generateExcel()" matTooltip="{{'SESSIONS.DOWNLOAD_EXCEL' | translate}}" />
+    </mat-card-title>
+    <mat-card-content>
+
+      <ngx-datatable class="material fixed-height-table" [rows]="warrentydetails" [loadingIndicator]="loadingIndicator"
+        [columnMode]="'force'" [headerHeight]="50" #warrantyReportTable [scrollbarV]="true" [footerHeight]="50" [rowHeight]="50"
+        [scrollbarH]="false" [sorts]="[{prop: 'BikeId'}]">
+
+
+        <ngx-datatable-row-detail [rowHeight]="180" #userDetailRow *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+            <div style="padding-left: 1px;">
+              <div style="padding-top:10px;">
+                <strong>{{'WARRANTY_REPORT.BIKE_SERIAL'|translate}} :</strong> 
+                <span style="padding-left: 1px;">{{row.Serial}}</span>
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'WARRANTY_REPORT.ONBOARDED_DATE'|translate}} :</strong> 
+                <span style="padding-left: 1px;">{{row.OnboardedTimestamp | convertTime}}</span>
+              </div>    
+              <div style="padding-top:10px;">
+                <strong>{{'WARRANTY_REPORT.OLDEST_SESSION_START_TIME'|translate}} :</strong> 
+                <span style="padding-left: 1px;">{{row.OldestSessionStartTime | convertTime}}</span>
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'WARRANTY_REPORT.NEWEST_SESSION_START_TIME'|translate}} :</strong> 
+                <span style="padding-left: 1px;">{{row.NewestSessionStartTime | convertTime}}</span>
+              </div> 
+              <div style="padding-top:10px;">
+                <strong>{{'WARRANTY_REPORT.TOTAL_NUMBER_OF_SESSIONS'|translate}} :</strong> 
+                <span style="padding-left: 1px;">{{row.TotalNumberOfSessions}}</span>
+              </div>       
+              <div style="padding-top:10px;">
+                <strong>{{'WARRANTY_REPORT.REMARKS'|translate}} :</strong> 
+                <span style="padding-left: 1px;">{{row.Remarks}}</span>
+              </div>                      
+            </div>
+          </ng-template>
+        </ngx-datatable-row-detail>
+
+        <ngx-datatable-column [width]="20" [resizeable]="false" [sortable]="false" [draggable]="false"
+          [canAutoResize]="false" *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+            <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+              title="Expand/Collapse Row" (click)="toggleExpandRow(row)">
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="VisualId" name="{{'WARRANTY_REPORT.BIKE_VISUAL_ID'|translate}}" [flexGrow]="0.1" [minWidth]="20" [width]="20">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <a routerLink='/bikes/{{row.BikeId}}/details' style="color:#007dbd;vertical-align: super;">{{row.VisualId}}</a>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="Serial" name="{{'WARRANTY_REPORT.BIKE_SERIAL'|translate}}" [flexGrow]="0.1" [minWidth]="30" [width]="30"
+        *ngIf="!isMobile">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="OnboardedTimestamp" name="{{'WARRANTY_REPORT.ONBOARDED_DATE'|translate}}" [flexGrow]="1" [minWidth]="100" [width]="100"
+        *ngIf="!isMobile">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{ value | convertTime }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="OldestSessionStartTime" name="{{'WARRANTY_REPORT.OLDEST_SESSION_START_TIME'|translate}}" [flexGrow]="1" [minWidth]="100" [width]="100" 
+        *ngIf="!isMobile">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{ value | convertTime }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="NewestSessionStartTime" name="{{'WARRANTY_REPORT.NEWEST_SESSION_START_TIME'|translate}}" [flexGrow]="1" [minWidth]="100" [width]="100"
+        *ngIf="!isMobile">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{ value | convertTime }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="TotalNumberOfSessions" name="{{'WARRANTY_REPORT.TOTAL_NUMBER_OF_SESSIONS'|translate}}" [flexGrow]="0.1" [minWidth]="25" [width]="25"
+        *ngIf="!isMobile">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+        
+        <ngx-datatable-column prop="DateBikePassedXDistance" name="{{'WARRANTY_REPORT.TWO_KM_PASSED_DATE'|translate}}" [flexGrow]="0.5" [minWidth]="75" [width]="75">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column prop="Remarks" name="{{'WARRANTY_REPORT.REMARKS'|translate}}" [flexGrow]="3" [minWidth]="300" [width]="365"
+        *ngIf="!isMobile">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+      </ngx-datatable>
+    </mat-card-content>
+  </mat-card>
+</div>

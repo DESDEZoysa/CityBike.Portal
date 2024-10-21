@@ -1,0 +1,127 @@
+<div id="bikesnotontrips" class="result-container" (window:resize)="onResize()">
+  <mat-card>
+    <mat-card-title>
+      {{ 'COMMON.BIKES' | translate }}
+      <div fxFlex="1 1 auto" class="fill-remaining-space"></div>
+
+      <!-- Web view -->
+      <div fxShow="false" fxShow.gt-sm>
+        <a mat-raised-button routerLink="/bikes/live" style="margin-right: 10px;">
+          <i class="material-icons" matTooltip="{{ 'BIKES_LIST.ALL' | translate }}">place</i>
+          <small class="font"> {{ 'BIKES_LIST.ALL' | translate }}</small>
+        </a>
+
+        <mat-button-toggle-group #group="matButtonToggleGroup" value="notontrips">
+          <mat-button-toggle value="all" (change)="ridirectUrlAll()">
+            <small class="font"> {{ 'BIKES_LIST.ALL_BIKES' | translate }}</small>
+          </mat-button-toggle>
+          <mat-button-toggle value="notontrips">
+            <i class="material-icons" matTooltip="{{ 'BIKES_LIST.NOT_ON_TRIPS' | translate }}">motorcycle</i>
+            <small class="font"> {{ 'BIKES_LIST.NOT_ON_TRIPS' | translate }}</small>
+          </mat-button-toggle>
+          <mat-button-toggle value="ontrips" (change)="ridirectUrlTrips()">
+            <i class="material-icons" matTooltip=" {{ 'BIKES_LIST.ON_TRIPS' | translate }}">directions_bike</i>
+            <small class="font"> {{ 'BIKES_LIST.ON_TRIPS' | translate }}</small>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+
+      <!-- Mobile View -->
+      <div fxHide="false" fxHide.gt-sm>
+        <a mat-raised-button routerLink="/bikes/live" style="float: right;">
+          <i class="material-icons" matTooltip="{{ 'BIKES_LIST.ALL' | translate }}">place</i>
+          <small class="font-mobile"> {{ 'BIKES_LIST.ALL' | translate }}</small>
+        </a>
+
+        <mat-button-toggle-group #group="matButtonToggleGroup" value="notontrips" style="float: right;">
+          <mat-button-toggle value="all" (change)="ridirectUrlAll()">
+            <small class="font-mobile"> {{ 'COMMON.ALL' | translate }}</small>
+          </mat-button-toggle>
+          <mat-button-toggle value="notontrips">
+            <i class="material-icons" matTooltip="{{ 'BIKES_LIST.NOT_ON_TRIPS' | translate }}"></i>
+            <small class="font-mobile"> {{ 'BIKES_LIST.NOT_ON_TRIPS' | translate }}</small>
+          </mat-button-toggle>
+          <mat-button-toggle value="ontrips" (change)="ridirectUrlTrips()">
+            <i class="material-icons" matTooltip=" {{ 'BIKES_LIST.ON_TRIPS' | translate }}"></i>
+            <small class="font-mobile"> {{ 'BIKES_LIST.ON_TRIPS' | translate }}</small>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </mat-card-title>
+
+    <mat-card-content>
+      <ngx-datatable class="material" [rows]="bikes" [loadingIndicator]="loadingIndicator" [columnMode]="'flex'" [headerHeight]="50"
+        [scrollbarH]="true" #bikeTable [footerHeight]="50" [scrollbarH]="true" [rowHeight]="50" [limit]="13" [sorts]="[{prop: 'VisualId'}]">
+
+        <!-- Row Detail Template -->
+        <ngx-datatable-row-detail [rowHeight]="90" #bikeDetailRow *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+            <div style="padding-left:15px;">
+              <div>
+                <strong>Visual Id :</strong> {{row.VisualId}}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>Charge Level :</strong> {{row.ChargeLevel}}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>Address :</strong>
+                <app-bike-address [bike]="row" (onAddressReceived)="updateAddress($event)" style="padding-right:15px;"></app-bike-address>
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-row-detail>
+
+        <!-- Column Templates -->
+        <ngx-datatable-column [width]="20" [resizeable]="false" [sortable]="false" [draggable]="false" [canAutoResize]="false" *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+            <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded" title="Expand/Collapse Row"
+              (click)="toggleExpandRow(row)">
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="VisualId" name="Id" [flexGrow]="0.25" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="Serial" name="Serial" [flexGrow]="0.5" [minWidth]="95">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="Address" [flexGrow]="1.5" [minWidth]="375" *ngIf="!isMobile">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <app-bike-address [bike]="row" (onAddressReceived)="updateAddress($event)"></app-bike-address>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="BikeState" name="State" [flexGrow]="0.75" [minWidth]="125">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value | bikeStatus }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="ChargeLevel" name="Charge Level" [flexGrow]="0.5" [minWidth]="60" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ (value / 100) | percent:'1.0-1' | replace:'.0%':'%' }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="BikeId" name="" [flexGrow]="0.75" [minWidth]="110">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <a class="list-icon" matTooltip="{{ 'COMMON.DETAILS_HINT' | translate }}" mat-icon-button routerLink="/bikes/{{value}}/details">
+              <mat-icon>list</mat-icon>
+            </a>
+            <a class="list-icon" matTooltip="{{ 'BIKE.DETAILS' | translate }}" mat-icon-button routerLink="/bikes/{{value}}/track">
+              <mat-icon>place</mat-icon>
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+      </ngx-datatable>
+    </mat-card-content>
+  </mat-card>
+</div>

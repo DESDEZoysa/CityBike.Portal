@@ -1,0 +1,27 @@
+.block {
+    height: -webkit-calc(67vh);
+    height: -moz-calc(67vh);
+    height: calc(67vh); 
+  } 
+
+  .btn-refresh{
+    width:0px !important;
+    height: 0px !important;
+}
+
+.fixed-height-table {
+  height: calc(100vh - 100px);
+  min-height: 200px;
+
+  @media (min-width: 560px) {
+    height: 100vh;
+  }
+
+  @media (min-width: 768px) {
+    height: calc(100vh - 355px);
+  }
+
+  @media (min-width: 800px) and (max-width: 812px) {
+    height: 100vh;
+  }
+}

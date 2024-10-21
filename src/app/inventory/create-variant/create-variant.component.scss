@@ -1,0 +1,12 @@
+.full-width {
+  width: 100%;
+  font-size: 15px;
+}
+
+.mat-dialog-actions .mat-button {
+  min-width: auto;
+  
+  +.mat-button {
+    margin-left: 0;
+  }
+}

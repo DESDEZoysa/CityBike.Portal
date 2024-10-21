@@ -1,0 +1,115 @@
+<div class="faliure-type-model">
+  <h1 mat-dialog-title>
+    <div style="text-align:center;">{{'REPORT_ERROR.CHOOSE_FAILURE_TYPE' | translate }}</div>
+  </h1>
+  <div mat-dialog-content style="max-height: none;">
+    <div class="report-error-popup-wrapper">
+      <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between ">
+        <div fxLayout="column" *ngFor="let errorCategory of group1">
+          <div>{{errorCategory.DisplayName}}</div>
+          <br>
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none">
+              <mat-checkbox [disabled]="disabledRegister" [(ngModel)]="subCat.Result" (change)="OnChange($event,subCat)"
+                *ngFor="let subCat of errorCategory.SubCategory">{{subCat.DisplayName}}
+              </mat-checkbox>
+              <br>
+              <br>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column">
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none" *ngFor="let errorCategory of group2">
+              <div>{{errorCategory.DisplayName}}</div>
+              <br>
+              <mat-checkbox [disabled]="disabledRegister" [(ngModel)]="subCat.Result" (change)="OnChange($event,subCat)"
+                *ngFor="let subCat of errorCategory.SubCategory">{{subCat.DisplayName}}</mat-checkbox>
+              <br>
+              <br>
+            </div>
+          </div>
+        </div>
+        <div fxLayout="column">
+          <div>
+            <div fxLayout="column" fxLayoutAlign="space-around none" *ngFor="let errorCategory of group3">
+              <div>{{errorCategory.DisplayName}}</div>
+              <br>
+              <mat-checkbox [disabled]="disabledRegister" [(ngModel)]="subCat.Result" (change)="OnChange($event,subCat)"
+                *ngFor="let subCat of errorCategory.SubCategory">{{subCat.DisplayName}}</mat-checkbox>
+              <br>
+              <br>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div fxLayout="column" fxLayout.gt-md="row">
+        <div fxFlex="25%">
+          <mat-checkbox [disabled]="disabledRegister" (change)="onCriticalChange()" [(ngModel)]="otherFell">
+            {{'REPORT_ERROR.OTHER_MINOR_ERROR' | translate }}
+          </mat-checkbox>
+        </div>
+        <div fxFlex="25%">
+          <mat-checkbox [disabled]="disabledRegister" (change)="onCriticalChange()" [(ngModel)]="otherCritical">
+            {{'REPORT_ERROR.OTHER_CRITICAL_ERROR' | translate }}
+          </mat-checkbox>
+        </div>
+
+      </div>
+      <br>
+      <br>
+      <div fxLayout="column" fxLayout.gt-sm="row wrap" fxLayoutAlign.gt-sm="space-between ">
+        <div fxFlex="50%">
+          <div>
+            <div>{{'REPORT_ERROR.ADD_COMMENT' | translate }}</div>
+            <br>
+            <div>
+              <textarea [className]="disabledRegister ? 'text-area-disabled' : 'background-color:white'"
+                [disabled]="disabledRegister" [(ngModel)]="comments" style="height: 100px; width: 100%;"></textarea>
+            </div>
+          </div>
+        </div>
+        <div fxFlex="40%" *ngIf="!isRepairRequired">
+          <div style="padding-top: 50px;">
+            <mat-radio-button [disabled]="true" [checked]="disableBike">
+              {{'REPORT_ERROR.MUST_BE_CHECKED' | translate }}</mat-radio-button>
+          </div>
+        </div>
+        <div *ngIf="disableBike && sessionId && !isBikeLocked" style="padding-top: 10px;">
+          <span class="ongoing-session-text">{{'REPORT_ERROR.ERROR_MSG_UNLOCKED' | translate }}</span>
+        </div>
+        <div *ngIf="disableBike && sessionId && isBikeLocked" style="padding-top: 10px;">
+          <span class="ongoing-session-text">{{'REPORT_ERROR.ERROR_MSG_LOCKED' | translate }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="none" *ngIf="!disabledRegister" class="button-wrapper">
+      <div fxFlex="100%">
+        <div fxLayout="row" fxLayoutAlign="space-between start">
+          <button *ngIf="!isRepairRequired"
+            [className]="disableBike && sessionId ? 'btn-style btn-disabled mat-button' : 'btn-style mat-button'"
+            [disabled]="disableBike && sessionId" mat-button cdkFocusInitial (click)="createErrorOrUpdate(data.type)">
+            {{'REPORT_ERROR.REGISTER_FAILURE' | translate }}</button>
+          <button *ngIf="!isRepairRequired"
+            [className]="disableBike && sessionId ? 'btn-style btn-disabled mat-button' : 'btn-style mat-button'"
+            [disabled]="disableBike && sessionId" mat-button (click)="this.dialogRef.close();">
+            {{'REPORT_ERROR.CLOSE' | translate }}</button>
+          <button *ngIf="isRepairRequired" [className]="disableBike && sessionId ? 'btn-style btn-disabled mat-button' : 'btn-style
+            mat-button'" [disabled]="disableBike && sessionId" mat-button cdkFocusInitial
+            (click)="this.dialogRef.close();">
+            {{'REPAIR_REPORT.BACK' | translate }}</button>
+          <button *ngIf="isRepairRequired" [className]="disableBike && sessionId ? 'btn-style btn-disabled mat-button' : 'btn-style
+              mat-button'" [disabled]="disableBike && sessionId" mat-button cdkFocusInitial
+            (click)="createErrorOrUpdate(data.type)">
+            {{'REPAIR_REPORT.NEXT' | translate }}</button>
+          <button [className]="isBikeLocked ? 'btn-style btn-disabled mat-button' : 'btn-style mat-button'"
+            [disabled]="isBikeLocked" *ngIf="disableBike && sessionId && !isBikeLocked" mat-button
+            (click)="addLock()">{{'REPORT_ERROR.LOCK_BIKE' | translate }}</button>
+          <button class="btn-style" *ngIf="disableBike && sessionId && isBikeLocked" mat-button
+            (click)="endSession()">{{'REPORT_ERROR.END_SESSION' | translate }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

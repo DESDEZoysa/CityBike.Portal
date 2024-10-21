@@ -1,0 +1,73 @@
+.dropdown-placeholder {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 12px;
+}
+
+.dropdown-menu {
+  font-size: 14px;
+}
+
+.btn-style {
+  background-color: #04a3e3;
+  border-radius: 35px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  padding: 0 10px;
+  margin: 1px;
+  margin-top: 10px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.19);
+}
+
+.btn-style:hover {
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.24), 0 3px 4px 0 rgba(0, 0, 0, 0.19);
+}
+.font {
+  font-size: 12px;
+}
+
+.font-mobile {
+  font-size: 12px;
+  margin-left: -2px;
+  margin-right: -2px;
+}
+
+.fixed-height-table {
+  height: calc(100vh - 185px);
+  min-height: 200px;
+
+  @media (min-width: 768px) {
+    height: calc(100vh - 195px);
+  }
+
+  @media (min-width: 960px) {
+    height: calc(100vh - 170px);
+  }
+}
+
+.mobile-filter-repair {
+  margin-top: 15px;
+
+  @media (min-width: 600px) {
+    margin-top: 0;
+  }
+}
+
+.repair-btn {
+  margin-top: 15px;
+  font-size: 12px;
+  
+  @media (min-width: 415px) {
+    margin-left: 10px;
+    margin-top: 0;
+  }
+}
+
+.bike-selector {
+  .mat-select {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: 12px;
+  }
+}

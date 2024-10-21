@@ -1,0 +1,131 @@
+<div id="route-details" class="result-container" (window:resize)="onResize()">
+  <mat-card class="">
+    <mat-card-title>
+      <div fxLayout="column" fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between center">
+        <div>
+          <a [routerLink]="['/routes']" class="bc-link">{{ 'COMMON.ROUTES' | translate }}</a>
+          <span class="bc-separator"> / </span>
+          <span class="bc-current">{{routeId}}</span>
+          <span class="bc-separator"> / </span>
+          <span class="bc-current">{{'ROUTES.DETAILS'|translate}}</span>
+        </div>
+      </div>
+    </mat-card-title>
+
+    <mat-card-content>
+      <h2 class="timeline-title">{{'ROUTES.DETAIL_TIMELINE' | translate}}</h2>
+
+      <ul class="clr-timeline clr-timeline-vertical" *ngIf="routeOrder">
+
+        <li class="clr-timeline-step">
+          <div class="clr-timeline-step-header">Start</div>        
+          <img *ngIf="!routeOrder.StartedDate" src="/assets/images/insight-icons/start-timeline.svg" width="24" />
+          <img *ngIf="routeOrder.StartedDate" src="/assets/images/insight-icons/completed-timeline.svg" width="24" /> 
+
+          <div class="clr-timeline-step-body">
+            <span class="clr-timeline-step-title" *ngIf="routeOrder.StartedDate">{{'ROUTES.STARTED_ON'|translate}} : {{routeOrder.StartedDate}}</span>
+            <span class="clr-timeline-step-title" *ngIf="!routeOrder.StartedDate">{{'ROUTES.STARTED_ON'|translate}} : {{'ROUTES.YET_TO_START'|translate}} </span>
+            <span class="clr-timeline-step-description">{{'ROUTES.CREATED_BY'|translate}} : {{routeOrder.CreatedBy.FirstName}} {{routeOrder.CreatedBy.LastName}} </span>
+            <span class="clr-timeline-step-description">{{'ROUTES.CREATED_ON'|translate}} : {{routeOrder.CreatedDate}}</span>
+            <span class="clr-timeline-step-description" *ngIf="routeOrder.AssignedOn.UserId">{{'ROUTES.ASSIGNED_ON'|translate}} : {{routeOrder.AssignedOn.FirstName}} {{routeOrder.AssignedOn.LastName}} </span>
+            <span class="clr-timeline-step-description" *ngIf="!routeOrder.AssignedOn.UserId">{{'ROUTES.ASSIGNED_ON'|translate}} : {{'ROUTES.YET_TO_START'|translate}} </span>
+          </div>
+        </li>
+
+        <li class="clr-timeline-step" *ngFor="let waypoint of routeOrder.Waypoints; index as i">
+
+          <div class="clr-timeline-step-header">Stop {{i+1}}</div>
+          <span *ngIf="!waypoint.IsSkipped">
+            <img *ngIf="!waypoint.CompletedDate && waypoint.BikeId >0" src="/assets/images/insight-icons/bike-default.svg" width="24" />
+            <img *ngIf="!waypoint.CompletedDate && waypoint.DockingStationId >0" src="/assets/images/insight-icons/ds-default.svg" width="24" />
+            <img *ngIf="!waypoint.CompletedDate && waypoint.StorageId >0" src="/assets/images/insight-icons/storage-default.svg" width="24" />
+            <img *ngIf="!waypoint.CompletedDate && waypoint.WorkshopId >0" src="/assets/images/insight-icons/workshop-default.svg" width="24" />
+           
+            <img *ngIf="waypoint.CompletedDate && waypoint.BikeId >0" src="/assets/images/insight-icons/bike-completed.svg" width="24" />
+            <img *ngIf="waypoint.CompletedDate && waypoint.DockingStationId >0" src="/assets/images/insight-icons/ds-completed.svg" width="24" />
+            <img *ngIf="waypoint.CompletedDate && waypoint.StorageId >0" src="/assets/images/insight-icons/storage-completed.svg" width="24" />
+            <img *ngIf="waypoint.CompletedDate && waypoint.WorkshopId >0" src="/assets/images/insight-icons/workshop-completed.svg" width="24" />
+          </span>
+
+          <span *ngIf="waypoint.IsSkipped">
+            <img *ngIf="waypoint.BikeId >0" src="/assets/images/insight-icons/bike-skip.svg" width="24" />
+            <img *ngIf="waypoint.DockingStationId >0" src="/assets/images/insight-icons/ds-skip.svg" width="24" />
+            <img *ngIf="waypoint.StorageId >0" src="/assets/images/insight-icons/storage-skip.svg" width="24" />
+            <img *ngIf="waypoint.WorkshopId >0" src="/assets/images/insight-icons/workshop-skip.svg" width="24" />
+          </span>
+          
+          <span>
+            <div class="clr-timeline-step-body" *ngIf="waypoint.BikeId >0">
+              <div class="clr-timeline-step-title-wrapper">
+                <span class="clr-timeline-step-title">{{waypoint.BikeVisualId}}</span>
+              </div>
+              <span class="clr-timeline-step-description">{{'ROUTES.BIKE' | translate}}
+                <span *ngIf="waypoint.Details">({{waypoint.Details.Serial}}) - 
+                <app-bike-address [bike]="waypoint.Details" [static]="true" (onAddressReceived)="updateAddress($event)"> </app-bike-address></span>
+                <ul class="actions-list">
+                  <li *ngFor="let action of waypoint.WaypointActions; index as i"><span *ngIf="action">{{action.Details}} - on {{action?.CompletedDate}}</span></li>
+                </ul>
+              </span>
+              <span *ngIf="waypoint.Comment" class="clr-timeline-step-description">
+                {{'ROUTES.WAYPOINT.COMMENT' | translate}} : "<i>{{waypoint?.Comment}}</i>"
+              </span>
+            </div>
+            <div class="clr-timeline-step-body" *ngIf="waypoint.DockingStationId >0">
+              <div class="clr-timeline-step-title-wrapper">
+                <span class="clr-timeline-step-title clr-timeline-step-title--margin">{{waypoint.DockingStationName}}</span>
+              </div>
+              
+              <span class="clr-timeline-step-description">{{'ROUTES.DOCKING_STATION' | translate}}
+                <ul class="actions-list">
+                  <li  *ngFor="let action of waypoint.WaypointActions; index as i"><span *ngIf="action">{{action?.Details}} - on {{action?.CompletedDate}}</span></li>
+                </ul>
+              </span>
+              <span *ngIf="waypoint.Comment" class="clr-timeline-step-description">
+                {{'ROUTES.WAYPOINT.COMMENT' | translate}} : "<i>{{waypoint?.Comment}}</i>"
+              </span>
+            </div>
+            <div class="clr-timeline-step-body" *ngIf="waypoint.StorageId >0">
+              <div class="clr-timeline-step-title-wrapper">
+                <span class="clr-timeline-step-title clr-timeline-step-title--margin">{{waypoint.StorageName}}</span>
+              </div>
+              
+              <span class="clr-timeline-step-description">{{'ROUTES.STORAGE' | translate}}
+                <ul class="actions-list">
+                  <li  *ngFor="let action of waypoint.WaypointActions; index as i"><span *ngIf="action">{{action?.Details}} - on {{action?.CompletedDate}}</span></li>
+                </ul>
+              </span>
+              <span *ngIf="waypoint.Comment" class="clr-timeline-step-description">
+                {{'ROUTES.WAYPOINT.COMMENT' | translate}} : "<i>{{waypoint?.Comment}}</i>"
+              </span>
+            </div>
+            <div class="clr-timeline-step-body" *ngIf="waypoint.WorkshopId >0">
+              <div class="clr-timeline-step-title-wrapper">
+                <span class="clr-timeline-step-title clr-timeline-step-title--margin">{{waypoint.WorkshopName}}</span>
+              </div>
+              <span class="clr-timeline-step-description">{{'ROUTES.WORKSHOP' | translate}}
+                <ul class="actions-list" >
+                  <li *ngFor="let action of waypoint.WaypointActions; index as i"><span *ngIf="action"></span>{{action?.Details}} - on {{action?.CompletedDate}}</li>
+                </ul>
+              </span>
+              <span *ngIf="waypoint.Comment" class="clr-timeline-step-description">
+                {{'ROUTES.WAYPOINT.COMMENT' | translate}} : "<i>{{waypoint?.Comment}}</i>"
+              </span>
+            </div>
+          </span>
+         </li>
+
+        <li class="clr-timeline-step">
+          <div class="clr-timeline-step-header">{{'ROUTES.END' | translate}}</div>
+          <img *ngIf="!routeOrder.CompletedDate" src="/assets/images/insight-icons/start-timeline.svg" width="24" />
+          <img *ngIf="routeOrder.CompletedDate" src="/assets/images/insight-icons/completed-timeline.svg" width="24" />
+
+          <div class="clr-timeline-step-body" *ngIf="routeOrder.CompletedDate">
+            <span class="clr-timeline-step-title">{{'ROUTES.COMPLETED_ON'|translate}} : {{routeOrder.CompletedDate}}</span>
+            <span class="clr-timeline-step-description">{{'ROUTES.TOTAL_TIME'|translate}}  : {{totaltimeMinutes}} </span>
+          </div>
+        </li>
+      </ul>
+
+    </mat-card-content>
+  </mat-card>
+</div>

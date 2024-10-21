@@ -1,0 +1,18 @@
+<div class="date-picker-row" *ngIf="visible">
+  <div id="range-selector" class="date-picker-column" fxLayout="column" fxLayout.gt-xs="row" fxLayoutAlign="end center" fxLayoutAlign.gt-xs=" flex-start">
+    <div fxLayout="row" fxLayout.gt-sm="column" class="date-pickers-wrapper">
+      <mat-form-field class="mobile">
+        <input matInput [matDatepicker]="fromPicker" placeholder="{{'COMMON.DATE_FROM' | translate}}" [value]="from" (dateChange)="onFromChange($event.value)">
+        <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+        <mat-datepicker #fromPicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="mobile">
+        <input matInput [matDatepicker]="toPicker" placeholder="{{'COMMON.DATE_TO' | translate}}" [value]="to" (dateChange)="onToChange($event.value)">
+        <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+        <mat-datepicker #toPicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <button mat-raised-button color="primary" (click)="onSelect()" class="mobile-btn">{{'COMMON.SEARCH' | translate}}</button>
+  </div>
+</div>
+

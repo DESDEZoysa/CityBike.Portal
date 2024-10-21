@@ -1,0 +1,310 @@
+<div id="bikes" class="result-container" (window:resize)="onResize()">
+  <mat-card>
+    <mat-card-title fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="space-between start">
+
+      <span class="card-title">{{ 'COMMON.SESSIONS' | translate }}</span>
+
+      <div fxLayout="row wrap" fxLayoutAlign.gt-xs="flex-end start" fxLayoutAlign.gt-sm="flex-end start"
+        style="width: 100%">
+        <div class="search-bar" fxFlex>
+          <form class="search-form" fxShow="true" fxShow.gt-xs>
+            <i class="material-icons"> search </i>
+            <input #search autofocus type="text" [(ngModel)]="searchItem" placeholder="{{'COMMON.SEARCH' | translate}}"
+              autofocus="true" (ngModelChange)="searchSession($event)" id="search" name="search" />
+          </form>
+        </div>
+        <img class="excel_expor_icon" style="padding-right: 10px;" src="assets/images/excel_export.svg" fxHide
+          fxShow.gt-sm (click)="handleExcelReportGeneration()" matTooltip="{{'SESSIONS.DOWNLOAD_EXCEL' | translate}}" />
+
+        <div class="areas-row" style="padding-right: 10px;" fxLayout="row" fxLayoutAlign="start start"
+          fxLayoutAlign.gt-xs="end start">
+          <mat-form-field>
+            <mat-select [formControl]="areaMultiCtrl" placeholder="{{'DOCKING_STATION.AREA' | translate}}" #multiSelect
+              [multiple]="true" (openedChange)="filterByAreas($event)">
+              <mat-option>
+                <ngx-mat-select-search [showToggleAllCheckbox]="true" [(toggleAllCheckboxChecked)]="checkAll"
+                  (toggleAll)="toggleSelectAll($event)" [formControl]="areaMultiFilterCtrl"
+                  placeholderLabel="{{'DOCKING_STATION.AREA_SEARCH' | translate}}"
+                  noEntriesFoundLabel="{{'DOCKING_STATION.NOT_FOUND_AREA' | translate}}">
+                  <!--(toggleAll)="toggleSelectAll($event)"-->
+                </ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let area of filteredAreaMulti | async" [value]="area">
+                {{area.Name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!-- <button mat-raised-button color="primary" (click)="filterByAreas()">Filter</button> -->
+        </div>
+
+        <!-- Web view -->
+        <div fxShow="false" fxShow.gt-sm class="filter-webview" fxLayout.gt-sm="column" fxLayoutAlign.gt-sm="end end">
+          <mat-button-toggle-group #group="matButtonToggleGroup" value="all" fxLayout="row" fxLayoutAlign="end ">
+            <mat-button-toggle value="all" (change)="listOngoingSessions()">
+              <small class="font"> {{ 'SESSIONS.ONGOING' | translate }}</small>
+            </mat-button-toggle>
+            <mat-button-toggle value="lastDay" (change)="listLastDaySessions()">
+              <small class="font"> {{ 'SESSIONS.LAST_24HOURS' | translate }}</small>
+            </mat-button-toggle>
+            <mat-button-toggle value="lastWeek" (change)="listLastWeekSessions()">
+              <small class="font"> {{ 'SESSIONS.LAST_7DAYS' | translate }}</small>
+            </mat-button-toggle>
+            <mat-button-toggle value="custom" (change)="listCustomSession()">
+              <small class="font"> {{ 'SESSIONS.CUSTOM' | translate }}</small>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+
+          <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign.gt-sm="end end" class="from-to-date-wrapper">
+            <div fxFlex="1 1 auto" class="fill-remaining-space"></div>
+
+            <!-- from date -->
+            <div class="from-to-date" style="font-size: 15px; padding-top: 25px;" *ngIf="isCustomDateShown"
+              fxLayout="row" fxLayoutAlign="end ">
+              <mat-form-field class="form-field-custom" style="font-size: 14px;">
+                <input matInput [matDatepicker]="picker" [(ngModel)]="fromDate"
+                  placeholder="{{'SESSIONS.DATE_FROM' | translate}}" (dateChange)="onStartDatePicked($event)">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker startView="year" [startAt]="startDate"></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <!-- to date -->
+            <div style="font-size: 15px; padding-top: 25px;" *ngIf="isCustomDateShown" fxLayout="row"
+              fxLayoutAlign="end " class="date-form-custom from-to-date">
+              <mat-form-field class="form-field-custom" style="font-size: 14px;">
+                <input matInput [matDatepicker]="picker" [(ngModel)]="toDate"
+                  placeholder="{{'SESSIONS.DATE_TO' | translate}}" (dateChange)="onEndDatePicked($event)">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker startView="year" [startAt]="startDate"></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+
+            <button mat-raised-button (click)="onCustomDateSearchClicked()" *ngIf="isCustomDateShown"
+              class="custom-date-search-btn">
+              <small class="font"> {{ 'COMMON.SEARCH' | translate }}</small>
+            </button>
+
+          </div>
+        </div>
+
+        <img class="excel_expor_icon" src="assets/images/excel_export.svg" fxHide.gt-sm
+          (click)="handleExcelReportGeneration()" matTooltip="{{'SESSIONS.DOWNLOAD_EXCEL' | translate}}" />
+
+        <!-- Mobile View -->
+        <div class="mobile-custom-date-wrapper" fxLayout="column" fxLayoutAlign="end end">
+          <div fxHide="false" fxHide.gt-sm class="bike-session-toggle">
+            <mat-button-toggle-group #group="matButtonToggleGroup" value="all" style="float: left;">
+              <mat-button-toggle value="all" (change)="listOngoingSessions()">
+                <small class="font"> {{ 'SESSIONS.ONGOING' | translate }}</small>
+              </mat-button-toggle>
+              <mat-button-toggle value="lastDay" (change)="listLastDaySessions()">
+                <small class="font"> {{ 'SESSIONS.LAST_24HOURS' | translate }}</small>
+              </mat-button-toggle>
+              <mat-button-toggle value="lastWeek" (change)="listLastWeekSessions()">
+                <small class="font"> {{ 'SESSIONS.LAST_7DAYS' | translate }}</small>
+              </mat-button-toggle>
+              <mat-button-toggle value="custom" (change)="listCustomSession()">
+                <small class="font"> {{ 'SESSIONS.CUSTOM' | translate }}</small>
+              </mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+
+          <div class="filter-wrapper-mobile" fxHide="false" fxHide.gt-sm *ngIf="isCustomDateShown" fxLayout="column"
+            fxLayout.gt-xs="row" fxLayoutAlign="end end" fxLayoutAlign.gt-xs="end center">
+            <mat-form-field class="custom-date-fields" style="font-size: 14px;">
+              <mat-label>{{ 'SESSIONS.DATE_FROM' | translate }}</mat-label>
+              <input matInput [matDatepicker]="picker" [(ngModel)]="fromDate"
+                placeholder="{{'SESSIONS.DATE_FROM' | translate}}" (dateChange)="onStartDatePicked($event)">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker startView="year" [startAt]="startDate"></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field class="custom-date-fields" style="font-size: 14px;">
+              <input matInput [matDatepicker]="picker" [(ngModel)]="toDate"
+                placeholder="{{'SESSIONS.DATE_TO' | translate}}" (dateChange)="onEndDatePicked($event)">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker startView="year" [startAt]="startDate"></mat-datepicker>
+            </mat-form-field>
+
+            <button mat-raised-button (click)="onCustomDateSearchClicked()" class="mobile-filter-search">
+              {{ 'COMMON.SEARCH' | translate }}
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </mat-card-title>
+
+    <mat-card-content>
+      <div class="dashboard-loader" fxLayout="row" fxLayoutAlign="center center" *ngIf="isLoading">
+        <img class="tire-pressure-loader" src="assets/images/preloader.svg" width="100" />
+      </div>
+      <ngx-datatable class="material expandable scrollable-table" [rows]="filteredRideSessions" [columnMode]="'force'"
+        [headerHeight]="50" #sessionTable [scrollbarH]="false" [scrollbarV]="true" [footerHeight]="50" [rowHeight]="50"
+        [loadingIndicator]="loadingIndicator">
+
+        <!-- Row Detail Template -->
+        <ngx-datatable-row-detail [rowHeight]="240" #sessionResponsive *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+            <div style="padding-left:15px;font-size: 13px;">
+              <!-- <div class="wordwrap">
+                <strong>Session Id :</strong> {{row.RideSessionId}}
+              </div> -->
+              <div style="padding-top:10px;">
+                <strong>{{'SESSIONS.END_USER_ID'|translate}} :</strong> {{row.EndUserId}}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'SESSIONS.START_TIME'|translate}} :</strong> {{row.StartTime | convertTime }}
+              </div>
+              <div style="padding-top:10px;" *ngIf="row.EndTime; else onGoing">
+                <strong>{{'SESSIONS.END_TIME'|translate}} :</strong> {{row.EndTime | convertTime }}
+              </div>
+              <ng-template #onGoing>
+                <div style="padding-top:10px;">
+                  <strong>{{'SESSIONS.END_TIME'|translate}}:</strong> OnGoing
+                </div>
+              </ng-template>
+              <div style="padding-top:10px;">
+                <strong>{{'SESSIONS.DURATION'|translate}} :</strong> {{row.Duration}}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'SESSIONS.MUNICIPALITY'|translate}} :</strong> {{row.Municipality}}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'SESSIONS.PRICE_MODEL'|translate}} :</strong> {{row.PriceModelId}}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'SESSIONS.START_REASON'|translate}} :</strong> {{row.StartReason }}
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{'SESSIONS.END_REASON'|translate}} :</strong> {{row.EndReason }}
+              </div>
+              <div style="padding-top:10px;" class="wordwrap">
+                <strong>{{'SESSIONS.COMMENT'|translate}} :</strong> {{row.Comment}}
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-row-detail>
+
+        <!-- Column Templates -->
+        <ngx-datatable-column [width]="20" [resizeable]="false" [sortable]="false" [draggable]="false"
+          [canAutoResize]="false" *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+            <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+              title="Expand/Collapse Row" (click)="toggleExpandRow(row)">
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <!-- <ngx-datatable-column prop="RideSessionId" name="Session Id" [flexGrow]="1" *ngIf="!isMobile && layout > LAYOUT.SM" [minWidth]="200"
+          [width]="200">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column> -->
+
+        <ngx-datatable-column prop="VisualId" name="{{'SESSIONS.VISUAL_ID'|translate}}" [flexGrow]="0.10"
+          [minWidth]="80" [width]="30" [maxWidth]="80">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <div>
+              <a routerLink='/bikes/{{row.BikeId}}/details'
+                style="color:#007dbd;vertical-align: super;">{{row.VisualId}}</a>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="EndUserId" name="{{'SESSIONS.END_USER_ID'|translate}}" [flexGrow]="0.5"
+          [minWidth]="125" [width]="100" *ngIf="!isMobile && layout > LAYOUT.SM">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="StartTime" name="{{'SESSIONS.START_TIME'|translate}}" [flexGrow]="0.5"
+          [minWidth]="60" [width]="120" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value | convertTime }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="EndTime" name="{{'SESSIONS.END_TIME'|translate}}" [flexGrow]="0.5" [minWidth]="60"
+          [width]="120" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <div *ngIf="value; else onGoing">
+              {{ value | convertTime }}
+            </div>
+          </ng-template>
+          <ng-template #onGoing>
+            <div>
+              <b>Ongoing</b>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="Duration" name="{{'SESSIONS.DURATION'|translate}}" [flexGrow]="0.5" [minWidth]="60"
+          [width]="80" [maxWidth]="80" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="Municipality" name="{{'SESSIONS.MUNICIPALITY'|translate}}" [flexGrow]="0.5"
+          [minWidth]="60" [width]="60" [maxWidth]="105" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="Comment" name="{{'SESSIONS.COMMENT'|translate}}" [flexGrow]="1" [minWidth]="60"
+          [width]="150" *ngIf="!isMobile && layout > LAYOUT.XS && !sessionsOngoingView">
+          <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+            {{row.Comment}}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="PriceModelId" name="{{'SESSIONS.PRICE_MODEL'|translate}}" [flexGrow]="0.5"
+          [minWidth]="60" [width]="100" [maxWidth]="110" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="StartReason" name="{{'SESSIONS.START_REASON'|translate}}" [flexGrow]="0.5"
+          [minWidth]="60" [width]="220" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="EndReason" name="{{'SESSIONS.END_REASON'|translate}}" [flexGrow]="0.5"
+          [minWidth]="60" [width]="220" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="BikeId" name="" [flexGrow]="0.5" [minWidth]="170">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <a class="list-icon" matTooltip="{{ 'COMMON.DETAILS_HINT' | translate }}" mat-icon-button
+              (click)="openDetailsInNewWindow('/sessions/' + row.RideSessionId, row.RideSessionId)">
+              <mat-icon>list</mat-icon>
+            </a>
+
+            <span class="btn-style hide-mobile" (click)="openDialog(row.BikeId, row.RideSessionId)"
+              *ngIf="!row.EndTime">
+              {{ 'SESSIONS.TERMINATE' | translate }}
+            </span>
+
+            <a class="list-icon hide-desktop" mat-icon-button>
+              <span class="mat-button-wrapper" (click)="openDialog(row.BikeId, row.RideSessionId)" *ngIf="!row.EndTime">
+                <img class="mat-icon material-icons" matTooltip="Terminate" src="/assets/images/terminate.svg">
+              </span>
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+      </ngx-datatable>
+    </mat-card-content>
+  </mat-card>
+</div>

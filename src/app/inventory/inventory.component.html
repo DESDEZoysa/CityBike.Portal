@@ -1,0 +1,134 @@
+<div id="invenrty" class="result-container" (window:resize)="onResize()">
+  <mat-card>
+    <mat-card-title fxLayout="row" fxLayoutAlign="space-between center">
+      {{ 'COMMON.INVENTORY' | translate }}
+
+      <div fxLayout="row wrap" fxLayoutAlign="end center" class="inventory-btn-wrapper">
+        <mat-form-field class="bike-selector bike-selector--inventory">
+          <mat-select [formControl]="partCtrl" [multiple]="true" (openedChange)="filterByParts($event)"
+            placeholder="{{'INVENTORY.SELECT_PART' | translate}}">
+            <mat-option>
+              <ngx-mat-select-search [showToggleAllCheckbox]="true" [toggleAllCheckboxChecked]="true"
+                (toggleAll)="toggleSelectAll($event)" style="font-size: 15px;" [formControl]="partFilterCtrl"
+                noEntriesFoundLabel="{{'INVENTORY.NOT_FOUND' | translate}}"
+                placeholderLabel="{{'INVENTORY.FILTER_BY_PARTS' | translate}}">
+              </ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let part of filteredParts | async" [value]="part">
+              {{ getInventoryPartMappingName(part.Name) | translate }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-card-title>
+
+    <mat-card-content>
+      <ngx-spinner bdOpacity=1 bdColor="rgba(255,255,255,0)" size="default" color="#1172c3" type="ball-clip-rotate"
+        [fullScreen]="false">
+      </ngx-spinner>
+      <ngx-datatable class="material expandable fixed-height-table" [loadingIndicator]="loadingIndicator"
+        [rows]="bikeDetails" [columnMode]="'force'" [headerHeight]="50" #inventryTable [footerHeight]="50"
+        [rowHeight]="50" [scrollbarH]="true" [scrollbarV]="true">
+
+        <!-- Row Detail Template -->
+        <ngx-datatable-row-detail [rowHeight]="100" #inventryTable *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+            <div style="padding-left:15px;font-size: 13px;">
+              <div class="wordwrap">
+                <strong>{{ 'INVENTORY.VARIANT_NAME' | translate }} :</strong> {{row.VariantName}}
+                <a md-icon class="material-icons"
+                  style="display: inline-block;vertical-align: middle; margin-bottom: 2px;margin-left: 5px;"
+                  (click)="openVariant(row)"> image </a>
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{ 'INVENTORY.IS_DEFAULT' | translate }} :
+                  <b>{{row.Active ? 'Yes' : 'No' }}</b>
+                </strong>
+              </div>
+              <div style="padding-top:10px;">
+                <strong>{{ 'INVENTORY.TOTAL_QUANTITY' | translate }} :</strong> {{row.TotalQuantity}}
+              </div>
+              <!-- <div style="padding-top:10px;">
+                <strong>Updated On :</strong> {{row.UpdatedOn}}
+              </div> -->
+            </div>
+          </ng-template>
+        </ngx-datatable-row-detail>
+
+        <!-- Column Templates -->
+        <ngx-datatable-column [width]="10" [resizeable]="false" [sortable]="false" [draggable]="false"
+          [canAutoResize]="false" *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+            <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+              title="Expand/Collapse Row" (click)="toggleExpandRow(row)">
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="TranslatedPartName" name="{{ 'INVENTORY.PART_NAME' | translate }}" [flexGrow]="1"
+          [minWidth]="100" [width]="200">
+          <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+            <a *ngIf="value" class="list-icon" matTooltip="Edit Variant" mat-icon-button (click)="openPart(row)">
+              <mat-icon>image</mat-icon>
+            </a>
+            <span class="column-value">{{ value }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="VariantName" name="{{ 'INVENTORY.VARIANT_NAME' | translate }}" [flexGrow]="1"
+          [minWidth]="125" [width]="350" *ngIf="!isMobile">
+          <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+            <a *ngIf="value" class="list-icon" matTooltip="Edit Variant" mat-icon-button (click)="openVariant(row)">
+              <mat-icon>crop_original</mat-icon>
+            </a>
+            <span class="column-value">{{ value }}</span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <!-- <ngx-datatable-column prop="Active" name="{{ 'INVENTORY.IS_DEFAULT' | translate }}" [flexGrow]="1" [minWidth]="50" [width]="50"
+          *ngIf="!isMobile && layout > LAYOUT.SM">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <b>{{ value ? 'Yes' : 'No' }}</b>
+          </ng-template>
+        </ngx-datatable-column> -->
+
+        <ngx-datatable-column prop="TotalQuantity" name="{{ 'INVENTORY.TOTAL_QUANTITY' | translate }}" [flexGrow]="1"
+          [minWidth]="50" [width]="50" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <!-- <ngx-datatable-column prop="Id" name="" [flexGrow]="0.2" [minWidth]="50" [width]="50">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <a class="list-icon" matTooltip="Edit Variant" mat-icon-button
+              (click)="openCreateUpdateVariantDialog(types.Update,row)">
+              <mat-icon>create</mat-icon>
+            </a>
+          </ng-template>
+        </ngx-datatable-column> -->
+
+        <ngx-datatable-column>
+          <ng-template ngx-datatable-header-template>
+            <span>{{ 'INVENTORY.QUANTITY_IN' | translate }} </span>
+            <mat-select [(ngModel)]="selectedWorkshop" (selectionChange)="filterBasedOnWorkshop()">
+              <mat-option *ngFor="let workshop of allWorkshops" [value]="workshop.Id">{{workshop.Name}}</mat-option>
+            </mat-select>
+          </ng-template>
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{row.Quantity}}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="Id" name="" [flexGrow]="0.2" [minWidth]="50" [width]="50">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <a class="list-icon" matTooltip="{{ 'INVENTORY.DETAILS.DETAILS' | translate }}" mat-icon-button
+              (click)="openAllWorkshopPartDetails(row)">
+              <mat-icon>list</mat-icon>
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+    </mat-card-content>
+  </mat-card>
+</div>

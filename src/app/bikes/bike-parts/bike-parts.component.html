@@ -1,0 +1,65 @@
+<mat-card id="parts" class="result-container" (window:resize)="onResize()">
+  <div>
+   <h4 style="margin: 3px;">{{ 'BIKE.PART_HIERARCHY' | translate }}</h4> 
+    <!-- <a  style="float: right;" mat-raised-button routerLink="/repair/bike/{{bike?.BikeId}}/create" style="float: right"> 
+      <i class="material-icons">add</i> {{ 'REPAIR_HISTORY.LOG_ACTION' | translate }}
+    </a> -->
+  </div>
+
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="fixed-height-table">
+
+     <!-- This is the tree node template for leaf nodes -->
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+      <li>
+        <div class="mat-tree-node" style="padding-left: 15px;">
+          {{node.name}}
+          <a *ngIf="node.imageUrl" md-icon class="material-icons" style="display: inline-block;vertical-align: middle; margin-bottom: 2px;margin-left: 5px;" 
+          (click)="openImage(node)"> image </a>
+          
+          <mat-icon *ngIf="node.variant"> play_arrow </mat-icon>
+          
+          <a *ngIf="node.variant" md-icon class="material-icons" style="display: inline-block;vertical-align: middle; margin-bottom: 2px;margin-left: 5px;" 
+          (click)="openVariant(node.variant)"> crop_original </a>  
+
+          <a class="part-tree-text-space" *ngIf="node.variant"> {{ node.variant.Name}}</a>
+
+          <a *ngIf="node" md-icon class="material-icons" style="display: inline-block;vertical-align: middle; margin-bottom: 2px;margin-left: 10px;" 
+          (click)="openRepairAction(node)"> playlist_add </a>  
+        </div>
+      </li>
+    </mat-tree-node>
+
+    <!-- This is the tree node template for expandable nodes -->
+    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+        <li class="example-tree-container">
+          <div class="mat-tree-node">
+            <button mat-icon-button matTreeNodeToggle 
+            [attr.aria-label]="'toggle ' + node.name">
+              <mat-icon class="mat-icon-rtl-mirror">
+                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+              </mat-icon>
+            </button>
+            {{node.name}}
+              <a *ngIf="node.imageUrl" md-icon class="material-icons" style="display: inline-block;vertical-align: middle; margin-bottom: 2px;margin-left: 5px;" 
+              (click)="openImage(node)"> image </a>
+          
+               <mat-icon *ngIf="node.variant" class="material-icons"> play_arrow </mat-icon>
+                  
+              <a *ngIf="node.variant" md-icon class="material-icons" style="display: inline-block;vertical-align: middle; margin-bottom: 2px;margin-left: 5px;" 
+              (click)="openVariant(node.variant)"> crop_original </a> 
+
+              <a class="part-tree-text-space" *ngIf="node.variant"> {{ node.variant.Name}}</a>
+
+              <a *ngIf="node" md-icon class="material-icons" style="display: inline-block;vertical-align: middle; margin-bottom: 2px;margin-left: 10px;" 
+              (click)="openRepairAction(node)"> playlist_add </a> 
+          </div>
+          
+          <ul class="example-tree-nested-node">
+            <div  *ngIf="treeControl.isExpanded(node)">
+            <ng-container matTreeNodeOutlet></ng-container>
+            </div>
+          </ul>
+      </li>      
+    </mat-tree-node>
+  </mat-tree>
+</mat-card>

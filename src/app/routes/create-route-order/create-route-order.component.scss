@@ -1,0 +1,158 @@
+.waypoint-list {
+    /* width: 500px; */
+    // max-width: 50%;
+    /* border: solid 1px #ccc; */
+    min-height: 60px;
+    display: block;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;  
+
+    @media (min-width: 768px) {
+      width: 95%;
+    }
+  }
+  .container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+  .drag-icon {
+    position: relative;
+  }
+  .drag-icon i {
+    cursor: move;
+  }
+  i.disable{
+    position: absolute;
+    cursor: not-allowed !important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    color: transparent;
+  }
+  .waypoint-box {
+    /* padding: 20px 10px; */
+    border: solid 1px #ccc;
+    color: rgba(0, 0, 0, 0.87);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    background: white;
+    font-size: 14px;
+    margin-bottom: 20px;
+    cursor: grab;
+  }
+
+  .waypoint-box.cdk-drag-disabled {
+    background: #ddd;
+    cursor: no-drop;
+  }
+  
+  .cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+                0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+  
+  .cdk-drag-placeholder {
+    opacity: 0;
+  }
+  
+  .cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  /* .waypoint-box:last-child {
+    border: none;
+  } */
+  
+  .waypoint-list.cdk-drop-list-dragging .waypoint-box:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .user-selector {
+    width: 100% !important;
+  }
+
+  .bike-selector-wrapper {
+    margin-top: 25px !important;
+    max-width: 350px;
+    width: 100%;
+  }
+
+  .waypoint-list {
+    margin: 20px 0 5px;
+  }
+
+  .drag-index {
+    text-align: center;
+    width: 30px;
+  }
+
+  .drag-ico {
+    margin-top: 3px;
+  }
+
+  .drag-content {
+    padding-left: 25px;
+  }
+
+  .delete-icon {
+    margin-left: auto;
+    padding-right: 5px;
+
+    .material-icons {
+      color: #04A3E3;
+    }
+  }
+
+  .status-chip {
+    background-color: #9A9A9A;
+    border-radius: 35px;
+    box-shadow: 0px 1px 4px 2px rgba(0, 0, 0, 0.2);
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    margin: 1px;
+    padding: 2px 7px;
+    text-align: center;
+    text-decoration: none;
+  
+    &.completed {
+      background-color: black;
+    }
+  
+    &.ongoing {
+      background-color: green;
+    }
+  
+    &.assigned {
+      background-color: #04a3e3;
+    }
+
+    &.completed-wp {
+      background-color: green;
+    }
+  
+    &.skipped-wp {
+      background-color: grey;
+    }
+  }
+
+  .status-content {
+    margin-left: auto;
+    margin-right: 10px;
+  }
+
+.result-container {
+  .mat-card {
+    padding-bottom: 0;
+    padding-right: 0;
+  }
+}

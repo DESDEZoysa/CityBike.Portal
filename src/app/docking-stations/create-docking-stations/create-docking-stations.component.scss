@@ -1,0 +1,58 @@
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mat-expansion-panel-header {
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.example-form {
+  min-width: 150px;
+  width: 100%;
+}
+
+.full-width {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.example-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.pad {
+  padding: 0px;
+}
+
+.map {
+  width: 100%;
+  height: 68vh;
+}
+.docking-station-state {
+  margin-top: 10px;
+  float: right;
+}
+
+.example-form {
+  margin-bottom: 30px;
+}
+
+.map-wrapper {
+  @media (min-width: 960px) {
+    padding-left: 25px;
+  }
+}
+
+.docking-point-form {
+  mat-form-field {
+    margin-bottom: 15px;
+  }
+}

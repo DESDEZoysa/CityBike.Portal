@@ -1,0 +1,148 @@
+<div id="repair_orders" class="result-container" (window:resize)="onResize()">
+  <mat-card>
+    <mat-card-title fxLayout="column" fxLayout.gt-xs="row" fxLayoutAlign=" none">
+      {{ 'REPAIR_ORDERS.REPAIR_ORDERS_LIST' | translate }}
+      <div fxFlex="1 1 auto" class="fill-remaining-space"></div>
+
+      <!-- Web view -->
+      <div fxShow="false" fxShow.gt-sm fxLayout="row" fxLayoutAlign=" end">
+        <mat-form-field style="margin-right: 10px;" class="bike-selector">
+          <mat-select [(value)]="selectedWorkshop" (selectionChange)="filterRepairOrdersByWorkshop()"
+            placeholder="{{'REPAIR_ORDERS.WORKSHOP' | translate}}">
+            <mat-option *ngFor="let workshop of allWorkshops" value={{workshop.Id}}>
+              {{ workshop.Name | translate}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-button-toggle-group #group="matButtonToggleGroup" value="all">
+          <mat-button-toggle value="all" (change)="listOngoingOrders()">
+            <small class="font"> {{ 'REPAIR_ORDERS.ONGOING_ORDERS' | translate }}</small>
+          </mat-button-toggle>
+          <mat-button-toggle value="lastDay" (change)="getCompletedOrders()">
+            <small class="font"> {{ 'REPAIR_ORDERS.COMPLETED_ORDERS' | translate }}</small>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+        <a mat-raised-button routerLink="/workshop/history" style="float: right;margin-left: 10px;font-size: 12px;">
+          <i class="material-icons">assignment</i> {{ 'REPAIR_ORDERS.ALL_HISTORY' | translate}}</a>
+      </div>
+
+      <!-- Mobile View -->
+      <div fxHide="false" fxHide.gt-sm fxLayout="row wrap" fxLayoutAlign="start start" class="mobile-filter-repair">
+        <mat-form-field style="margin-right: 10px;" class="bike-selector">
+          <mat-select [(value)]="selectedWorkshop" (selectionChange)="filterRepairOrdersByWorkshop()">
+            <mat-option *ngFor="let workshop of allWorkshops" value={{workshop.Id}}>
+              {{ workshop.Name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-button-toggle-group #group="matButtonToggleGroup" value="all">
+          <mat-button-toggle value="all" (change)="listOngoingOrders()">
+            <small class="font"> {{ 'REPAIR_ORDERS.ONGOING_ORDERS' | translate }}</small>
+          </mat-button-toggle>
+          <mat-button-toggle value="lastDay" (change)="listCompletedOrders()">
+            <small class="font"> {{ 'REPAIR_ORDERS.COMPLETED_ORDERS' | translate }}</small>
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+        <a mat-raised-button routerLink="/workshop/history" class="repair-btn"> <i class="material-icons">assignment</i>
+          {{ 'REPAIR_ORDERS.ALL_HISTORY' | translate}}</a>
+      </div>
+    </mat-card-title>
+
+    <mat-card-content>
+      <ngx-datatable class="material expandable fixed-height-table" [rows]="filteredRepairOrders" [columnMode]="'force'"
+        [headerHeight]="50" [loadingIndicator]="loadingIndicator" #repairOrdersTable [footerHeight]="50"
+        [rowHeight]="50" [scrollbarH]="true" [scrollbarV]="true">
+
+        <!-- Row Detail Template -->
+        <ngx-datatable-row-detail [rowHeight]="150" #bikeDetailRow *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+            <div style="padding-left:15px;font-size: 13px;">
+              <div class="wordwrap">
+                <strong>{{'REPAIR_ORDERS.REPAIR_ORDER_CREATED_DATE'|translate}} :</strong> {{row.CreatedDate |
+                convertTime}}
+              </div>       
+              <div class="wordwrap" *ngIf="completedOrdersView" style="padding-top:10px;">
+                <strong>{{'REPAIR_ORDERS.REPAIR_ORDER_COMPLETED_DATE'|translate}} :</strong> {{row.CompletedDate |
+                convertTime}}
+              </div>
+              <div class="wordwrap" *ngIf="completedOrdersView" style="padding-top:10px;">
+                <strong>{{'REPAIR_ORDERS.COMPLETED_BY'|translate}} :</strong> {{row.FirstName}} {{row.LastName}}
+              </div>
+              <div style="padding-top:10px;" class="wordwrap">
+                <strong>{{'REPAIR_ORDERS.ADDRESS'|translate}} : </strong>
+                <app-bike-address [bike]="row" (onAddressReceived)="updateAddress($event)" style="padding-right:15px;">
+                </app-bike-address>
+              </div>
+              <div class="wordwrap" style="padding-top:10px;">
+                <strong>{{'REPAIR_ORDERS.WORKSHOP'|translate}} :</strong> {{row.WorkshopName}}
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-row-detail>
+
+        <!-- Column Templates -->
+        <ngx-datatable-column [width]="10" [resizeable]="false" [sortable]="false" [draggable]="false"
+          [canAutoResize]="false" *ngIf="isMobile">
+          <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+            <a href="javascript:void(0)" [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+              title="Expand/Collapse Row" (click)="toggleExpandRow(row)">
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="VisualId" name="Id" [flexGrow]="0.5" [minWidth]="25" [width]="35">
+          <ng-template let-value="value" let-row="row" ngx-datatable-cell-template>
+            <div>
+              <a routerLink="/bikes/{{row.BikeId}}/details" style="color:#007dbd;vertical-align: super;">{{value}}</a>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column name="{{'REPAIR_ORDERS.ADDRESS'|translate}}" [flexGrow]="2.5" [minWidth]="100"
+          [width]="300" *ngIf="!isMobile">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <app-bike-address [bike]="row" (onAddressReceived)="updateAddress($event)"></app-bike-address>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="WorkshopName" name="{{'REPAIR_ORDERS.WORKSHOP'|translate}}" [flexGrow]="1"
+          [minWidth]="50" [width]="150" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="CreatedDate" name="{{'REPAIR_ORDERS.REPAIR_ORDER_CREATED_DATE'|translate}}"
+          [flexGrow]="1" [minWidth]="50" [width]="150" *ngIf="!isMobile">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value | convertTime }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="CompletedDate" name="{{'REPAIR_ORDERS.REPAIR_ORDER_COMPLETED_DATE'|translate}}"
+          [flexGrow]="1" [minWidth]="50" [width]="150" *ngIf="completedOrdersView">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            {{ value | convertTime }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column prop="RepairId" name="" [flexGrow]="0.5" [minWidth]="100" [width]="100" *ngIf="!completedOrdersView">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            <span class="list-icon btn-style" (click)="closeRepairOrder(row.RepairId)" *ngIf="!row.IsCompleted">
+              {{'COMMON.CLOSE'|translate}}
+            </span>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <!-- <ngx-datatable-column prop="BikeId" name="" [flexGrow]="0.5" [minWidth]="50" [width]="50" *ngIf="!completedOrdersView">
+            <ng-template let-value="value"  let-row="row" ngx-datatable-cell-template>            
+              <a *ngIf="!row.IsCompleted" class="list-icon" matTooltip="{{'REPAIR_ORDERS.ADD_TOOLTIP'|translate}}" mat-icon-button routerLink="/repair/bike/{{value}}/create">
+                <mat-icon>playlist_add</mat-icon>
+              </a>
+            </ng-template>
+          </ngx-datatable-column> -->
+
+      </ngx-datatable>
+    </mat-card-content>
+  </mat-card>
+</div>

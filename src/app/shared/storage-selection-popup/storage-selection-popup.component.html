@@ -1,0 +1,21 @@
+<div class="service-main">
+  <div class="service-main--loader" *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center center">
+    <img class="tire-pressure-loader" src="assets/images/preloader.svg" *ngIf="isLoading" />
+  </div>
+
+  <div class="bike-storage-status" fxLayout="column" fxLayoutAlign="center center">
+    <div fxLayout="row" fxLayoutAlign="start center">
+      <img src="assets/images/map-icons/send-in-stock.svg">
+      <h3>{{'STORAGE.CHOOSE_STORAGE' | translate}} {{bike.VisualId}}</h3>
+    </div>
+    <div class="workshop-selector">
+      <mat-select placeholder="{{'STORAGE.SELECT_STORAGE' | translate}}" [(value)]="selectedStorage">
+        <mat-option *ngFor="let storage of allStorages" [value]="storage.Id">
+          {{storage.Name}}</mat-option>
+      </mat-select>
+    </div>
+    <div class="button-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+      <a mat-raised-button (click)="SetStorage()">{{'STORAGE.CONFIRM' | translate}}</a>
+      <a class="close-btn" mat-raised-button (click)="this.dialogRef.close()">{{'STORAGE.CANCEL' | translate}}</a>
+    </div>
+  </div>

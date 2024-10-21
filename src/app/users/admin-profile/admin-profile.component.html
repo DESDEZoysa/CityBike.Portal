@@ -1,0 +1,140 @@
+<div id="AdminProdile" class="result-container">
+  <mat-card>
+    <mat-card-title style="position: relative;" fxLayout="row wrap" fxLayoutAlign=" start">
+      <!-- bread crumb -->
+      <div>
+        <span class="bc-link">{{ 'COMMON.ADMIN' | translate }}</span>
+        <span class="bc-separator"> / </span>
+        <span class="bc-current"> {{ 'COMMON.PROFILE' | translate }}</span>
+      </div>
+      <div fxFlex="1 1 auto" class="fill-remaining-space"></div>
+    </mat-card-title>
+
+    <mat-card-title style="position: relative;padding-top: 15px;" fxLayout="row wrap" fxLayoutAlign=" start">
+      <div>
+        <span class="bc-current" style="font-size: medium;">{{ 'REMOTE_CONTROL.ALL_BIKES' | translate }}</span>
+      </div>
+      <div fxFlex="1 1 auto" class="fill-remaining-space"></div>
+    </mat-card-title>
+
+    <ngx-datatable class="material expandable" #commandsTable [rows]="commands" [groupRowsBy]="'Category'"
+      [columnMode]="'flex'" [headerHeight]="50" [footerHeight]="0" [rowHeight]="50" [scrollbarH]="true"
+      [groupExpansionDefault]="true" [limit]="5">
+
+      <!-- Group Header Template -->
+      <ngx-datatable-group-header [rowHeight]="50">
+        <ng-template let-group="group" let-expanded="expanded" ngx-datatable-group-header-template>
+          <div style="padding-left:15px;">
+            <a [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+              title="Expand/Collapse Group" (click)="toggleExpandGroup(group)">
+              <b style="font-size: medium;">{{group.value[0].Category}}</b>
+            </a>
+          </div>
+        </ng-template>
+      </ngx-datatable-group-header>
+
+      <ngx-datatable-column prop="Name" name="{{'REMOTE_CONTROL.NAME'|translate}}" [flexGrow]="2">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <span [ngClass]="{'disable': row.IsUpgradable === false }"> {{ value }}</span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="Parameter" name="{{'REMOTE_CONTROL.PARAMETER'|translate}}" [flexGrow]="3">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <!-- <input *ngIf="value == '450'"  [(value)]="value" /> -->
+          <input *ngIf="value == '450'" type="number" [(ngModel)]="param" (ngModelChange)="getParameters($event)" placeholder="Observation Id">
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="Status" name="{{'REMOTE_CONTROL.STATUS'|translate}}" [flexGrow]="2">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <div class="chip" ngClass="status-{{value}}">
+            {{ value }}</div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column prop="CommandId" name="" [flexGrow]="1">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <a class="list-icon" [ngClass]="{'disable': row.IsUpgradable === false }" mat-icon-button
+            matTooltip="{{ 'COMMON.SEND' | translate }}" (click)="sendCommand(value)">
+            <mat-icon>play_arrow</mat-icon>
+          </a>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+
+    <mat-card-title class="admin-settings-title" fxLayout="row wrap" fxLayoutAlign=" start">
+      <div>
+        <span class="bc-current" style="font-size: large;">{{'SETTINGS.TITLE' | translate}}</span>
+      </div>
+      <div fxFlex="1 1 auto" class="fill-remaining-space"></div>
+    </mat-card-title>
+
+    <div class="card">
+      <div>
+        <div>
+          <span style="font-size: medium; font-weight: bold">{{'SETTINGS.TITLE_GENERAL' | translate}}</span>
+        </div>
+        <mat-form-field class="pb-1 pl-2 pt-2">
+          <input autocomplete="off" min="1" max="100" matInput placeholder="{{'SETTINGS.MIN_CHARGE_LEVEL' | translate}}" type="number" [(ngModel)]="minimumChargeLevel">
+        </mat-form-field>
+        <button mat-raised-button color="primary" class="btn-block admin-settings-button" (click)="updateSystemSettings()">{{'SETTINGS.UPDATE' | translate}}</button>
+      </div>
+      <div>
+        <div>
+          <span style="font-size: medium; font-weight: bold">{{'SETTINGS.TITLE_AREA' | translate}}</span>
+        </div>
+        <div class="container pl-2 pt-2" fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start left">
+          <div>
+            <mat-form-field>
+              <mat-select
+                [formControl]="areaCtrl" 
+                placeholder="{{'DOCKING_STATION.AREA' | translate}}" 
+                #singleSelect 
+                (openedChange)="setMinimumBikesOfArea($event)">
+                <mat-option>
+                  <ngx-mat-select-search 
+                    style="font-size: 15px;" 
+                    [formControl]="areaFilterCtrl"
+                    noEntriesFoundLabel="{{'DOCKING_STATION.AREA_SEARCH' | translate}}"
+                    placeholderLabel="{{'DOCKING_STATION.NOT_FOUND_AREA' | translate}}">
+                  </ngx-mat-select-search>
+                </mat-option>
+                <mat-option 
+                  *ngFor="let area of filteredArea | async" 
+                  [value]="area">
+                  {{area.Name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field>
+              <input
+                [ngClass]="isAreaSelected ? 'mun-select' : 'mun-deselect'"
+                autocomplete="off"
+                min="1"
+                max="100"
+                matInput
+                placeholder="{{ 'SETTINGS.MIN_BIKES' | translate }}"
+                type="number"
+                [(ngModel)]="minimumBikes"
+              >
+            </mat-form-field>
+          </div>
+          <div>
+            <button
+            [ngClass]="isAreaSelected ? 'mun-btn-select' : 'mun-btn-deselect'"
+            [disabled]="isSubmit || !isAreaSelected"
+            mat-raised-button
+            color="primary"
+            (click)="updateMinimumBikes()"
+            >
+              {{ 'SETTINGS.UPDATE' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</div>

@@ -1,0 +1,100 @@
+.dropdown-placeholder {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 12px;
+}
+
+.dropdown-menu {
+  font-size: 14px;
+}
+
+.block {
+  height: -webkit-calc(56vh);
+  height: -moz-calc(56vh);
+  height: calc(56vh);
+}
+
+.btn-style {
+  background-color: #04a3e3;
+  border-radius: 35px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  width: 100px;
+  margin: 1px;
+  margin-top: 10px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.19);
+}
+
+.btn-style:hover {
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.24), 0 3px 4px 0 rgba(0, 0, 0, 0.19);
+}
+
+.fixed-height-table {
+  height: calc(100vh - 280px);
+  min-height: 200px;
+
+  @media (min-width: 560px) {
+    height: 100vh;
+  }
+
+  @media (min-width: 666px) {
+    height: calc(100vh - 100px);
+  }
+
+  @media (min-width: 768px) {
+    height: calc(100vh - 520px);
+  }
+
+  @media (min-width: 800px) and (max-width: 812px) {
+    height: 100vh;
+  }
+
+  @media (min-width: 900px) {
+    height: calc(100vh - 505px);
+  }
+}
+
+.closebtn {
+  cursor: pointer;
+}
+
+.onboarding-btn-group {
+  margin-bottom: 15px;
+}
+
+a.list-icon.mat-icon-button .mat-icon {
+  line-height: 40px;
+}
+
+a.list-icon {
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0);
+  display: inline-block;
+  justify-content: center;
+  margin: 0 auto;
+  transition: 0.2s;
+}
+
+[mat-icon-button] {
+  display: inline-block !important;
+}
+
+.onboarding-icon {
+  @media (min-width: 960px) {
+    display: none !important;
+  }
+}
+
+.near-docking-stations {
+  align-items: center;
+  display: flex;
+  font-size: 14px;
+  margin: 0 15px 15px 0;
+}
+
+span.text-center {
+  text-align: center;
+  width: 100%;
+}

@@ -1,0 +1,265 @@
+.service-main {
+    height: 100%;
+    position: relative;
+    width: 100%;
+  
+    &--loader {
+      background-color: rgba(#fff, 0.5);
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 1;
+  
+      img {
+        width: 100px;
+      }
+    }
+  
+    &--left {
+      height: 100%;
+    }
+  
+    &__icon {
+      margin-right: 5px;
+      width: 100px;
+    }
+  
+    &--details {
+      padding-top: 60px;
+      position: relative;
+  
+      &__header {
+        border-bottom: 1px solid #adadad;
+        padding-bottom: 30px;
+  
+        .go-back {
+          padding: 5px 5px 3px 5px;
+          position: absolute;
+          right: -5px;
+          top: -10px;
+          transition: 0.3s;
+  
+          &:hover {
+            background-color: #f3f3f3;
+          }
+  
+          &:focus,
+          &:active {
+            background-color: #f0f0f0;
+          }
+        }
+  
+        .lock-status {
+          cursor: pointer;
+          font-size: 12px;
+          padding: 5px;
+          transition: 0.3s;
+  
+          &:hover {
+            background-color: #f3f3f3;
+          }
+  
+          &:focus,
+          &:active {
+            background-color: #f0f0f0;
+          }
+        }
+      }
+  
+      &__bikeid {
+        font-size: 33px;
+        margin: 0 24px;
+        text-decoration: underline;
+      }
+  
+      &__tab {
+        border-bottom: 1px solid #adadad;
+        margin: 30px 30 0 0;
+  
+        &:last-child {
+          border: 0 none;
+        }
+  
+        &--item {
+          margin-bottom: 10px;
+  
+          div {
+            width: 35px;
+  
+            img {
+              display: block;
+              margin: 0 auto;
+            }
+          }
+  
+          p {
+            font-size: 12px;
+            margin: 0;
+          }
+        }
+      }
+    }
+  
+    &--footer {
+      border-top: 1px solid #adadad;
+      padding: 30px 30px 0;
+  
+      > div {
+        cursor: pointer;
+        margin-right: 50px;
+        padding: 5px;
+        transition: 0.3s;
+  
+        &:hover {
+          background-color: #f3f3f3;
+        }
+  
+        &:focus,
+        &:active {
+          background-color: #f0f0f0;
+        }
+  
+        span {
+          font-size: 12px;
+        }
+      }
+  
+      a {
+        background-color: #333f48;
+        border-radius: 5px;
+        cursor: pointer;
+        display: flex;
+        padding: 13px 35px;
+        transition: 0.3s;
+  
+        &:hover {
+          background-color: darken(#333f48, 5%);
+        }
+  
+        &:active,
+        &:focus {
+          background-color: darken(#333f48, 10%);
+        }
+      }
+  
+      p {
+        font-size: 12px;
+        margin: 7px 0 10px;
+  
+        @media (min-width: 960px) {
+          margin-bottom: 0;
+        }
+      }
+    }
+  
+    &--right {
+      height: calc(100vh - 115px);
+      overflow: auto;
+      padding: 20px 60px;
+  
+      h3 {
+        font-size: 35px;
+        margin-top: 0;
+        text-align: center;
+      }
+  
+      &__item {
+        margin-bottom: 23px;
+  
+        &:last-child {
+          margin-bottom: 0;
+        }
+  
+        &--img {
+          margin-right: 20px;
+          width: 40px;
+        }
+  
+        &--details {
+          h4 {
+            font-weight: 400;
+            margin: 0;
+          }
+  
+          p {
+            color: #adadad;
+            font-size: 13px;
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+  
+  .service-main-handover {
+    white-space: nowrap;
+  }
+  
+  .bike-workshop-status {
+    height: 100%;
+  
+    img {
+      margin-bottom: 25px;
+  
+      &.go-to-workshop {
+        display: block;
+        margin: 0 auto 47px;
+        width: 120px;
+      }
+    }
+  
+    p {
+      font-size: 20px;
+      margin-bottom: 50px;
+      text-align: center;
+  
+      &.go-to-workshop {
+        font-size: 16px;
+        line-height: 1.5;
+        margin: 0 0 55px;
+        text-align: left;
+  
+        @media (max-width: 600px) {
+          padding: 0;
+        }
+      }
+  
+      &.title {
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 2;
+        margin: 15px 0 30px;
+      }
+    }
+  
+    a {
+      background-color: #00aa50;
+      color: #fff;
+    }
+  
+    .go-to-workshop-btn-wrapper {
+      padding: 0 35px;
+      width: 100%;
+  
+      @media (max-width: 600px) {
+        padding: 0;
+      }
+  
+      .go-to-workshop-purple {
+        background-color: #6236ba;
+      }
+  
+      a {
+        font-size: 11px;
+        padding: 3px 15px;
+        width: 130px;
+      }
+    }
+  }
+  
+  .go-to-content-wrapper {
+    line-height: 1.6;
+    margin: 0 0 45px;
+  }

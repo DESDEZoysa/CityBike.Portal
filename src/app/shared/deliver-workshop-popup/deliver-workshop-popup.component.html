@@ -1,0 +1,11 @@
+<div class="service-main">
+  <div class="service-main--loader" *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center center">
+    <img class="tire-pressure-loader" src="assets/images/preloader.svg" *ngIf="isLoading" />
+  </div>
+
+  <div class="bike-workshop-status" fxLayout="column" fxLayoutAlign="center center">
+    <img src="assets/images/map-icons/in-ws.svg">
+    <p>{{'LIVE_MAP.BICYCLE' | translate}} {{bike.VisualId}}
+      {{'LIVE_MAP.DELIVER_TO_WORKSHOP' | translate}}</p>
+    <a mat-raised-button (click)="this.dialogRef.close()">{{'LIVE_MAP.OK' | translate}}</a>
+  </div>

@@ -1,0 +1,127 @@
+<div class="service-main">
+  <div class="service-main--loader" *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center center">
+    <img class="tire-pressure-loader" src="assets/images/preloader.svg" *ngIf="isLoading" />
+  </div>
+  <!-- Bike sidebar left -->
+  <div class="service-main--left" fxLayout="column" fxLayoutAlign="space-between none">
+    <div class="service-main--details">
+
+      <!-- Bike details header  -->
+      <div class="service-main--details__header" fxLayout="row wrap" fxLayoutAlign=" end">
+        <!-- Go back -->
+        <a (click)="CancelCheck()" class="go-back">
+          <img src="/assets/images/map-icons/close.svg">
+        </a>
+        <img *ngIf="carBike.BikeStatus == 9" class="service-main__icon" src="/assets/images/map-icons/bike-moving.svg"
+          width="78" />
+        <img *ngIf="carBike.BikeStatus == 11" class="service-main__icon"
+          src="/assets/images/map-icons/bike-workshop.svg" width="78" />
+        <a (click)="NavigateToBikeDetails()" class="service-main--details__bikeid">{{carBike?.VisualId}}</a>
+        <div *ngIf="!isLockState" class="lock-status" fxLayout="column" fxLayoutAlign="space-between center"
+          (click)="LockBike()">
+          <img src="/assets/images/map-icons/lock-btn.svg">
+          {{'LIVE_MAP.LOCK' | translate}}
+        </div>
+        <div *ngIf="isLockState" class="lock-status" fxLayout="column" fxLayoutAlign="space-between center"
+          (click)="UnLockBike()">
+          <img src="/assets/images/map-icons/unlock-btn.svg">
+          {{'LIVE_MAP.UNLOCK' | translate}}
+        </div>
+        <div class="status-notice" *ngIf="carBike.BikeStatus == 11" fxLayout="row" fxFlex="100">
+          <!-- <p>{{'LIVE_MAP.STATUS' | translate}}</p> -->
+          <p>{{'LIVE_MAP.WORKSHOP' | translate}}</p>
+        </div>
+        <div class="status-notice" *ngIf="carBike.BikeStatus == 9" fxLayout="row" fxFlex="100">
+          <p>{{'LIVE_MAP.MOVING' | translate}}</p>
+          <!-- <p>{{'LIVE_MAP.COMPLETE_MOVING' | translate}}</p> -->
+        </div>
+      </div>
+      <!-- / Bike details header  -->
+
+      <!-- Bike details tab  -->
+      <div class="service-main--details__tab">
+
+        <div class="service-main--details__tab--item" fxLayout="row" fxLayoutAlign="start center">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <img *ngIf="!carBike?.IsCharging" src="/assets/images/map-icons/battery.svg">
+            <img *ngIf="carBike?.IsCharging && carBike?.DockingStationId" src="/assets/images/map-icons/battery-charge.svg">
+          </div>
+          <p>{{carBike?.ChargeLevel | number:'1.0-0'}}%</p>
+        </div>
+
+        <div class="service-main--details__tab--item" fxLayout="row">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <img src="/assets/images/map-icons/visibility.svg">
+          </div>
+          <p>{{'LIVE_MAP.CHECKED_FOR' | translate}} {{ formatServiceTimeDuration(carBike?.CheckDate) }}</p>
+        </div>
+
+        <div class="service-main--details__tab--item" fxLayout="row">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <img src="/assets/images/map-icons/refresh.svg">
+          </div>
+          <p>{{ formatPulseTimeDuration(carBike?.LatestPulse) }}</p>
+        </div>
+
+      </div>
+
+      <div class="service-main--details__tab" fxLayout="column">
+        <h3 class="service-main--details__title">{{'LIVE_MAP.FAIL_REPORTED_VIA_CUSTOMER' | translate}}</h3>
+        <div class="service-main--details__tab--scroller">
+          <div class="service-main--details__issue" *ngFor="let bikeIssue of bikeIssues">
+            <span class="service-main--details__date">
+              {{bikeIssue?.ReportedDateFormatted}} - <strong>{{bikeIssue?.ReportedUser}}</strong>
+            </span>
+            <p class="service-main--details__text-with-icon">{{bikeIssue?.ErrorCategoriesText}}</p>
+            <p *ngIf="bikeIssue.Comments"
+              class="service-main--details__text-with-icon service-main--details__text-with-icon--sms">
+              {{bikeIssue?.Comments}}</p>
+          </div>
+          <div>
+            <p class="service-main--details__text-with-no-data" *ngIf="!isBikeIssueLoading && bikeIssues.length == 0">
+              {{'LIVE_MAP.NO_DATA_TO_DISPLAY' | translate}}</p>
+          </div>
+          <div *ngIf="isBikeIssueLoading" class="loader">
+            <img src="assets/images/preloader-gray.svg" width="100" />
+          </div>
+        </div>
+      </div>
+      <!-- / Bike details tab  -->
+
+    </div>
+    <div class="service-main--footer" fxLayout="row" fxLayoutAlign="start start">
+
+      <!-- check function used for docked bikes -->
+      <!-- <div *ngIf="isDocked && !isChecking" fxLayout="column" fxLayoutAlign="center center"
+        (click)="CheckDockedBike(carBike)">
+        <img src="/assets/images/map-icons/eye.svg">
+        <span>{{'LIVE_MAP.CHECK' | translate}}</span>
+      </div> -->
+      <!-- check function used for test or moving bikes -->
+      <div fxLayout="column" fxLayoutAlign="center center" (click)="FullCheckBike()">
+        <img src="/assets/images/map-icons/eye.svg">
+        <span *ngIf="carBike.BikeStatus == 11" class="service-main-handover">{{'LIVE_MAP.CHECK_AGAIN' |
+          translate}}</span>
+        <span *ngIf="carBike.BikeStatus == 9" class="service-main-handover">{{'LIVE_MAP.CHECK' | translate}}</span>
+      </div>
+
+      <div *ngIf="carBike.BikeStatus == 11" fxLayout="column" fxLayoutAlign="center center" (click)="HandToWorkshop()">
+        <img src="/assets/images/map-icons/settings-green.svg">
+        <span class="service-main-handover">{{'LIVE_MAP.HANDOVER_WORKSHOP' | translate}}</span>
+      </div>
+
+      <div *ngIf="carBike.BikeStatus == 11" fxLayout="column" fxLayoutAlign="center center" (click)="HandToStorage()">
+        <img src="/assets/images/map-icons/send-in-stock.svg">
+        <span class="service-main-handover">{{'LIVE_MAP.SEND_TO_STORAGE' | translate}}</span>
+      </div>
+
+      <!-- finish function used for test and loose bikes -->
+      <div *ngIf="carBike.BikeStatus == 9" fxLayout="column" fxLayoutAlign="center center" (click)="PlaceFreeBike()">
+        <img src="/assets/images/map-icons/handover-bike.svg">
+        <span class="service-main-handover">{{'LIVE_MAP.HANDOVER' | translate}}</span>
+      </div>
+
+    </div>
+  </div>
+  <!-- / Bike sidebar left -->
+</div>

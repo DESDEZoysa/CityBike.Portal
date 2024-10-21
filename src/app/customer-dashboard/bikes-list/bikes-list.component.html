@@ -1,0 +1,30 @@
+<div id="avilable-bikes" class="result-container">
+  <mat-card>
+    <mat-card-title>
+      <!-- bread crumb -->
+      <div>
+        <a [routerLink]="['/customer/dockingstations/list']" class="bc-link">{{ 'COMMON.DOCKING_STATIONS' | translate }}</a>
+        <span class="bc-separator"> / </span>
+        <span class="bc-current"> {{ 'BIKES_LIST.AVAILABLE_BIKES' | translate }}</span>
+      </div>
+    </mat-card-title>
+    <mat-card-content>
+      <mat-list class="item-list">
+        <mat-list-item *ngFor="let bike of bikes">
+          <!-- Visual Id -->
+          <h4 mat-line style="font-weight: bold; margin:12px 0 5px 0">{{ bike.VisualId }}</h4>
+          <p mat-line style="margin: 2px 0"> Charge Level : {{bike.ChargeLevel }} </p>
+          <p mat-line style="margin: 2px 0"> Lock State : {{bike.LockState }} </p>
+          <p mat-line style="margin: 2px 0 12px 0"> Power State : {{bike.PowerState }} </p>
+          <div fxFlex="1 1 auto" class="fill-remaining-space"></div>
+          <!-- Customer doesn't have permission to execute following commands  -->
+          <!-- <div>
+            <button mat-raised-button (click)="onBlinkClicked(bike.BikeId)" style="margin-bottom: 5px">Blink</button>
+            <button mat-raised-button (click)="onReleaseClick(bike.BikeId)" [disabled]="isDisabled" >Release</button>
+          </div> -->
+          <mat-divider></mat-divider>
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+</div>

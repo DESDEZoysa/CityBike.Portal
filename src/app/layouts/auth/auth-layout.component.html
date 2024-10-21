@@ -1,0 +1,17 @@
+<div class="outer primary-color">
+    <!-- toolbar with filters -->
+    <mat-toolbar color="primary">
+        <div fxLayout="row" style="width: 100%;">
+            <div fxFlex="1 1 auto" class="fill-remaining-space"></div>
+            <div>
+                <mat-select id="language-list" #langSelect (selectionChange)="onLanguageChange(langSelect.value)" [(value)]="selectedLanguage">
+                    <mat-option *ngFor="let lang of languages" [value]="lang.id">{{ lang.name }}</mat-option>
+                </mat-select>
+            </div>      
+        </div>
+    </mat-toolbar>
+    
+    <div class="auth-content">
+        <router-outlet></router-outlet>
+    </div>
+</div>

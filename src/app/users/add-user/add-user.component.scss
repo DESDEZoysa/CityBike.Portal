@@ -1,0 +1,18 @@
+.user-edit-form {
+    padding-top: 15px;
+    width: 100%;
+
+    @media (min-width: 600px) {
+        width: 500px;
+    }
+}
+
+.add-user-form {
+    border-radius: 5px;
+    box-shadow: 1px 4px 8px 1px rgba(0, 0, 0, 0.5);
+    padding: 15px;
+
+    @media (max-width: 599px) {
+        width: 90%;
+    }
+}

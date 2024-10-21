@@ -1,0 +1,33 @@
+.btn-style {
+  background-color: #04A3E3;
+  border-radius: 35px;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  width: auto;
+  margin: 10px 0 5px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.19);
+}
+
+.table-content-wrapper {
+  font-size: 13px;
+  word-break: break-all;
+}
+
+.faliure-type-model {
+  position: relative;
+
+  .closebtn {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 20px;
+  }
+}
+
+.mat-card-header-title {
+  padding: 0%;
+  box-shadow: none;
+}

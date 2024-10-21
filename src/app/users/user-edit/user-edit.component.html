@@ -1,0 +1,138 @@
+<div id="system-users" class="result-container">
+  <mat-card>
+    <mat-card-title>
+      <div>
+        <a [routerLink]="['/users']" class="bc-link">{{ 'COMMON.USERS' | translate }}</a>
+        <span class="bc-separator"> / </span>
+        <span class="bc-current">{{ 'REGISTER.EDIT_USER_DETAILS' | translate}}</span>
+        <span class="bc-separator"> / </span>
+        <span class="bc-current" *ngIf="user">{{ user.Email }}</span>
+      </div>
+    </mat-card-title>
+
+    <mat-card-content fxLayout="column" fxLayout.gt-xs="row" fxLayoutAlign="start start">
+      <div class="docking-station-state hide-md">
+        <mat-slide-toggle [(ngModel)]="isActive" (change)="stateChangeConfirmation()">{{(isActive == true) ?
+          'Active' : 'Deactive'}}</mat-slide-toggle>
+      </div>
+      <div *ngIf="user" fxLayout="column" fxLayoutAlign="space-around" class="user-edit-form" fxFlex.gt-xs="50">
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" style="margin-top: 35px; margin-bottom: -25px;">
+          <div fxLayout="column">
+            <mat-form-field class="pb-1">
+              <input matInput placeholder="{{ 'REGISTER.FIRST_NAME' | translate }}" type="text"
+                [formControl]="form.controls['FirstName']">
+              <mat-error *ngIf="form.controls['FirstName'].hasError('required') && form.controls['FirstName'].touched"
+                class="md-text-warn">
+                {{ 'REGISTER.FIRST_NAME_REQ_ERROR' | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="pb-1">
+              <input matInput placeholder="{{ 'REGISTER.LAST_NAME' | translate }}" type="text"
+                [formControl]="form.controls['LastName']">
+              <mat-error *ngIf="form.controls['LastName'].hasError('required') && form.controls['LastName'].touched"
+                class="md-text-warn">
+                {{ 'REGISTER.LAST_NAME_REQ_ERROR' | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="pb-1">
+              <mat-select placeholder="{{ 'REGISTER.COUNTRY' | translate }}" [formControl]="form.controls['CountryId']"
+                (selectionChange)="onCountryChange($event)">
+                <mat-option *ngFor="let country of countries" [value]="country.CountryId">{{country.Name}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="form.controls['CountryId'].hasError('required') && form.controls['CountryId'].touched"
+                class="md-text-warn">
+                {{ 'REGISTER.COUNTRY_REQ_ERROR' | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="pb-1">
+              <input matInput placeholder="{{ 'REGISTER.MOBILE_NO' | translate }}" type="text"
+                [formControl]="form.controls['PhoneNumber']">
+              <mat-error
+                *ngIf="form.controls['PhoneNumber'].hasError('required') && form.controls['PhoneNumber'].touched"
+                class="md-text-warn">
+                {{ 'REGISTER.MOBILE_NO_REQ_ERROR' | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="pb-1">
+              <input matInput placeholder="{{ 'REGISTER.EMAIL' | translate }}" type="email"
+                [formControl]="form.controls['Email']">
+              <mat-error *ngIf="form.controls['Email'].hasError('required') && form.controls['Email'].touched"
+                class="md-text-warn">
+                {{ 'REGISTER.EMAIL_REQ_ERROR' | translate }}
+              </mat-error>
+              <mat-error *ngIf="form.controls['Email'].errors?.email && form.controls['Email'].touched"
+                class="md-text-warn">
+                {{ 'REGISTER.EMAIL_VALIDATION_ERROR' | translate }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </form>
+
+        <div fxLayout="column" *ngIf="roles" class="edit-field">
+          <span class="font-placeholder">{{ 'REGISTER.ROLES' | translate }} </span>
+          <span>
+            <mat-select [(ngModel)]="roleId" (selectionChange)="onRoleChange($event)">
+              <mat-option *ngFor="let role of roles" [value]="role.RoleId">{{role.Name}}</mat-option>
+            </mat-select>
+          </span>
+          <div class="field-underline"></div>
+        </div>
+
+        <div fxLayout="column" class="edit-field" *ngIf="privileges && isStreetTeam">
+          <span class="font-placeholder">{{ 'REGISTER.PRIVILEGES' | translate }} </span>
+          <span>
+            <mat-select [(ngModel)]="privilegeId" (selectionChange)="onPrivilegeChanges($event)">
+              <mat-option *ngFor="let privilege of privileges"
+                [value]="privilege.PrivilegeId">{{privilege.Name}}</mat-option>
+            </mat-select>
+          </span>
+          <div class="field-underline"></div>
+        </div>
+
+        <div fxLayout="column" class="edit-field">
+          <span class="font-placeholder">{{ 'REGISTER.MUNICIPALITIES' | translate }} </span>
+          <span>
+            <mat-select [formControl]="areaMultiCtrl" placeholder="{{'DOCKING_STATION.AREA' | translate}}" #multiSelect
+              [multiple]="true">
+              <mat-option>
+                <ngx-mat-select-search [showToggleAllCheckbox]="true" [toggleAllCheckboxChecked]="checkAll"
+                  (toggleAll)="toggleSelectAll($event)" [formControl]="areaMultiFilterCtrl"
+                  placeholderLabel="{{'DOCKING_STATION.AREA_SEARCH' | translate}}"
+                  noEntriesFoundLabel="{{'DOCKING_STATION.NOT_FOUND_AREA' | translate}}">
+                </ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let area of filteredAreaMulti | async" [value]="area">
+                {{area.Name}}
+              </mat-option>
+            </mat-select>
+          </span>
+          <div class="field-underline"></div>
+        </div>
+
+        <button mat-raised-button color="primary" class="btn-block" style="margin-top: 10px;"
+          (click)="onSubmitChanges()">{{ 'REGISTER.SAVE' | translate }}</button>
+        <!--[disabled]="!isChanged"-->
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="start start" class="selected-areas-wrapper" fxFlex.gt-xs="50">
+        <div class="docking-station-state hide-xs">
+          <mat-slide-toggle [(ngModel)]="isActive" (change)="stateChangeConfirmation()">{{(isActive == true) ?
+            'Active' : 'Deactive'}}</mat-slide-toggle>
+        </div>
+
+        <div class="selected-areas ngx-datatable material" *ngIf="areaMultiCtrl?.value">
+          <mat-card-title class="area-title"><span class="bc-current">{{ 'REGISTER.SELECTED_AREAS' | translate }}</span>
+          </mat-card-title>
+          <ul class="area-list" fxLayout="column" fxLayout.gt-sm="row wrap">
+            <li *ngFor="let area of areaMultiCtrl?.value" fxFlex="100%" fxFlex.gt-sm="50%">{{area.Name}}</li>
+          </ul>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,209 @@
+<div id="bikes" class="result-container" (window:resize)="onResize()">
+  <div class="dashboard-loader" fxLayout="row" fxLayoutAlign="center center" *ngIf="isLoading">
+    <img class="tire-pressure-loader" src="assets/images/preloader.svg" width="100" />
+  </div>
+  <mat-card>
+    <mat-card-title fxLayout="row wrap" fxLayoutAlign="space-between stretch" fxLayoutAlign.gt-sm="space-between start">
+      <div class="session-summery-tile" fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="space-between start"
+        fxLayoutAlign.gt-sm="space-between center" fxFlex="49" fxFlex.gt-md="19">
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <img src="/assets/images/dashboard/bike.svg">
+          <p class="session-summery-tile__title">{{ 'DASHBOARD.SUM_IN_USE' | translate }}</p>
+        </div>
+        <p class="session-summery-tile__count">{{ bikes?.AllInUse }}</p>
+      </div>
+
+      <div class="session-summery-tile" fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="space-between start"
+        fxLayoutAlign.gt-sm="space-between center" fxFlex="49" fxFlex.gt-md="19">
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <img src="/assets/images/dashboard/bike-normal-insession.svg">
+          <p class="session-summery-tile__title">{{ 'DASHBOARD.INUSE_SESSION' | translate }}</p>
+        </div>
+        <p class="session-summery-tile__count">{{ bikes?.InUseInSession }}</p>
+      </div>
+
+      <div class="session-summery-tile" fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="space-between start"
+        fxLayoutAlign.gt-sm="space-between center" fxFlex="49" fxFlex.gt-md="19">
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <img src="/assets/images/dashboard/must-check.svg">
+          <p class="session-summery-tile__title">{{ 'DASHBOARD.MUST_BE_CHECKED' | translate }}</p>
+        </div>
+        <p class="session-summery-tile__count">{{ bikes?.DisabledCheckRequired }}</p>
+      </div>
+
+      <div class="session-summery-tile" fxLayout="column" fxLayout.gt-sm="row" fxLayoutAlign="space-between start"
+        fxLayoutAlign.gt-sm="space-between center" fxFlex="49" fxFlex.gt-md="19">
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <img src="/assets/images/dashboard/bike.svg">
+          <p class="session-summery-tile__title">{{ 'DASHBOARD.TOTAL_BIKES' | translate }}</p>
+        </div>
+        <p class="session-summery-tile__count">{{ bikes?.All }}</p>
+      </div>
+
+      <div fxLayout="column" fxLayoutAlign="space-between end" fxFlex="100" fxFlex.gt-md="22">
+        <div class="custom-fields-wrapper">
+          <!-- filter by date time -->
+          <div style="font-size: 15px;">
+            <div>
+              <mat-label class="dropdown-placeholder">{{'SESSION_SUMMARY.FILTER_DATE' | translate}}</mat-label>
+              <mat-select placeholder="Filter By Date" [(value)]="selectedDate"
+                (selectionChange)="onDateChange($event)">
+                <mat-option *ngFor="let dateRange of dateRanges" [value]="dateRange.id">{{dateRange.name}}</mat-option>
+              </mat-select>
+            </div>
+          </div>
+        </div>
+
+        <div class="custom-date-field-wrapper" fxLayout="column" fxLayout.gt-xs="row" fxLayoutAlign="end end" *ngIf="isCustomDateShown">
+          <!-- from date -->
+            <mat-form-field>
+              <input matInput [matDatepicker]="picker" [(ngModel)]="fromDate"
+                placeholder="{{'SESSION_SUMMARY.DATE_FROM' | translate}}" (dateChange)="onStartDatePicked($event)">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker startView="year" [startAt]="startDate"></mat-datepicker>
+            </mat-form-field>
+
+          <!-- to date -->
+            <mat-form-field>
+              <input matInput [matDatepicker]="picker" [(ngModel)]="toDate"
+                placeholder="{{'SESSION_SUMMARY.DATE_TO' | translate}}" (dateChange)="onEndDatePicked($event)">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker startView="year" [startAt]="startDate"></mat-datepicker>
+            </mat-form-field>
+
+          <button mat-raised-button (click)="onCustomDateSearchClicked()">
+            <small class="font"> {{ 'COMMON.SEARCH' | translate }}</small>
+          </button>
+        </div>
+      </div>
+
+    </mat-card-title>
+    <mat-card-content>
+      <div fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign.gt-md="space-between end">
+        <div fxLayout="column" fxLayoutAlign="start center" fxFlex="100" fxFlex.gt-sm="60">
+          <h2>{{'SESSION_SUMMARY.BIKE_SUMMARY'| translate}}</h2>
+          <div fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="start start"
+            fxLayoutAlign.gt-md="space-between end" fxFill>
+            <div fxLayout="column" fxLayoutAlign="start center" fxFlex="100" fxFlex.gt-sm="49" fxFill>
+              <ngx-datatable class="material expandable scrollable-table fixed-height-table session-summery"
+                [rows]="sessionBikeHistory" [columnMode]="'force'" #bikeHistoryTable [headerHeight]="50"
+                [footerHeight]="50" [rowHeight]="50" [scrollbarH]="false" [scrollbarV]="true"
+                [sorts]="[{prop: 'Name'}]">
+
+                <ngx-datatable-column prop="BikeModeId" name="" [maxWidth]="100" [minWidth]="100">
+                  <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+                    <img *ngIf="value == 16 && row.Resolved == 0" src="/assets/images/dashboard/docked-free.svg" class="bike-icon">
+                    <img *ngIf="value == 16 && row.Resolved != 0" src="/assets/images/map-icons/bike-yellow-dock.svg" class="bike-icon">
+                    <img *ngIf="value == 17 && row.Resolved == 0" src="/assets/images/dashboard/available-free.svg" class="bike-icon">
+                    <img *ngIf="value == 17 && row.Resolved != 0" src="/assets/images/map-icons/bike-yellow.svg" class="bike-icon">
+                    <img *ngIf="value == 18 && row.Resolved == 0" src="/assets/images/dashboard/bike-normal-insession.svg" class="bike-icon">
+                    <img *ngIf="value == 18 && row.Resolved != 0" src="/assets/images/dashboard/bike-yellow-insession.svg" class="bike-icon">
+                    <img *ngIf="value == 19" src="/assets/images/dashboard/in-test-session.svg" class="bike-icon">
+                    <img *ngIf="value == 1" src="/assets/images/dashboard/way-to-ws.svg" class="bike-icon">
+                    <img *ngIf="value == 2" src="/assets/images/dashboard/in-ws.svg" class="bike-icon--square">
+                    <img *ngIf="value == 3" src="/assets/images/dashboard/fix-ready.svg" class="bike-icon--square">
+                    <img *ngIf="value == 4" src="/assets/images/dashboard/in-stock.svg" class="bike-icon">
+                    <img *ngIf="value == 21" src="/assets/images/dashboard/moving.svg" class="bike-icon">
+                    <img *ngIf="value == 22" src="/assets/images/dashboard/must-check.svg" class="bike-icon">
+                    <img *ngIf="value == 24" src="/assets/images/dashboard/missing.svg" class="bike-icon">
+                    <img *ngIf="value == 23" src="/assets/images/dashboard/testing.svg" class="bike-icon">
+                    <img *ngIf="value == 29" src="/assets/images/dashboard/checked-need-repair.svg" class="bike-icon">
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column prop="VisualId" name="{{'SESSION_SUMMARY.VISUAL'|translate}}" [maxWidth]="100"
+                  [minWidth]="100">
+                  <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+                    <a routerLink='/bikes/{{row.BikeId}}/details'
+                      style="color:#007dbd;vertical-align: super;">{{value}}</a>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column prop="NumberOfSessions"
+                  name="{{'SESSION_SUMMARY.NUMBER_OF_UNSUCCESSFUL_SESSIONS'|translate}}">
+                  <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+                    {{value}}
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+            <div fxLayout="column" fxLayoutAlign="start center" fxFlex="100" fxFlex.gt-sm="49" class="custom-margin"
+              fxFill>
+              <ngx-datatable class="material expandable scrollable-table fixed-height-table session-summery"
+                [rows]="allBikesSessionHistory" [columnMode]="'force'" #allbikeHistoryTable [headerHeight]="50"
+                [footerHeight]="50" [rowHeight]="50" [scrollbarH]="false" [scrollbarV]="true"
+                [sorts]="[{prop: 'Name'}]">
+
+                <ngx-datatable-column prop="BikeModeId" name="" [maxWidth]="100" [minWidth]="100">
+                  <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+                    <img *ngIf="value == 16 && row.Resolved == 0" src="/assets/images/dashboard/docked-free.svg" class="bike-icon">
+                    <img *ngIf="value == 16 && row.Resolved != 0" src="/assets/images/map-icons/bike-yellow-dock.svg" class="bike-icon">
+                    <img *ngIf="value == 17 && row.Resolved == 0" src="/assets/images/dashboard/available-free.svg" class="bike-icon">
+                    <img *ngIf="value == 17 && row.Resolved != 0" src="/assets/images/map-icons/bike-yellow.svg" class="bike-icon">
+                    <img *ngIf="value == 18 && row.Resolved == 0" src="/assets/images/dashboard/bike-normal-insession.svg" class="bike-icon">
+                    <img *ngIf="value == 18 && row.Resolved != 0" src="/assets/images/dashboard/bike-yellow-insession.svg" class="bike-icon">
+                    <img *ngIf="value == 19" src="/assets/images/dashboard/in-test-session.svg" class="bike-icon">
+                    <img *ngIf="value == 1" src="/assets/images/dashboard/way-to-ws.svg" class="bike-icon">
+                    <img *ngIf="value == 2" src="/assets/images/dashboard/in-ws.svg" class="bike-icon--square">
+                    <img *ngIf="value == 3" src="/assets/images/dashboard/fix-ready.svg" class="bike-icon--square">
+                    <img *ngIf="value == 4" src="/assets/images/dashboard/in-stock.svg" class="bike-icon">
+                    <img *ngIf="value == 21" src="/assets/images/dashboard/moving.svg" class="bike-icon">
+                    <img *ngIf="value == 22" src="/assets/images/dashboard/must-check.svg" class="bike-icon">
+                    <img *ngIf="value == 24" src="/assets/images/dashboard/missing.svg" class="bike-icon">
+                    <img *ngIf="value == 23" src="/assets/images/dashboard/testing.svg" class="bike-icon">
+                    <img *ngIf="value == 29" src="/assets/images/dashboard/checked-need-repair.svg" class="bike-icon">
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column prop="VisualId" name="{{'SESSION_SUMMARY.VISUAL'|translate}}" [maxWidth]="100"
+                  [minWidth]="100">
+                  <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+                    <a routerLink='/bikes/{{row.BikeId}}/details'
+                      style="color:#007dbd;vertical-align: super;">{{value}}</a>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column prop="DisplayText"
+                  name="{{'SESSION_SUMMARY.TOTAL_NUMBER_OF_UNSUCCESSFUL_SESSIONS'|translate}}">
+                  <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+                    {{value}}
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+          </div>
+        </div>
+
+        <div fxLayout="column" fxLayoutAlign="start center" fxFlex="100" fxFlex.gt-sm="39">
+          <h2 class="ds-summery-title">{{'SESSION_SUMMARY.DOCKING_POINT_SUMMARY'| translate}}</h2>
+          <ngx-datatable class="material expandable scrollable-table fixed-height-table session-summery"
+            [rows]="sessionDPHistory" [columnMode]="'force'" #bikeHistoryTable [headerHeight]="50" [footerHeight]="50"
+            [rowHeight]="50" [scrollbarH]="false" [scrollbarV]="true" [sorts]="[{prop: 'Name'}]">
+
+            <ngx-datatable-column prop="DockingStationName" name="{{'SESSION_SUMMARY.DOCKING_STATION_NAME'|translate}}"
+              [width]="200">
+              <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+                <a routerLink="/dockingStations/{{row.DockingStationId}}/dockingpoints"
+                  style="color:#007dbd;vertical-align: super;">{{value}}</a>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column prop="DPVisualId" name="{{'SESSION_SUMMARY.VISUAL'|translate}}" [maxWidth]="100"
+              [minWidth]="100">
+              <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+                {{value}}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column prop="DisplayText"
+              name="{{'SESSION_SUMMARY.TOTAL_NUMBER_OF_UNSUCCESSFUL_SESSIONS'|translate}}">
+              <ng-template let-value="value" ngx-datatable-cell-template let-row="row">
+                {{value}}
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

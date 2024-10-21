@@ -1,0 +1,168 @@
+  .see-more {
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 22px;
+    letter-spacing: -0.41px;
+    margin-left: 8px;
+    margin-top: 10px;
+    text-decoration-line: underline;
+  }
+  
+  .see-less {
+    @extend .see-more;
+    text-decoration: none;
+    
+    display: block;
+    margin: 5px 0 0 0;
+    text-align: right;
+    width: 100%;
+  }
+  
+  .recent {
+    @extend .see-less;
+  
+    color: #ADADAD;
+    cursor: default;
+    margin-left: 0;
+  }
+  
+  .indecators-container {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: wrap-reverse;
+    overflow: hidden;
+    padding: 25px 25px 0 0;
+  }
+  
+  .indecator-item-wrapper {
+    cursor: pointer;
+    margin: 0 8px 30px;
+
+    @media (min-width: 1280px) {
+      margin: 0 15px 45px;
+    }
+  }
+  
+  .indecator-item {
+    background-color: #00AA50;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    height: 23px;
+    min-width: 23px;
+    position: relative;
+    transition: 0.2s;
+    width: 23px;
+
+    @media (min-width: 1280px) {
+      height: 27px;
+      min-width: 27px;
+      width: 27px;
+    }
+  
+    &.clicked {
+      border: 2px solid #00AA50;
+    }
+  
+    &.red {
+      background-color: #DF2A2A;
+  
+      &.clicked {
+          border: 2px solid #DF2A2A;
+        }
+  
+      &::before {
+        background-image: url("/assets/images/history-red-cross.svg");
+        background-repeat: no-repeat;
+        content: "";
+        display: block;
+        height: 100%;
+        left: 3.5px;
+        position: absolute;
+        top: 4px;
+        width: 100%;
+
+        @media (min-width: 1280px) {
+          left: 6px;
+          top: 6px;
+        }
+      }
+    }
+  
+    &.key {
+      &::after {
+        background-image: url("/assets/images/key.svg");
+        background-repeat: no-repeat;
+        content: "";
+        display: block;
+        height: 16px;
+        right: -16px;
+        position: absolute;
+        top: -10px;
+        width: 14px;
+      }
+    }
+  
+    &.eye {
+      &::after {
+        background-image: url("/assets/images/eye.svg");
+        background-repeat: no-repeat;
+        content: "";
+        display: block;
+        height: 14px;
+        left: 1px;
+        margin: auto;
+        position: absolute;
+        right: 0;
+        top: -15px;
+        width: 14px;
+      }
+    }
+  }
+  
+  .error-rate {
+    bottom: 30px;
+    color: #ADADAD;
+    font-size: 11px;
+    left: 0;
+    margin-left: 10px;
+    position: absolute;
+  }
+  
+  .custom-tooltip {
+    background-color: #FFFFFF;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    bottom: 15px;
+    color: #000000 !important;
+    font-size: 14px;
+    line-height: 22px;
+    padding: 5px 5px 10px;
+    position: relative;
+    white-space: pre-line;
+  }
+
+  .service-main {
+    padding: 15px 10px 25px;
+
+    &--details {
+      &__tab {
+        border-radius: 5px;
+        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+          0 8px 10px 1px rgba(0, 0, 0, 0.14),
+          0 3px 14px 2px rgba(0, 0, 0, 0.12);
+        height: calc(100vh - 250px);
+        min-height: 200px;
+        overflow: auto;
+        padding: 20px;
+        width: 100%;
+
+        @media (min-width: 768px) {
+          height: calc(100vh - 490px);
+        }
+
+        @media (min-width: 991px) {
+          height: calc(100vh - 420px);
+        }
+      }
+    }
+  }

@@ -1,0 +1,53 @@
+.map {
+  height: calc(100vh - 260px);
+  min-height: 300px;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    height: calc(100vh - 190px);
+  }
+
+  @media (min-width: 900px) {
+    height: calc(100vh - 207px);
+  }
+}
+
+.popup {
+  background: #ff2c00;
+  padding: 3px;
+  color: white;
+  opacity: 0.8;
+  position: relative;
+  white-space: nowrap;
+  font-size: 0.9em;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.map-legend {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.legend-item {
+  line-height: 30px; //padding: 0 10px;
+  font-size: 0.9em;
+}
+
+.quarts {
+  float: left;
+  width: 100px;
+  margin-left: 20px;
+  font-size: 13px;
+  height: 40px;
+  color: black;
+}
+
+.circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  float: left;
+  margin: 5px;
+}

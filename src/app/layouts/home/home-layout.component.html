@@ -1,0 +1,131 @@
+<!-- toolbar with filters -->
+<mat-toolbar color="primary" class="nav-bar">
+  <div fxLayout="row" style="width: 100%;">
+    <div fxShow="false" fxShow.gt-xs>
+      <div class="icon-map" *ngIf="!isStreetTeamLogo" fxLayout="row" fxLayoutAlign="center center" style="cursor: default;">
+        <img class="logo-main" src="assets/images/main-menu/main-logo.svg" />
+        <div>{{logoTitle}}</div>
+      </div>
+      <div class="icon-map" (click)="NavigateToMap()" *ngIf="isStreetTeamLogo" fxLayout="row" fxLayoutAlign="center center">
+        <img class="logo-service" src="assets/images/kart_logo.svg" />
+        <div>{{ 'COMMON.MAP' | translate }}</div>
+      </div>
+    </div>
+    <div fxShow="false" fxShow.xs style="display: inline-block;height: 100%;vertical-align: middle;">
+      <img *ngIf="!isStreetTeamLogo" class="logo-mobile" src="assets/images/main-menu/main-logo.svg" />
+      <div (click)="NavigateToMap()" *ngIf="isStreetTeamLogo" fxLayout="row" fxLayoutAlign="center center">
+        <img class="logo-service" src="assets/images/kart_logo.svg" />
+         <div>{{ 'COMMON.MAP' | translate }}</div>
+      </div>
+    </div>
+    <div fxFlex="1 1 auto" class="fill-remaining-space"></div>
+
+    <!-- Web View non dashboard user -->
+    <div *ngIf="!isDashboardUser" fxLayout="row" fxShow="false" fxShow.gt-md>
+      <a *ifRole="'Admin,Workshop,Customer Service,Street Team'" mat-button routerLink="/dashboard" routerLinkActive="active-list-item">{{ 'COMMON.DASHBOARD' | translate }}</a>
+      <a *ifRole="'Admin,Workshop,Customer Service'" mat-button routerLink="/bikes/live" routerLinkActive="active-list-item" [routerLinkActiveOptions]="{exact: true}">{{ 'COMMON.MAP' | translate }}</a>
+      <a *ifRole="'Admin,Workshop,Customer Service,Street Team'" mat-button routerLink="/bikes" routerLinkActive="active-list-item" [routerLinkActiveOptions]="{exact: true}">{{ 'COMMON.BIKES' | translate }}</a>
+      <a *ifRole="'Admin,Workshop,Customer Service,Street Team'" mat-button routerLinkActive="active-list-item" routerLink="/dockingStations">{{ 'COMMON.DOCKING_STATIONS' | translate }}</a>
+      <!--Reservation based on the config value-->
+      <a *ngIf="showReservation" mat-button routerLink="/reservations" routerLinkActive="active-list-item">{{'COMMON.RESERVATIONS' | translate }}</a>
+      <a *ifRole="'Admin,Customer Service'" mat-button routerLink="/sessions" routerLinkActive="active-list-item">{{'COMMON.SESSIONS' | translate }}</a>
+      <a *ifRole="'Customer'" mat-button routerLink="/customer/dashboard" routerLinkActive="active-list-item">{{'COMMON.DOCKING_STATIONS_MAP' | translate }}</a>
+      <a *ifRole="'Customer'" mat-button routerLink="/customer/dockingstations/list" routerLinkActive="active-list-item">{{ 'COMMON.DOCKING_STATIONS' | translate }}</a>      
+      <a *ifRole="'Admin,Workshop,Customer Service,Street Team'" routerLinkActive="active-list-item" mat-button routerLink="/repair/orders">{{ 'COMMON.AT_WORKSHOP' | translate }}</a>
+      <a *ifRole="'Admin,Workshop,Street Team'" mat-button routerLink="/inventory" routerLinkActive="active-list-item">{{'COMMON.INVENTORY' | translate }}</a>
+      <!-- <a *ifRole="'Admin,Workshop,Customer Service,Street Team'" mat-button routerLinkActive="active-list-item" routerLink="/session/summary">{{ 'COMMON.SESSION_SUMMARY' | translate }}</a> -->
+        <span *ngIf="enableRoutes">
+          <a *ifRole="'Admin,Workshop,Street Team'" mat-button routerLinkActive="active-list-item" routerLink="/routes">{{ 'COMMON.ROUTES' | translate }}</a>
+        </span>     
+    </div>
+
+    <!-- Web View dashboard user -->
+     <button *ngIf="!isDashboardUser" mat-icon-button [matMenuTriggerFor]="menu" fxHide="false" fxHide.gt-md>
+      <mat-icon>menu</mat-icon>
+    </button>
+    <button *ngIf="isDashboardUser" mat-icon-button [matMenuTriggerFor]="menudashboard" fxHide="false" fxHide.gt-md>
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <button *ngIf="!isDashboardUser" mat-icon-button [matMenuTriggerFor]="settings" style="width: 150px;">
+      <div class="icon-map" fxLayout="row" fxLayoutAlign="center center">
+        <img *ngIf="isStreetTeamLogo" class="logo-main" src="assets/images/main-menu/street-team.svg" width="40" />
+        <img *ngIf="isAdmin" class="logo-main" src="assets/images/main-menu/admin.svg" width="25" />
+        <img *ngIf="isWorkshopUser" class="logo-main" src="assets/images/main-menu/workshop.svg" width="30" />
+        <img *ngIf="isCustomerService" class="logo-main" src="assets/images/main-menu/customer-service.svg" width="25" />
+        <div>{{profileName}}</div>
+      </div>
+    </button>
+    <button *ngIf="isDashboardUser" mat-icon-button [matMenuTriggerFor]="settingsdashboard" style="width: 150px;">
+      <div class="icon-map" fxLayout="row" fxLayoutAlign="center center">
+        <img *ngIf="isStreetTeamLogo" class="logo-main" src="assets/images/main-menu/street-team.svg" width="40" />
+        <img *ngIf="isAdmin" class="logo-main" src="assets/images/main-menu/admin.svg" width="25" />
+        <img *ngIf="isWorkshopUser" class="logo-main" src="assets/images/main-menu/workshop.svg" width="30" />
+        <img *ngIf="isCustomerService" class="logo-main" src="assets/images/main-menu/customer-service.svg"
+          width="25" />
+        <div>{{profileName}}</div>
+      </div>
+    </button>
+  </div>
+</mat-toolbar>
+
+<!-- Mobile View non dashboard user-->
+<mat-menu x-position="before" #menu="matMenu">
+  <a *ifRole="'Admin,Workshop,Customer Service,Street Team'" mat-menu-item routerLink="/dashboard">{{ 'COMMON.DASHBOARD'| translate }}</a>
+  <a *ifRole="'Admin,Workshop,Customer Service'" mat-button routerLink="/bikes/live">{{ 'COMMON.MAP' | translate }}</a>
+  <a *ifRole="'Admin,Workshop,Customer Service,Street Team'" mat-menu-item routerLink="/bikes">{{ 'COMMON.BIKES'|translate }}</a>
+  <a *ifRole="'Admin,Workshop,Customer Service,Street Team'" mat-menu-item routerLink="/dockingStations">{{'COMMON.DOCKING_STATIONS'|translate }}</a> 
+  <!--Reservation based on the config value-->
+  <a *ngIf="showReservation" mat-button routerLink="/reservations">{{ 'COMMON.RESERVATIONS' | translate }}</a>
+  <a *ifRole="'Admin,Customer Service'" mat-menu-item routerLink="/sessions">{{ 'COMMON.SESSIONS' | translate }}</a>
+  <a *ifRole="'Customer'" mat-menu-item routerLink="/customer/dashboard">{{ 'COMMON.DOCKING_STATIONS_MAP' | translate }}</a>
+  <a *ifRole="'Customer'" mat-menu-item routerLink="/customer/dockingstations/list">{{ 'COMMON.DOCKING_STATIONS' | translate }}</a>  
+  <a *ifRole="'Admin,Workshop,Customer Service,Street Team'" mat-menu-item routerLink="/repair/orders">{{ 'COMMON.AT_WORKSHOP' | translate }}</a>
+  <a *ifRole="'Admin,Workshop,Street Team'" mat-menu-item routerLink="/inventory">{{ 'COMMON.INVENTORY' | translate }}</a>
+  <!-- <a *ifRole="'Admin,Workshop,Customer Service,Street Team'" mat-menu-item routerLink="/session/summary">{{'COMMON.SESSION_SUMMARY' | translate }}</a> -->
+    <span *ngIf="enableRoutes">
+      <a *ifRole="'Admin,Workshop,Street Team'" mat-menu-item routerLink="/routes">{{ 'COMMON.ROUTES'|translate }}</a>
+    </span> 
+</mat-menu>
+
+<mat-menu x-position="before" #menudashboard="matMenu">
+  <a *ifRole="'Admin,Workshop,Customer Service,Street Team'" mat-menu-item routerLink="/dashboard">{{ 'COMMON.DASHBOARD'|translate }}</a>
+  <!-- <a *ifRole="'Admin,Workshop,Customer Service,Street Team'" mat-menu-item routerLink="/session/summary">{{'COMMON.SESSION_SUMMARY' |translate }}</a> -->
+</mat-menu>
+
+<mat-menu #settings="matMenu"> 
+  <button mat-menu-item *ifRole="'Admin,Workshop'" routerLink="/events">{{ 'COMMON.ALERTS' | translate }}</button>
+  <button mat-menu-item *ifRole="'Admin,Workshop,Customer Service,Street Team'" routerLink="/issues">{{ 'COMMON.ISSUES' | translate }}</button>
+  <button mat-menu-item *ifRole="'Admin'" routerLink="/users">{{ 'COMMON.USERS' | translate }}</button>
+
+  <button mat-menu-item *ifRole="'Admin'" routerLink="/users/admin">{{ 'COMMON.ADMIN' | translate }}</button>
+  <button mat-menu-item *ifRole="'Admin'" routerLink="/users/prioritygroup">{{ 'COMMON.PRIORITY_GROUPS' | translate }}</button>
+  <!-- <button mat-menu-item routerLink="/bikes/report/warranty">{{ 'COMMON.WARRANTY_REPORT' | translate }}</button> -->
+  <button mat-menu-item [matMenuTriggerFor]="time">{{ 'COMMON.TIMEZONE' | translate }}</button>
+  <button mat-menu-item [matMenuTriggerFor]="lang">{{ 'COMMON.LANGUAGE' | translate }}</button>
+
+  <button mat-menu-item sign-out>
+    <mat-icon aria-label="sign out">exit_to_app</mat-icon> {{ 'COMMON.SIGNOUT' | translate }}
+  </button>
+</mat-menu>
+
+<mat-menu #settingsdashboard="matMenu">
+  <button mat-menu-item [matMenuTriggerFor]="time">{{ 'COMMON.TIMEZONE' | translate }}</button>
+  <button mat-menu-item [matMenuTriggerFor]="lang">{{ 'COMMON.LANGUAGE' | translate }}</button>
+  <button mat-menu-item sign-out>
+    <mat-icon aria-label="sign out">exit_to_app</mat-icon> {{ 'COMMON.SIGNOUT' | translate }}
+  </button>
+</mat-menu>
+<mat-menu #time="matMenu">
+  <button mat-menu-item [ngClass]="{'active' : selectedTimeZone === timeZone.id}" *ngFor="let timeZone of timeZones"
+    [value]="timeZone.id" (click)="onTimeZoneChange(timeZone.id)">{{ timeZone.name }}</button>
+</mat-menu>
+
+<mat-menu #lang="matMenu">
+  <button mat-menu-item [ngClass]="{'active' : selectedLanguage === lang.id}" *ngFor="let lang of languages"
+    [value]="lang.id" (click)="onLanguageChange(lang.id)">{{ lang.name }}</button>
+</mat-menu>
+
+<div class="content">
+  <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,82 @@
+<div class="faliure-type-model">
+  <div class="faliure-type-model--loader" *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center center">
+    <img class="tire-pressure-loader" src="assets/images/preloader.svg" *ngIf="isLoading" />
+  </div>
+  <div mat-dialog-title>
+    <div fxLayout="column">
+      <div fxLayout="row" class="faliure-header">
+        <a (click)="closeDialog()" class="go-back">
+          <img src="/assets/images/map-icons/close.svg">
+        </a>
+        <img src="/assets/images/dashboard/in-ws.svg" width="37" />
+        <h3 class="text-center faliure-title">{{dateFinishedShortFormatted}}:{{dockingStationName}}</h3>
+        <img *ngIf="isOwner" (click)="updateRepairHistoryForm()" class="editbtn"
+          src="/assets/images/edit-icon.svg" width="20">
+      </div>
+      <span class="edited" *ngIf="isUpdated && !modifiedUser">{{'DP_REPAIR_HISTORY.DETAILS_BODY.EDITED'|translate}}</span>
+      <span class="edited" *ngIf="isUpdated && modifiedUser">({{'DP_REPAIR_HISTORY.DETAILS_BODY.EDITED_BY'|translate}} {{modifiedUser}})</span>
+    </div>
+
+  </div>
+  <div mat-dialog-content style="max-height: none;">
+    <div class="report-error-popup-wrapper">
+      <div class="table-content-wrapper">
+        <div>
+          <div class="meta-section">
+            <div>
+              <div>
+                {{'DP_REPAIR_HISTORY.DETAILS_BODY.DPVISUAL_ID'|translate}}
+              </div>
+              <div>
+                : <b>{{dpVisualId}}</b>
+              </div>
+            </div>
+            <div>
+              <div>
+                {{'DP_REPAIR_HISTORY.DETAILS_BODY.FIX_FINISHED'|translate}}
+              </div>
+              <div>
+                : <b>{{dateFinishedLongFormatted}}</b>
+              </div>
+            </div>
+            <div>
+              <div>
+                {{'DP_REPAIR_HISTORY.DETAILS_BODY.FIX_BY'|translate}}
+              </div>
+              <div *ngIf="fixedBy">
+                : <b>{{fixedBy.FirstName}} {{fixedBy.LastName}}</b>
+              </div>
+            </div>
+            <div>
+              <div>
+                {{'DP_REPAIR_HISTORY.DETAILS_BODY.HOURS_SPENT'|translate}}
+              </div>
+              <div>
+                : <b><span *ngIf="hoursSpent>0">{{hoursSpent}} hr</span>&nbsp;<span *ngIf="minutesSpent>0">{{minutesSpent}} min</span></b>                
+              </div>
+            </div>
+          </div>
+          <hr>
+          <div fxLayout="column" fxLayoutAlign="space-around start" class="pt-1">
+            <h3 fxFlex="30" class="faliure-subtitle">{{'DP_REPAIR_HISTORY.DETAILS_BODY.WORKS_DONE'|translate}}</h3>
+            <div fxFlex="70">
+              <ul class="faliure-list">
+                <li *ngFor="let fix of fixes">
+                  {{fix.FixType}}
+                </li>
+              </ul>
+            </div>
+            <p class="no-data" *ngIf="fixes.length==0">{{'DP_REPAIR_HISTORY.DETAILS_BODY.NO_WORKS_DONE'|translate}}</p>
+          </div>
+          <hr>
+          <div fxLayout="column" fxLayoutAlign="space-around start" class="py-1">
+            <h3 fxFlex="30" class="faliure-subtitle">{{'DP_REPAIR_HISTORY.DETAILS_BODY.COMMENTS'|translate}}</h3>
+            <div fxFlex="70">
+              <p class="faliure-comment">{{comments}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

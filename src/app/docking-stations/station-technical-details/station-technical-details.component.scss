@@ -1,0 +1,44 @@
+.tech-details-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+
+    &-wrapper {
+        margin-bottom: 20px;
+    }
+}
+
+.detail-field-value {
+    margin-left: 5px;
+}
+
+.detail-field {
+    font-size: 14px;
+    padding-bottom: 15px;
+    margin-top: 15px;
+}
+
+.detail-field-edit {
+    font-size: 14px;
+    padding-bottom: 15px;
+    margin-bottom: 3px;
+}
+
+.icons-container {
+    display: flex;
+    align-items: center;
+}
+
+.icon-link {
+    margin: 5px;
+}
+
+.icon-link:last-child {
+    margin-left: auto; /* Pushes the second icon to the right */
+}
+
+.mat-edit-icon {
+    font-size: large;
+}
+
+
